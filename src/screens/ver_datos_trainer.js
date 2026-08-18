@@ -12,6 +12,7 @@ export default function UserDataScreen() {
     <SafeAreaView style={styles.container}>
 
       {/* HEADER */}
+
       <View style={styles.header}>
 
         <TouchableOpacity>
@@ -24,7 +25,9 @@ export default function UserDataScreen() {
 
       </View>
 
-      {/* CONTENIDO */}
+
+      {/* CONTENIDO CON SCROLL */}
+
       <ScrollView
         style={styles.scroll}
         contentContainerStyle={styles.content}
@@ -32,7 +35,8 @@ export default function UserDataScreen() {
       >
 
         {/* PERFIL */}
-        <View style={styles.profileCard}>
+
+        <View style={styles.card}>
 
           <View style={styles.avatar}>
             <Text style={styles.avatarText}>
@@ -40,8 +44,7 @@ export default function UserDataScreen() {
             </Text>
           </View>
 
-          <View style={styles.profileInfo}>
-
+          <View>
             <Text style={styles.name}>
               Sol Gaetmank
             </Text>
@@ -49,107 +52,69 @@ export default function UserDataScreen() {
             <Text style={styles.email}>
               solgaetmank@gmail.com
             </Text>
-
           </View>
 
         </View>
 
 
         {/* DATOS PERSONALES */}
-        <View style={styles.section}>
 
-          <Text style={styles.sectionTitle}>
+        <View style={styles.card}>
+
+          <Text style={styles.title}>
             Datos Personales
           </Text>
 
           <View style={styles.row}>
-
-            <View style={styles.dataBox}>
-              <Text style={styles.label}>
-                Nombre
-              </Text>
-
-              <Text style={styles.value}>
-                Sol
-              </Text>
+            <View style={styles.box}>
+              <Text style={styles.label}>Nombre</Text>
+              <Text style={styles.value}>Sol</Text>
             </View>
 
-            <View style={styles.dataBox}>
-              <Text style={styles.label}>
-                Apellido
-              </Text>
-
-              <Text style={styles.value}>
-                Gaetmank
-              </Text>
+            <View style={styles.box}>
+              <Text style={styles.label}>Apellido</Text>
+              <Text style={styles.value}>Gaetmank</Text>
             </View>
-
           </View>
 
           <View style={styles.row}>
-
-            <View style={styles.dataBox}>
-              <Text style={styles.label}>
-                DNI
-              </Text>
-
-              <Text style={styles.value}>
-                12345678
-              </Text>
+            <View style={styles.box}>
+              <Text style={styles.label}>DNI</Text>
+              <Text style={styles.value}>12345678</Text>
             </View>
 
-            <View style={styles.dataBox}>
-              <Text style={styles.label}>
-                Género
-              </Text>
-
-              <Text style={styles.value}>
-                Femenino
-              </Text>
+            <View style={styles.box}>
+              <Text style={styles.label}>Género</Text>
+              <Text style={styles.value}>Femenino</Text>
             </View>
-
           </View>
 
         </View>
 
 
         {/* DATOS FÍSICOS */}
-        <View style={styles.section}>
 
-          <Text style={styles.sectionTitle}>
+        <View style={styles.card}>
+
+          <Text style={styles.title}>
             Datos Físicos
           </Text>
 
           <View style={styles.row}>
 
-            <View style={styles.dataBox}>
-              <Text style={styles.label}>
-                Edad
-              </Text>
-
-              <Text style={styles.value}>
-                23 años
-              </Text>
+            <View style={styles.box}>
+              <Text style={styles.label}>Edad</Text>
+              <Text style={styles.value}>23 años</Text>
             </View>
 
-            <View style={styles.dataBox}>
-              <Text style={styles.label}>
-                Peso
-              </Text>
-
-              <Text style={styles.value}>
-                70.5 kg
-              </Text>
+            <View style={styles.box}>
+              <Text style={styles.label}>Peso</Text>
+              <Text style={styles.value}>70.5 kg</Text>
             </View>
 
-            <View style={styles.dataBox}>
-              <Text style={styles.label}>
-                Altura
-              </Text>
-
-              <Text style={styles.value}>
-                175 cm
-              </Text>
+            <View style={styles.box}>
+              <Text style={styles.label}>Altura</Text>
+              <Text style={styles.value}>175 cm</Text>
             </View>
 
           </View>
@@ -158,14 +123,14 @@ export default function UserDataScreen() {
 
 
         {/* CONTACTO Y SALUD */}
-        <View style={styles.section}>
 
-          <Text style={styles.sectionTitle}>
+        <View style={styles.card}>
+
+          <Text style={styles.title}>
             Contacto y Salud
           </Text>
 
-          <View style={styles.fullDataBox}>
-
+          <View style={styles.box}>
             <Text style={styles.label}>
               Teléfono de Contacto
             </Text>
@@ -173,11 +138,9 @@ export default function UserDataScreen() {
             <Text style={styles.value}>
               1123456789
             </Text>
-
           </View>
 
-          <View style={styles.fullDataBox}>
-
+          <View style={styles.box}>
             <Text style={styles.label}>
               Teléfono de Emergencia
             </Text>
@@ -185,11 +148,9 @@ export default function UserDataScreen() {
             <Text style={styles.value}>
               1122344556
             </Text>
-
           </View>
 
-          <View style={styles.fullDataBox}>
-
+          <View style={styles.box}>
             <Text style={styles.label}>
               Obra Social
             </Text>
@@ -197,11 +158,9 @@ export default function UserDataScreen() {
             <Text style={styles.value}>
               OSDE
             </Text>
-
           </View>
 
-          <View style={styles.fullDataBox}>
-
+          <View style={styles.box}>
             <Text style={styles.label}>
               Contraindicaciones Médicas
             </Text>
@@ -209,16 +168,16 @@ export default function UserDataScreen() {
             <Text style={styles.value}>
               Ninguna registrada
             </Text>
-
           </View>
 
         </View>
 
 
         {/* ENTRENAMIENTO */}
-        <View style={styles.section}>
 
-          <Text style={styles.sectionTitle}>
+        <View style={styles.card}>
+
+          <Text style={styles.title}>
             Entrenamiento
           </Text>
 
@@ -240,9 +199,10 @@ export default function UserDataScreen() {
   );
 }
 
+
 const styles = StyleSheet.create({
 
-  /* CONTENEDOR */
+  /* GENERAL */
 
   container: {
     flex: 1,
@@ -254,10 +214,10 @@ const styles = StyleSheet.create({
   },
 
   content: {
-    paddingHorizontal: 10,
-    paddingTop: 10,
+    padding: 10,
     paddingBottom: 20,
   },
+
 
   /* HEADER */
 
@@ -272,7 +232,6 @@ const styles = StyleSheet.create({
   backIcon: {
     color: '#FFFFFF',
     fontSize: 27,
-    fontWeight: '300',
     marginRight: 12,
   },
 
@@ -282,16 +241,18 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
 
-  /* PERFIL */
 
-  profileCard: {
+  /* TARJETAS */
+
+  card: {
     backgroundColor: '#1D1D1D',
     borderRadius: 8,
-    padding: 14,
-    flexDirection: 'row',
-    alignItems: 'center',
+    padding: 12,
     marginBottom: 10,
   },
+
+
+  /* PERFIL */
 
   avatar: {
     width: 48,
@@ -300,17 +261,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#3A2B0D',
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: 12,
+    marginBottom: 8,
   },
 
   avatarText: {
     color: '#FFC107',
     fontSize: 14,
     fontWeight: '700',
-  },
-
-  profileInfo: {
-    flex: 1,
   },
 
   name: {
@@ -325,21 +282,16 @@ const styles = StyleSheet.create({
     marginTop: 4,
   },
 
-  /* SECCIONES */
 
-  section: {
-    backgroundColor: '#1D1D1D',
-    borderRadius: 8,
-    padding: 12,
-    marginBottom: 10,
-  },
+  /* TÍTULOS */
 
-  sectionTitle: {
+  title: {
     color: '#FFC107',
     fontSize: 11,
     fontWeight: '700',
-    marginBottom: 12,
+    marginBottom: 10,
   },
+
 
   /* DATOS */
 
@@ -349,19 +301,11 @@ const styles = StyleSheet.create({
     marginBottom: 8,
   },
 
-  dataBox: {
+  box: {
     flex: 1,
     backgroundColor: '#292929',
     borderRadius: 6,
-    paddingHorizontal: 10,
-    paddingVertical: 8,
-  },
-
-  fullDataBox: {
-    backgroundColor: '#292929',
-    borderRadius: 6,
-    paddingHorizontal: 10,
-    paddingVertical: 8,
+    padding: 9,
     marginBottom: 8,
   },
 
@@ -376,6 +320,7 @@ const styles = StyleSheet.create({
     fontSize: 10,
     fontWeight: '500',
   },
+
 
   /* OBJETIVO */
 
