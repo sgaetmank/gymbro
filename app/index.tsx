@@ -1,5 +1,5 @@
-import UserHomeScreen from '../src/screens/home_user';
+import HomeTrainerScreen from '../src/screens/home_trainer';
 
 export default function App() {
-  return <UserHomeScreen />;
+  return <HomeTrainerScreen />;
 }
