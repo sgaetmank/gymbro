@@ -1,13 +1,14 @@
 import { useState } from 'react';
 import {
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TextInput,
+    TouchableOpacity,
+    View,
 } from 'react-native';
+
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
 

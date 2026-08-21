@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import {
   Modal,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
@@ -10,6 +9,7 @@ import {
   View,
 } from 'react-native';
 
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
 
 export default function EditRoutineScreen() {

@@ -2,7 +2,6 @@ import { useState } from 'react';
 
 import {
   Modal,
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
@@ -12,6 +11,7 @@ import {
 
 import { VideoView, useVideoPlayer } from 'expo-video';
 
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
 
 function ExerciseVideo({ video }) {

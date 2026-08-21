@@ -1,11 +1,11 @@
 import {
-  SafeAreaView,
   ScrollView,
   StyleSheet,
   Text,
   View,
 } from 'react-native';
 
+import { SafeAreaView } from 'react-native-safe-area-context';
 import CustomInput from '../components/CustomInput';
 import PrimaryButton from '../components/PrimaryButton';
 import { useResponsiveLayout } from '../hooks/useResponsiveLayout';

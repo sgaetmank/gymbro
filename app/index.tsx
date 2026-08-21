@@ -1,5 +1,11 @@
-import EditRoutineScreen from '../src/screens/editar_rutina_trainer';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
+
+import UserRoutineScreen from '../src/screens/mi_rutina_user';
 
 export default function App() {
-  return <EditRoutineScreen />;
+  return (
+    <SafeAreaProvider>
+      <UserRoutineScreen />
+    </SafeAreaProvider>
+  );
 }
