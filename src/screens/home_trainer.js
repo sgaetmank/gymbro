@@ -6,12 +6,21 @@ import {
   View,
 } from 'react-native';
 
+import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
+
 export default function HomeTrainerScreen() {
+  const { isLandscape } = useResponsiveLayout();
+
   return (
     <SafeAreaView style={styles.container}>
 
       {/* Barra superior */}
-      <View style={styles.header}>
+      <View
+        style={[
+          styles.header,
+          isLandscape && styles.headerLandscape,
+        ]}
+      >
         <Text style={styles.backIcon}>‹</Text>
 
         <Text style={styles.headerTitle}>
@@ -20,7 +29,12 @@ export default function HomeTrainerScreen() {
       </View>
 
       {/* Contenido */}
-      <View style={styles.content}>
+      <View
+        style={[
+          styles.content,
+          isLandscape && styles.contentLandscape,
+        ]}
+      >
 
         <Text style={styles.title}>
           Hola, Entrenador!
@@ -103,12 +117,25 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
 
+  headerLandscape: {
+    minHeight: 56,
+    paddingHorizontal: 24,
+  },
+
   /* CONTENIDO */
 
   content: {
     flex: 1,
     paddingHorizontal: '2.5%',
     paddingTop: '4.5%',
+  },
+
+  contentLandscape: {
+    width: '100%',
+    maxWidth: 800,
+    alignSelf: 'center',
+    paddingHorizontal: 24,
+    paddingTop: 24,
   },
 
   title: {

@@ -8,16 +8,22 @@ import {
 
 import CustomInput from '../components/CustomInput';
 import PrimaryButton from '../components/PrimaryButton';
+import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
 
 export default function SignUpScreen() {
+  const { isLandscape } = useResponsiveLayout();
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
-        contentContainerStyle={styles.scrollContent}
+        contentContainerStyle={[
+          styles.scrollContent,
+          isLandscape && styles.scrollContentLandscape,
+        ]}
         showsVerticalScrollIndicator={false}
       >
 
-        <View style={styles.card}>
+        <View style={[styles.card, isLandscape && styles.cardLandscape]}>
 
           {/* Icono */}
           <View style={styles.iconContainer}>
@@ -231,12 +237,21 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 
+  scrollContentLandscape: {
+    paddingVertical: 12,
+  },
+
   card: {
     width: '100%',
     maxWidth: 500,
     backgroundColor: '#1D1D1D',
     borderRadius: 8,
     padding: 16,
+  },
+
+  cardLandscape: {
+    maxWidth: 600,
+    paddingHorizontal: 24,
   },
 
   iconContainer: {

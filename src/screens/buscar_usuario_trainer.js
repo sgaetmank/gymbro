@@ -9,7 +9,10 @@ import {
   View,
 } from 'react-native';
 
+import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
+
 export default function SearchUserScreen() {
+  const { isLandscape } = useResponsiveLayout();
 
   // Usuarios de ejemplo
   const users = [
@@ -57,7 +60,12 @@ export default function SearchUserScreen() {
     <SafeAreaView style={styles.container}>
 
       {/* HEADER */}
-      <View style={styles.header}>
+      <View
+        style={[
+          styles.header,
+          isLandscape && styles.headerLandscape,
+        ]}
+      >
 
         <TouchableOpacity>
           <Text style={styles.backIcon}>‹</Text>
@@ -70,7 +78,12 @@ export default function SearchUserScreen() {
       </View>
 
       {/* CONTENIDO */}
-      <View style={styles.content}>
+      <View
+        style={[
+          styles.content,
+          isLandscape && styles.contentLandscape,
+        ]}
+      >
 
         {/* BUSCADOR */}
         <View style={styles.searchContainer}>
@@ -218,12 +231,25 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
 
+  headerLandscape: {
+    minHeight: 56,
+    paddingHorizontal: 24,
+  },
+
   /* CONTENIDO */
 
   content: {
     flex: 1,
     paddingHorizontal: '2.5%',
     paddingTop: '2.5%',
+  },
+
+  contentLandscape: {
+    width: '100%',
+    maxWidth: 900,
+    alignSelf: 'center',
+    paddingHorizontal: 24,
+    paddingTop: 24,
   },
 
   /* BUSCADOR */

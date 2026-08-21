@@ -8,16 +8,22 @@ import {
 
 import CustomInput from '../components/CustomInput';
 import PrimaryButton from '../components/PrimaryButton';
+import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
 
 export default function LoginScreen() {
+  const { isLandscape } = useResponsiveLayout();
+
   return (
     <SafeAreaView style={styles.container}>
       <ScrollView
-        contentContainerStyle={styles.scrollContent}
+        contentContainerStyle={[
+          styles.scrollContent,
+          isLandscape && styles.scrollContentLandscape,
+        ]}
         keyboardShouldPersistTaps="handled"
         showsVerticalScrollIndicator={false}
       >
-      <View style={styles.card}>
+      <View style={[styles.card, isLandscape && styles.cardLandscape]}>
 
         {/* Icono */}
         <View style={styles.iconContainer}>
@@ -105,10 +111,18 @@ const styles = StyleSheet.create({
   },
 
   scrollContent: {
-  flexGrow: 1,
-  justifyContent: 'center',
-  paddingVertical: 20,
-},
+    flexGrow: 1,
+    justifyContent: 'center',
+    paddingVertical: 20,
+  },
+
+  scrollContentLandscape: {
+    paddingVertical: 16,
+  },
+
+  cardLandscape: {
+    paddingHorizontal: 24,
+  },
 
   icon: {
     color: '#FFC107',

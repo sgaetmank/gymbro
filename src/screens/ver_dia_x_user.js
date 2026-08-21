@@ -12,6 +12,8 @@ import {
 
 import { VideoView, useVideoPlayer } from 'expo-video';
 
+import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
+
 function ExerciseVideo({ video }) {
 
   const player = useVideoPlayer(video, (player) => {
@@ -29,6 +31,7 @@ function ExerciseVideo({ video }) {
 }
 
 export default function UserDayScreen() {
+  const { isLandscape } = useResponsiveLayout();
 
   // ============================================================
   // DÍA DE EJEMPLO
@@ -127,7 +130,12 @@ const closeModal = () => {
 
       {/* HEADER */}
 
-      <View style={styles.header}>
+      <View
+        style={[
+          styles.header,
+          isLandscape && styles.headerLandscape,
+        ]}
+      >
 
         <TouchableOpacity>
           <Text style={styles.backIcon}>
@@ -146,7 +154,10 @@ const closeModal = () => {
 
       <ScrollView
         style={styles.scroll}
-        contentContainerStyle={styles.content}
+        contentContainerStyle={[
+          styles.content,
+          isLandscape && styles.contentLandscape,
+        ]}
         showsVerticalScrollIndicator={false}
       >
 
@@ -302,7 +313,12 @@ const closeModal = () => {
 
         <View style={styles.modalBackground}>
 
-            <View style={styles.modal}>
+            <View
+              style={[
+                styles.modal,
+                isLandscape && styles.modalLandscape,
+              ]}
+            >
 
             {/* TÍTULO */}
 
@@ -389,6 +405,14 @@ const styles = StyleSheet.create({
     paddingBottom: '7%',
   },
 
+  contentLandscape: {
+    width: '100%',
+    maxWidth: 900,
+    alignSelf: 'center',
+    paddingHorizontal: 24,
+    paddingTop: 24,
+  },
+
 
   /* HEADER */
 
@@ -412,6 +436,11 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 13,
     fontWeight: '500',
+  },
+
+  headerLandscape: {
+    minHeight: 56,
+    paddingHorizontal: 24,
   },
 
 
@@ -506,11 +535,9 @@ const styles = StyleSheet.create({
 
   /* BOTONES */
 
-  button: {
-    backgroundColor: '#3A2B0D',
-    borderRadius: 12,
-    paddingHorizontal: '2.3%',
-    paddingVertical: '1.3%',
+  buttons: {
+    flexDirection: 'row',
+    gap: 8,
   },
 
   button: {
@@ -557,6 +584,11 @@ const styles = StyleSheet.create({
     backgroundColor: '#1D1D1D',
     borderRadius: 10,
     padding: 15,
+  },
+
+  modalLandscape: {
+    width: '90%',
+    maxWidth: 700,
   },
 
   modalTitle: {

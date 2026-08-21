@@ -7,7 +7,11 @@ import {
   View,
 } from 'react-native';
 
+import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
+
 export default function UserHomeScreen() {
+  const { isLandscape } = useResponsiveLayout();
+
   return (
     <SafeAreaView style={styles.container}>
 
@@ -15,7 +19,12 @@ export default function UserHomeScreen() {
           HEADER
       ====================================================== */}
 
-      <View style={styles.header}>
+      <View
+        style={[
+          styles.header,
+          isLandscape && styles.headerLandscape,
+        ]}
+      >
         <Text style={styles.headerTitle}>
           Inicio
         </Text>
@@ -28,7 +37,10 @@ export default function UserHomeScreen() {
 
       <ScrollView
         style={styles.scroll}
-        contentContainerStyle={styles.content}
+        contentContainerStyle={[
+          styles.content,
+          isLandscape && styles.contentLandscape,
+        ]}
         showsVerticalScrollIndicator={false}
       >
 
@@ -177,7 +189,12 @@ export default function UserHomeScreen() {
           BARRA DE NAVEGACIÓN INFERIOR
       ====================================================== */}
 
-      <View style={styles.bottomNav}>
+      <View
+        style={[
+          styles.bottomNav,
+          isLandscape && styles.bottomNavLandscape,
+        ]}
+      >
 
         {/* INICIO */}
 
@@ -295,6 +312,14 @@ const styles = StyleSheet.create({
     paddingBottom: '5%',
   },
 
+  contentLandscape: {
+    width: '100%',
+    maxWidth: 1000,
+    alignSelf: 'center',
+    paddingHorizontal: 24,
+    paddingTop: 24,
+  },
+
   /* ==========================================================
      HEADER
   ========================================================== */
@@ -311,6 +336,11 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 13,
     fontWeight: '500',
+  },
+
+  headerLandscape: {
+    paddingHorizontal: 24,
+    minHeight: 56,
   },
 
 
@@ -503,6 +533,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-around',
+  },
+
+  bottomNavLandscape: {
+    minHeight: 56,
   },
 
   navItem: {

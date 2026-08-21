@@ -10,7 +10,10 @@ import {
   View,
 } from 'react-native';
 
+import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
+
 export default function EditRoutineScreen() {
+  const { isLandscape } = useResponsiveLayout();
 
   // ============================================================
   // DATOS INICIALES DE EJEMPLO
@@ -505,7 +508,12 @@ const moveItem = (dayId, blockId, itemId, direction) => {
           HEADER
       ====================================================== */}
 
-      <View style={styles.header}>
+      <View
+        style={[
+          styles.header,
+          isLandscape && styles.headerLandscape,
+        ]}
+      >
 
         <TouchableOpacity>
           <Text style={styles.backIcon}>‹</Text>
@@ -517,7 +525,12 @@ const moveItem = (dayId, blockId, itemId, direction) => {
 
         <View style={styles.headerSpacer} />
 
-        <TouchableOpacity style={styles.saveButton}>
+        <TouchableOpacity
+          style={[
+            styles.saveButton,
+            isLandscape && styles.saveButtonLandscape,
+          ]}
+        >
           <Text style={styles.saveIcon}>
             ▣
           </Text>
@@ -532,7 +545,10 @@ const moveItem = (dayId, blockId, itemId, direction) => {
 
       <ScrollView
         style={styles.scroll}
-        contentContainerStyle={styles.content}
+        contentContainerStyle={[
+          styles.content,
+          isLandscape && styles.contentLandscape,
+        ]}
         showsVerticalScrollIndicator={false}
       >
 
@@ -571,6 +587,7 @@ const moveItem = (dayId, blockId, itemId, direction) => {
                 <View style={styles.arrowColumn}>
 
                 <TouchableOpacity
+                  style={styles.arrowButton}
                     disabled={days.findIndex(
                     (d) => d.id === day.id
                     ) === 0}
@@ -592,6 +609,7 @@ const moveItem = (dayId, blockId, itemId, direction) => {
 
 
                 <TouchableOpacity
+                  style={styles.arrowButton}
                     disabled={days.findIndex(
                     (d) => d.id === day.id
                     ) === days.length - 1}
@@ -661,6 +679,7 @@ const moveItem = (dayId, blockId, itemId, direction) => {
                     <View style={styles.blockArrowColumn}>
 
                         <TouchableOpacity
+                        style={styles.smallArrowButton}
                         disabled={
                             day.blocks.findIndex(
                             (b) => b.id === block.id
@@ -688,6 +707,7 @@ const moveItem = (dayId, blockId, itemId, direction) => {
 
 
                         <TouchableOpacity
+                        style={styles.smallArrowButton}
                         disabled={
                             day.blocks.findIndex(
                             (b) => b.id === block.id
@@ -756,6 +776,7 @@ const moveItem = (dayId, blockId, itemId, direction) => {
                         <View style={styles.itemArrows}>
 
                         <TouchableOpacity
+                          style={styles.itemArrowButton}
                             disabled={
                             block.items.findIndex(
                                 (i) => i.id === item.id
@@ -785,6 +806,7 @@ const moveItem = (dayId, blockId, itemId, direction) => {
 
 
                         <TouchableOpacity
+                          style={styles.itemArrowButton}
                             disabled={
                             block.items.findIndex(
                                 (i) => i.id === item.id
@@ -968,7 +990,12 @@ const moveItem = (dayId, blockId, itemId, direction) => {
 
         <View style={styles.modalOverlay}>
 
-          <View style={styles.modal}>
+          <View
+            style={[
+              styles.modal,
+              isLandscape && styles.modalLandscape,
+            ]}
+          >
 
             <View style={styles.modalHeader}>
 
@@ -1139,7 +1166,12 @@ const moveItem = (dayId, blockId, itemId, direction) => {
 
         <View style={styles.modalOverlay}>
 
-          <View style={styles.modal}>
+          <View
+            style={[
+              styles.modal,
+              isLandscape && styles.modalLandscape,
+            ]}
+          >
 
             <View style={styles.modalHeader}>
 
@@ -1270,6 +1302,14 @@ const styles = StyleSheet.create({
     paddingBottom: '6%',
   },
 
+  contentLandscape: {
+    width: '100%',
+    maxWidth: 1000,
+    alignSelf: 'center',
+    paddingHorizontal: 24,
+    paddingTop: 24,
+  },
+
 
   /* ==============================================================
      HEADER
@@ -1297,17 +1337,27 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
 
+  headerLandscape: {
+    minHeight: 48,
+    paddingHorizontal: 16,
+  },
+
   headerSpacer: {
     flex: 1,
   },
 
   saveButton: {
-    width: '8%',
-    aspectRatio: 1,
+    width: 40,
+    height: 40,
     backgroundColor: '#FFC107',
     borderRadius: 6,
     alignItems: 'center',
     justifyContent: 'center',
+  },
+
+  saveButtonLandscape: {
+    width: 36,
+    height: 36,
   },
 
   saveIcon: {
@@ -1379,13 +1429,24 @@ const styles = StyleSheet.create({
     marginRight: 6,
   },
 
+  arrowButton: {
+    width: 34,
+    height: 30,
+    backgroundColor: '#302714',
+    borderWidth: 1,
+    borderColor: '#59430E',
+    borderRadius: 6,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 3,
+  },
+
   arrow: {
-  color: '#FFC107',
-  fontSize: 18,
-  lineHeight: 18,
-  minWidth: 22,
-  textAlign: 'center',
-},
+    color: '#FFC107',
+    fontSize: 20,
+    lineHeight: 20,
+    textAlign: 'center',
+  },
 
   disabledArrow: {
   color: '#444444',
@@ -1449,13 +1510,23 @@ const styles = StyleSheet.create({
   },
 
   smallArrow: {
-  color: '#8A8A8A',
-  fontSize: 16,
-  lineHeight: 16,
-  paddingVertical: 3,
-  minWidth: 18,
-  textAlign: 'center',
-},
+    color: '#8A8A8A',
+    fontSize: 18,
+    lineHeight: 18,
+    textAlign: 'center',
+  },
+
+  smallArrowButton: {
+    width: 32,
+    height: 28,
+    backgroundColor: '#303030',
+    borderWidth: 1,
+    borderColor: '#4A4A4A',
+    borderRadius: 6,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 3,
+  },
 
   blockTitle: {
     color: '#FFFFFF',
@@ -1499,14 +1570,24 @@ disabledSmallArrow: {
     marginRight: 6,
   },
 
+  itemArrowButton: {
+    width: 32,
+    height: 30,
+    backgroundColor: '#302714',
+    borderWidth: 1,
+    borderColor: '#59430E',
+    borderRadius: 6,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 3,
+  },
+
   itemArrow: {
-  color: '#FFC107',
-  fontSize: 15,
-  lineHeight: 15,
-  paddingVertical: 3,
-  minWidth: 18,
-  textAlign: 'center',
-},
+    color: '#FFC107',
+    fontSize: 17,
+    lineHeight: 17,
+    textAlign: 'center',
+  },
 
   disabledItemArrow: {
   color: '#444444',
@@ -1631,6 +1712,15 @@ disabledSmallArrow: {
     borderTopRightRadius: 16,
     padding: '4%',
     maxHeight: '85%',
+  },
+
+  modalLandscape: {
+    width: '90%',
+    maxWidth: 700,
+    alignSelf: 'center',
+    borderBottomLeftRadius: 16,
+    borderBottomRightRadius: 16,
+    padding: 24,
   },
 
   modalHeader: {

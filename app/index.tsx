@@ -1,5 +1,5 @@
-import UserDayScreen from '../src/screens/ver_dia_x_user';
+import EditRoutineScreen from '../src/screens/editar_rutina_trainer';
 
 export default function App() {
-  return <UserDayScreen />;
+  return <EditRoutineScreen />;
 }

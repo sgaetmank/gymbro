@@ -7,13 +7,22 @@ import {
   View,
 } from 'react-native';
 
+import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
+
 export default function UserDataScreen() {
+  const { isLandscape } = useResponsiveLayout();
+
   return (
     <SafeAreaView style={styles.container}>
 
       {/* HEADER */}
 
-      <View style={styles.header}>
+      <View
+        style={[
+          styles.header,
+          isLandscape && styles.headerLandscape,
+        ]}
+      >
 
         <TouchableOpacity>
           <Text style={styles.backIcon}>‹</Text>
@@ -30,7 +39,10 @@ export default function UserDataScreen() {
 
       <ScrollView
         style={styles.scroll}
-        contentContainerStyle={styles.content}
+        contentContainerStyle={[
+          styles.content,
+          isLandscape && styles.contentLandscape,
+        ]}
         showsVerticalScrollIndicator={false}
       >
 
@@ -218,6 +230,14 @@ const styles = StyleSheet.create({
     paddingBottom: '5%',
   },
 
+  contentLandscape: {
+    width: '100%',
+    maxWidth: 800,
+    alignSelf: 'center',
+    paddingHorizontal: 24,
+    paddingTop: 24,
+  },
+
 
   /* HEADER */
 
@@ -240,6 +260,11 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 13,
     fontWeight: '500',
+  },
+
+  headerLandscape: {
+    minHeight: 56,
+    paddingHorizontal: 24,
   },
 
 
