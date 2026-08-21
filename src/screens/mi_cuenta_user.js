@@ -1,10 +1,10 @@
 import {
-    SafeAreaView,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 
 export default function UserProfileScreen() {
@@ -245,18 +245,18 @@ const styles = StyleSheet.create({
   },
 
   content: {
-    padding: 10,
-    paddingBottom: 20,
+    padding: '2.5%',
+    paddingBottom: '5%',
   },
-
 
   /* HEADER */
 
   header: {
-    height: 58,
+    minHeight: '7%',
+    paddingVertical: '1.5%',
     backgroundColor: '#1D1D1D',
     justifyContent: 'center',
-    paddingHorizontal: 14,
+    paddingHorizontal: '4%',
   },
 
   headerTitle: {
@@ -270,18 +270,18 @@ const styles = StyleSheet.create({
 
   profile: {
     alignItems: 'center',
-    paddingVertical: 14,
-    marginBottom: 4,
+    paddingVertical: '3.5%',
+    marginBottom: '1%',
   },
 
   avatar: {
-    width: 52,
-    height: 52,
-    borderRadius: 26,
+    width: '14%',
+    aspectRatio: 1,
+    borderRadius: 999,
     backgroundColor: '#FFC107',
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 7,
+    marginBottom: '2%',
   },
 
   avatarText: {
@@ -308,8 +308,8 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: '#1D1D1D',
     borderRadius: 8,
-    padding: 11,
-    marginBottom: 9,
+    padding: '3%',
+    marginBottom: '2.3%',
   },
 
   sectionTitle: {
@@ -321,11 +321,10 @@ const styles = StyleSheet.create({
 
 
   /* DATOS */
-
   dataRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    minHeight: 40,
+    paddingVertical: '2.5%',
     borderTopWidth: 1,
     borderTopColor: '#292929',
   },
@@ -333,9 +332,9 @@ const styles = StyleSheet.create({
   icon: {
     color: '#FFC107',
     fontSize: 13,
-    width: 32,
+    width: '9%',
     textAlign: 'center',
-    marginRight: 5,
+    marginRight: '1.5%',
   },
 
   label: {
@@ -355,12 +354,12 @@ const styles = StyleSheet.create({
   /* OBJETIVO */
 
   objective: {
-    height: 38,
+    paddingVertical: '2.5%',
     backgroundColor: '#292929',
     borderRadius: 6,
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 10,
+    paddingHorizontal: '3%',
   },
 
   objectiveIcon: {
@@ -379,12 +378,12 @@ const styles = StyleSheet.create({
   /* CERRAR SESIÓN */
 
   logoutButton: {
-    height: 40,
+    paddingVertical: '3%',
     backgroundColor: '#FF4D4D',
     borderRadius: 7,
     justifyContent: 'center',
     alignItems: 'center',
-    marginBottom: 5,
+    marginBottom: '1.3%',
   },
 
   logoutText: {
@@ -397,7 +396,7 @@ const styles = StyleSheet.create({
   /* NAVEGACIÓN */
 
   bottomNav: {
-    height: 60,
+    minHeight: '8%',
     backgroundColor: '#1D1D1D',
     borderTopWidth: 1,
     borderTopColor: '#292929',

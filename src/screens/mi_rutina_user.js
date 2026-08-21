@@ -1,10 +1,10 @@
 import {
-    SafeAreaView,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 
 export default function UserRoutineScreen() {
@@ -339,18 +339,19 @@ const styles = StyleSheet.create({
   },
 
   content: {
-    padding: 10,
-    paddingBottom: 20,
+    padding: '2.5%',
+    paddingBottom: '5%',
   },
 
 
   /* HEADER */
 
   header: {
-    height: 58,
+    minHeight: '7%',
+    paddingVertical: '1.5%',
     backgroundColor: '#1D1D1D',
     justifyContent: 'center',
-    paddingHorizontal: 14,
+    paddingHorizontal: '4%',
   },
 
   headerTitle: {
@@ -392,8 +393,8 @@ const styles = StyleSheet.create({
   dayButton: {
     backgroundColor: '#3A2B0D',
     borderRadius: 12,
-    paddingHorizontal: 9,
-    paddingVertical: 5,
+    paddingHorizontal: '2.5%',
+    paddingVertical: '1.3%',
   },
 
   dayButtonText: {
@@ -417,8 +418,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#292929',
     fontSize: 9,
     fontWeight: '700',
-    paddingHorizontal: 10,
-    paddingVertical: 8,
+    paddingHorizontal: '3%',
+    paddingVertical: '2%',
   },
 
 
@@ -427,20 +428,20 @@ const styles = StyleSheet.create({
   item: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 10,
-    paddingVertical: 9,
+    paddingHorizontal: '3%',
+    paddingVertical: '2.3%',
     borderTopWidth: 1,
     borderTopColor: '#292929',
   },
 
   itemIcon: {
-    width: 27,
-    height: 27,
-    borderRadius: 14,
+    width: '7%',
+    aspectRatio: 1,
+    borderRadius: 999,
     backgroundColor: '#3A2B0D',
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: 9,
+    marginRight: '2.5%',
   },
 
   itemIconText: {
@@ -480,7 +481,7 @@ const styles = StyleSheet.create({
   /* NAVEGACIÓN */
 
   bottomNav: {
-    height: 60,
+    minHeight: '8%',
     backgroundColor: '#1D1D1D',
     borderTopWidth: 1,
     borderTopColor: '#292929',

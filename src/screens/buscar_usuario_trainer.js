@@ -1,12 +1,12 @@
 import { useState } from 'react';
 import {
-    SafeAreaView,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 
 export default function SearchUserScreen() {
@@ -197,11 +197,12 @@ const styles = StyleSheet.create({
   /* HEADER */
 
   header: {
-    height: 58,
+    minHeight: '7%',
+    paddingVertical: '2%',
     backgroundColor: '#1D1D1D',
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 14,
+    paddingHorizontal: '4%',
   },
 
   backIcon: {
@@ -221,22 +222,23 @@ const styles = StyleSheet.create({
 
   content: {
     flex: 1,
-    paddingHorizontal: 10,
-    paddingTop: 10,
+    paddingHorizontal: '2.5%',
+    paddingTop: '2.5%',
   },
 
   /* BUSCADOR */
 
   searchContainer: {
-    height: 40,
+    minHeight: '5%',
+    paddingVertical: '1.5%',
+    paddingHorizontal: '3%',
+    marginBottom: '2.5%',
     backgroundColor: '#1D1D1D',
     borderRadius: 7,
     borderWidth: 1,
     borderColor: '#292929',
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 10,
-    marginBottom: 10,
   },
 
   searchIcon: {
@@ -265,8 +267,8 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderWidth: 1,
     borderColor: '#292929',
-    padding: 10,
-    marginBottom: 8,
+      padding: '2.5%',
+    marginBottom: '2%',
     flexDirection: 'row',
     alignItems: 'center',
     flexWrap: 'wrap',
@@ -279,13 +281,13 @@ const styles = StyleSheet.create({
   /* AVATAR */
 
   avatar: {
-    width: 34,
-    height: 34,
-    borderRadius: 17,
+    width: '9%',
+    aspectRatio: 1,      
+    borderRadius: 999,    
     backgroundColor: '#3A2B0D',
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: 10,
+    marginRight: '3%',
   },
 
   avatarText: {
@@ -324,9 +326,9 @@ const styles = StyleSheet.create({
   trainerBadge: {
     backgroundColor: '#3A2B0D',
     borderRadius: 3,
-    paddingHorizontal: 6,
-    paddingVertical: 3,
-    marginLeft: 7,
+    paddingHorizontal: '2%',
+    paddingVertical: '1%',
+    marginLeft: '2%',
   },
 
   trainerText: {
@@ -340,12 +342,13 @@ const styles = StyleSheet.create({
   actionsContainer: {
     width: '100%',
     flexDirection: 'row',
-    gap: 7,
-    marginTop: 10,
+    gap: '2%',
+    marginTop: '2.5%',
   },
 
   dataButton: {
     flex: 1,
+    paddingVertical: '2.5%',
     height: 32,
     backgroundColor: '#363636',
     borderRadius: 6,
@@ -374,6 +377,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     flexDirection: 'row',
+    paddingVertical: '2.5%',
   },
 
   routineIcon: {

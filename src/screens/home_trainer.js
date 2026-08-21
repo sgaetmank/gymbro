@@ -1,9 +1,9 @@
 import {
-    SafeAreaView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 
 export default function HomeTrainerScreen() {
@@ -82,11 +82,12 @@ const styles = StyleSheet.create({
   /* HEADER */
 
   header: {
-    height: 58,
+    minHeight: '7%',
+    paddingVertical: '1.5%',
     backgroundColor: '#1D1D1D',
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 14,
+    paddingHorizontal: '4%',
   },
 
   backIcon: {
@@ -106,8 +107,8 @@ const styles = StyleSheet.create({
 
   content: {
     flex: 1,
-    paddingHorizontal: 10,
-    paddingTop: 18,
+    paddingHorizontal: '2.5%',
+    paddingTop: '4.5%',
   },
 
   title: {
@@ -119,8 +120,8 @@ const styles = StyleSheet.create({
   subtitle: {
     color: '#FFC107',
     fontSize: 10,
-    marginTop: 3,
-    marginBottom: 15,
+    marginTop: '1%',
+    marginBottom: '4%',
   },
 
   /* CARD */
@@ -128,20 +129,20 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: '#1D1D1D',
     borderRadius: 8,
-    minHeight: 60,
-    padding: 12,
+    minHeight: '8%',
+    padding: '3%',
     flexDirection: 'row',
     alignItems: 'center',
   },
 
   iconContainer: {
-    width: 38,
-    height: 38,
-    borderRadius: 19,
+    width: '10%',
+    aspectRatio: 1,
+    borderRadius: 999,
     backgroundColor: '#2B2615',
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: 12,
+    marginRight: '3%',
   },
 
   icon: {
@@ -170,12 +171,12 @@ const styles = StyleSheet.create({
   /* CERRAR SESIÓN */
 
   bottomContainer: {
-    paddingHorizontal: 10,
-    paddingBottom: 10,
+    paddingHorizontal: '2.5%',
+    paddingBottom: '2.5%',
   },
 
   logoutButton: {
-    height: 40,
+    paddingVertical: '3%',
     backgroundColor: '#FF4D55',
     borderRadius: 7,
     alignItems: 'center',

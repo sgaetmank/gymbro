@@ -10,6 +10,7 @@ export default function PrimaryButton({ title }) {
 
 const styles = StyleSheet.create({
   button: {
+    width: '100%',
     height: 42,
     backgroundColor: '#FFC107',
     borderRadius: 7,

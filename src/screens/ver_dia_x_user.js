@@ -1,13 +1,13 @@
 import { useState } from 'react';
 
 import {
-    Modal,
-    SafeAreaView,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View
+  Modal,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View
 } from 'react-native';
 
 import { VideoView, useVideoPlayer } from 'expo-video';
@@ -384,20 +384,21 @@ const styles = StyleSheet.create({
   },
 
   content: {
-    paddingHorizontal: 10,
-    paddingTop: 10,
-    paddingBottom: 30,
+    paddingHorizontal: '2.5%',
+    paddingTop: '2.5%',
+    paddingBottom: '7%',
   },
 
 
   /* HEADER */
 
   header: {
-    height: 58,
+    minHeight: '7%',
+    paddingVertical: '1.5%',
     backgroundColor: '#1D1D1D',
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 14,
+    paddingHorizontal: '4%',
   },
 
   backIcon: {
@@ -429,14 +430,18 @@ const styles = StyleSheet.create({
   block: {
     backgroundColor: '#1D1D1D',
     borderRadius: 8,
-    marginBottom: 10,
+    marginBottom: '2.5%',
     overflow: 'hidden',
   },
 
   blockHeader: {
     backgroundColor: '#292929',
-    paddingHorizontal: 10,
-    paddingVertical: 8,
+    paddingHorizontal: '2.5%',
+    paddingVertical: '2%',
+  },
+
+  blockContent: {
+    padding: '2%',
   },
 
   blockTitle: {
@@ -445,9 +450,6 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
 
-  blockContent: {
-    padding: 8,
-  },
 
 
   /* EJERCICIO */
@@ -476,7 +478,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#292929',
     borderRadius: 5,
-    paddingVertical: 6,
+    paddingVertical: '1.5%',
     alignItems: 'center',
   },
 
@@ -504,9 +506,11 @@ const styles = StyleSheet.create({
 
   /* BOTONES */
 
-  buttons: {
-    flexDirection: 'row',
-    gap: 6,
+  button: {
+    backgroundColor: '#3A2B0D',
+    borderRadius: 12,
+    paddingHorizontal: '2.3%',
+    paddingVertical: '1.3%',
   },
 
   button: {
@@ -528,8 +532,8 @@ const styles = StyleSheet.create({
   rest: {
     backgroundColor: '#202C35',
     borderRadius: 5,
-    paddingVertical: 8,
-    paddingHorizontal: 9,
+    paddingVertical: '2%',
+    paddingHorizontal: '2.3%',
   },
 
   restText: {
@@ -539,13 +543,12 @@ const styles = StyleSheet.create({
   },
 
    /* MODAL */
-
-  modalBackground: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.75)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    padding: 20,
+  modal: {
+    width: '100%',
+    maxHeight: '80%',
+    backgroundColor: '#1D1D1D',
+    borderRadius: 10,
+    padding: '4%',
   },
 
   modal: {
@@ -574,7 +577,7 @@ const styles = StyleSheet.create({
 
   video: {
     width: '100%',
-    height: 200,
+    aspectRatio: 16 / 9,   // reemplaza el height: 200 fijo
     backgroundColor: '#000000',
     borderRadius: 7,
   },
@@ -596,9 +599,9 @@ const styles = StyleSheet.create({
   closeButton: {
     backgroundColor: '#FFC107',
     borderRadius: 7,
-    paddingVertical: 9,
+    paddingVertical: '2.3%',
     alignItems: 'center',
-    marginTop: 15,
+    marginTop: '4%',
   },
 
   closeButtonText: {

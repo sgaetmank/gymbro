@@ -1,8 +1,9 @@
 import {
-    SafeAreaView,
-    StyleSheet,
-    Text,
-    View,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
 } from 'react-native';
 
 import CustomInput from '../components/CustomInput';
@@ -11,6 +12,11 @@ import PrimaryButton from '../components/PrimaryButton';
 export default function LoginScreen() {
   return (
     <SafeAreaView style={styles.container}>
+      <ScrollView
+        contentContainerStyle={styles.scrollContent}
+        keyboardShouldPersistTaps="handled"
+        showsVerticalScrollIndicator={false}
+      >
       <View style={styles.card}>
 
         {/* Icono */}
@@ -64,6 +70,7 @@ export default function LoginScreen() {
         </View>
 
       </View>
+      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -74,12 +81,16 @@ const styles = StyleSheet.create({
     backgroundColor: '#101010',
     justifyContent: 'center',
     paddingHorizontal: 16,
+    paddingVertical: 20,
   },
 
   card: {
+    width: '100%',
+    maxWidth: 450,
     backgroundColor: '#1D1D1D',
     borderRadius: 8,
     padding: 16,
+    alignSelf: 'center',
   },
 
   iconContainer: {
@@ -92,6 +103,12 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginBottom: 12,
   },
+
+  scrollContent: {
+  flexGrow: 1,
+  justifyContent: 'center',
+  paddingVertical: 20,
+},
 
   icon: {
     color: '#FFC107',

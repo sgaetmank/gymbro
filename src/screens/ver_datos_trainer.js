@@ -1,10 +1,10 @@
 import {
-    SafeAreaView,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 
 export default function UserDataScreen() {
@@ -214,19 +214,20 @@ const styles = StyleSheet.create({
   },
 
   content: {
-    padding: 10,
-    paddingBottom: 20,
+    padding: '2.5%',
+    paddingBottom: '5%',
   },
 
 
   /* HEADER */
 
   header: {
-    height: 58,
+    minHeight: '7%',
+    paddingVertical: '1.5%',
     backgroundColor: '#1D1D1D',
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 14,
+    paddingHorizontal: '4%',
   },
 
   backIcon: {
@@ -247,23 +248,22 @@ const styles = StyleSheet.create({
   card: {
     backgroundColor: '#1D1D1D',
     borderRadius: 8,
-    padding: 12,
-    marginBottom: 10,
+    padding: '3%',
+    marginBottom: '2.5%',
   },
 
 
   /* PERFIL */
 
   avatar: {
-    width: 48,
-    height: 48,
-    borderRadius: 24,
+    width: '13%',
+    aspectRatio: 1,
+    borderRadius: 999,
     backgroundColor: '#3A2B0D',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 8,
+    marginBottom: '2%',
   },
-
   avatarText: {
     color: '#FFC107',
     fontSize: 14,
@@ -297,16 +297,16 @@ const styles = StyleSheet.create({
 
   row: {
     flexDirection: 'row',
-    gap: 8,
-    marginBottom: 8,
+    gap: '2%',
+    marginBottom: '2%',
   },
 
   box: {
     flex: 1,
     backgroundColor: '#292929',
     borderRadius: 6,
-    padding: 9,
-    marginBottom: 8,
+    padding: '2.3%',
+    marginBottom: '2%',
   },
 
   label: {
@@ -328,9 +328,9 @@ const styles = StyleSheet.create({
     alignSelf: 'flex-start',
     backgroundColor: '#3A2B0D',
     borderRadius: 15,
-    paddingHorizontal: 12,
-    paddingVertical: 7,
-    marginTop: 2,
+    paddingHorizontal: '3%',
+    paddingVertical: '1.8%',
+    marginTop: '0.5%',
   },
 
   tagText: {

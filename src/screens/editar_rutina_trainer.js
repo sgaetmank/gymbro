@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import {
-    Modal,
-    SafeAreaView,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TextInput,
-    TouchableOpacity,
-    View,
+  Modal,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 
 export default function EditRoutineScreen() {
@@ -1265,9 +1265,9 @@ const styles = StyleSheet.create({
   },
 
   content: {
-    paddingHorizontal: 10,
-    paddingTop: 10,
-    paddingBottom: 25,
+    paddingHorizontal: '2.5%',
+    paddingTop: '2.5%',
+    paddingBottom: '6%',
   },
 
 
@@ -1276,11 +1276,12 @@ const styles = StyleSheet.create({
   ============================================================== */
 
   header: {
-    height: 58,
+    minHeight: '7%',
+    paddingVertical: '1.5%',
     backgroundColor: '#1D1D1D',
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: 14,
+    paddingHorizontal: '4%',
   },
 
   backIcon: {
@@ -1301,8 +1302,8 @@ const styles = StyleSheet.create({
   },
 
   saveButton: {
-    width: 31,
-    height: 31,
+    width: '8%',
+    aspectRatio: 1,
     backgroundColor: '#FFC107',
     borderRadius: 6,
     alignItems: 'center',
@@ -1355,18 +1356,17 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderWidth: 1,
     borderColor: '#292929',
-    padding: 9,
-    marginBottom: 10,
+    padding: '2.3%',
+    marginBottom: '2.5%',
   },
 
   dayHeader: {
-    minHeight: 38,
     flexDirection: 'row',
     alignItems: 'center',
     borderBottomWidth: 1,
     borderBottomColor: '#292929',
-    paddingBottom: 7,
-    marginBottom: 8,
+    paddingBottom: '1.8%',
+    marginBottom: '2%',
   },
 
   dayTitleContainer: {
@@ -1432,14 +1432,14 @@ const styles = StyleSheet.create({
   blockContainer: {
     backgroundColor: '#242424',
     borderRadius: 7,
-    padding: 8,
-    marginBottom: 8,
+    padding: '2%',
+    marginBottom: '2%',
   },
 
   blockHeader: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 7,
+    marginBottom: '1.8%',
   },
 
   blockTitleContainer: {
@@ -1478,8 +1478,8 @@ disabledSmallArrow: {
 
   itemCard: {
     borderRadius: 6,
-    padding: 8,
-    marginBottom: 5,
+    padding: '2%',
+    marginBottom: '1.3%',
   },
 
   exerciseCard: {
@@ -1580,7 +1580,7 @@ disabledSmallArrow: {
   ============================================================== */
 
   addBlockButton: {
-    height: 34,
+    paddingVertical: '2.5%',
     backgroundColor: '#303030',
     borderRadius: 6,
     alignItems: 'center',
@@ -1600,7 +1600,7 @@ disabledSmallArrow: {
   ============================================================== */
 
   addDayButton: {
-    height: 42,
+    paddingVertical: '3%',
     backgroundColor: '#FFC107',
     borderRadius: 7,
     alignItems: 'center',
@@ -1629,7 +1629,7 @@ disabledSmallArrow: {
     backgroundColor: '#1D1D1D',
     borderTopLeftRadius: 16,
     borderTopRightRadius: 16,
-    padding: 16,
+    padding: '4%',
     maxHeight: '85%',
   },
 
@@ -1661,27 +1661,28 @@ disabledSmallArrow: {
   },
 
   modalInput: {
-    height: 40,
+    paddingVertical: '2.8%',
+    paddingHorizontal: '3%',
     backgroundColor: '#101010',
     borderRadius: 7,
     borderWidth: 1,
     borderColor: '#292929',
     color: '#FFFFFF',
-    fontSize: 10,
-    paddingHorizontal: 10,
+    fontSize: 10
   },
 
   commentInput: {
-    height: 55,
+    paddingVertical: '3%',
+    paddingHorizontal: '3%',
     backgroundColor: '#101010',
     borderRadius: 7,
     borderWidth: 1,
     borderColor: '#292929',
     color: '#FFFFFF',
     fontSize: 10,
-    paddingHorizontal: 10,
     paddingTop: 10,
     textAlignVertical: 'top',
+    minHeight: '13%',
   },
 
   /* SUGERENCIAS */
@@ -1689,8 +1690,8 @@ disabledSmallArrow: {
   exerciseSuggestions: {
     backgroundColor: '#181818',
     borderRadius: 7,
-    padding: 10,
-    marginTop: 8,
+    padding: '2.5%',
+    marginTop: '2%',
   },
 
   suggestionTitle: {
@@ -1724,7 +1725,7 @@ disabledSmallArrow: {
 
   unitButton: {
     flex: 1,
-    height: 36,
+    paddingVertical: '2.8%', 
     borderRadius: 7,
     backgroundColor: '#181818',
     borderWidth: 1,
@@ -1751,12 +1752,12 @@ disabledSmallArrow: {
   /* BOTÓN MODAL */
 
   modalPrimaryButton: {
-    height: 42,
+    paddingVertical: '3%',
     backgroundColor: '#FFC107',
     borderRadius: 7,
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 15,
+    marginTop: '3.5%',
   },
 
   modalPrimaryText: {

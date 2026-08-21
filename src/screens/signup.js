@@ -1,9 +1,9 @@
 import {
-    SafeAreaView,
-    ScrollView,
-    StyleSheet,
-    Text,
-    View,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
 } from 'react-native';
 
 import CustomInput from '../components/CustomInput';
@@ -225,10 +225,15 @@ const styles = StyleSheet.create({
   },
 
   scrollContent: {
-    padding: 16,
+    flexGrow: 1,
+    paddingHorizontal: 16,
+    paddingVertical: 20,
+    alignItems: 'center',
   },
 
   card: {
+    width: '100%',
+    maxWidth: 500,
     backgroundColor: '#1D1D1D',
     borderRadius: 8,
     padding: 16,
@@ -289,6 +294,7 @@ const styles = StyleSheet.create({
 
   optionsRow: {
     flexDirection: 'row',
+    flexWrap: 'wrap',
     gap: 7,
     marginBottom: 10,
   },

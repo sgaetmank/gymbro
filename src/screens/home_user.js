@@ -1,10 +1,10 @@
 import {
-    SafeAreaView,
-    ScrollView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  SafeAreaView,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 
 export default function UserHomeScreen() {
@@ -290,21 +290,21 @@ const styles = StyleSheet.create({
   },
 
   content: {
-    paddingHorizontal: 10,
-    paddingTop: 20,
-    paddingBottom: 20,
+    paddingHorizontal: '2.5%',
+    paddingTop: '5%',
+    paddingBottom: '5%',
   },
-
 
   /* ==========================================================
      HEADER
   ========================================================== */
 
   header: {
-    height: 58,
+    minHeight: '7%',
+    paddingVertical: '1.5%',
     backgroundColor: '#1D1D1D',
     justifyContent: 'center',
-    paddingHorizontal: 14,
+    paddingHorizontal: '4%',
   },
 
   headerTitle: {
@@ -319,7 +319,7 @@ const styles = StyleSheet.create({
   ========================================================== */
 
   greetingContainer: {
-    marginBottom: 17,
+   marginBottom: '4%'
   },
 
   greeting: {
@@ -347,12 +347,12 @@ const styles = StyleSheet.create({
 
   statCard: {
     flex: 1,
-    minHeight: 78,
     backgroundColor: '#1D1D1D',
     borderRadius: 8,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingHorizontal: 8,
+    paddingVertical: '4%',
+    paddingHorizontal: '2%',
   },
 
   statIcon: {
@@ -394,11 +394,18 @@ const styles = StyleSheet.create({
   progressCard: {
     backgroundColor: '#1D1D1D',
     borderRadius: 8,
-    padding: 11,
-    minHeight: 61,
+    padding: '3%',
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 15,
+    marginBottom: '4%',
+  },
+
+  nextWorkoutCard: {
+    backgroundColor: '#1D1D1D',
+    borderRadius: 8,
+    padding: '3%',
+    flexDirection: 'row',
+    alignItems: 'center',
   },
 
   progressInfo: {
@@ -422,8 +429,8 @@ const styles = StyleSheet.create({
   smallButton: {
     backgroundColor: '#FFC107',
     borderRadius: 18,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
+    paddingHorizontal: '3.5%',
+    paddingVertical: '2%',
   },
 
   smallButtonText: {
@@ -465,8 +472,8 @@ const styles = StyleSheet.create({
   trainButton: {
     backgroundColor: '#FFC107',
     borderRadius: 18,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
+    paddingHorizontal: '3.5%',
+    paddingVertical: '2%',
     flexDirection: 'row',
     alignItems: 'center',
   },
@@ -489,7 +496,7 @@ const styles = StyleSheet.create({
   ========================================================== */
 
   bottomNav: {
-    height: 60,
+    minHeight: '8%',
     backgroundColor: '#1D1D1D',
     borderTopWidth: 1,
     borderTopColor: '#292929',

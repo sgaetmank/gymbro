@@ -1,8 +1,8 @@
 import {
-    StyleSheet,
-    Text,
-    TextInput,
-    View,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
 } from 'react-native';
 
 export default function CustomInput({
@@ -26,6 +26,7 @@ export default function CustomInput({
 
 const styles = StyleSheet.create({
   container: {
+    width: '100%',
     marginBottom: 14,
   },
 
@@ -37,6 +38,7 @@ const styles = StyleSheet.create({
   },
 
   input: {
+    width: '100%',
     height: 40,
     backgroundColor: '#292929',
     borderRadius: 7,
