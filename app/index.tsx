@@ -21,6 +21,7 @@ export default function App() {
     <SafeAreaProvider>
       <NavigationContainer>
         <Stack.Navigator screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="mi_rutina_user" component={UserRoutineScreen} />
             <Stack.Screen name="buscar_usuario_trainer" component={SearchUserScreen} />
             <Stack.Screen name="home_user" component={UserHomeScreen} />
             
@@ -29,7 +30,6 @@ export default function App() {
           <Stack.Screen name="editar_rutina_trainer" component={EditRoutineScreen} />
           <Stack.Screen name="login" component={LooginScreen} />
           <Stack.Screen name="mi_cuenta_user" component={UserProfileScreen} />
-          <Stack.Screen name="mi_rutina_user" component={UserRoutineScreen} />
           <Stack.Screen name="signup" component={SignUpScreen} />
           <Stack.Screen name="ver_datos_trainer" component={UserDataScreen} />
           <Stack.Screen name="ver_dia_x_user" component={UserDayScreen} />

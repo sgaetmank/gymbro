@@ -445,7 +445,7 @@ const moveItem = (dayId, blockId, itemId, direction) => {
         ]}
       >
 
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('buscar_usuario_trainer')}>
           <Text style={styles.backIcon}>‹</Text>
         </TouchableOpacity>
 
@@ -472,7 +472,7 @@ const moveItem = (dayId, blockId, itemId, direction) => {
         <View style={styles.titleRow}>
 
           <Text style={styles.routineTitle}>
-            Rutina de Sol
+            Rutina de X
           </Text>
 
         </View>

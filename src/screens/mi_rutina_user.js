@@ -14,7 +14,7 @@ import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
 export default function UserRoutineScreen({ navigation }) {
   const { isLandscape } = useResponsiveLayout();
 
-  const routine = getRoutineById(1);
+  const routine = getRoutineById(4);
 
 
   // ============================================================
