@@ -14,99 +14,34 @@ import ExerciseVideo from '../components/ExerciseVideo';
 import UserBottomNav from '../components/UserBottomNav';
 import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
 
-export default function UserDayScreen() {
+export default function UserDayScreen({ navigation, route }) {
+
   const { isLandscape } = useResponsiveLayout();
 
-  // ============================================================
-  // DÍA DE EJEMPLO
-  // Más adelante estos datos vendrán de la rutina del usuario.
-  // ============================================================
 
-  const day = {
-    id: 1,
-    name: 'Día 1',
-    blocks: [
-      {
-        id: 1,
-        name: 'Bloque 1',
-
-        items: [
-          {
-            id: 1,
-            type: 'exercise',
-            name: 'Curva lateral de 45°',
-            series: '4',
-            repetitions: '10',
-            weight: '0 kg',
-            comments: 'Equipamiento: banco',
-
-            instructions:
-                'Colocarse correctamente en el banco. Mantener la espalda recta y realizar el movimiento de forma controlada. Evitar movimientos bruscos y mantener una postura estable durante todo el ejercicio.',
-
-            video:
-                'https://tu-video.com/curva-lateral.mp4',
-          },
-
-          {
-            id: 2,
-            type: 'rest',
-            time: '1 minuto',
-          },
-        ],
-      },
-
-      {
-        id: 2,
-        name: 'Bloque 2',
-
-        items: [
-        {
-            id: 3,
-            type: 'exercise',
-            name: 'Estiramiento del equipo a cuatro patas',
-            series: '2',
-            repetitions: '2',
-            weight: '2 kg',
-            comments: 'Músculo secundario: isquiotibiales',
-
-            instructions:
-                'Comenzar en posición de cuatro apoyos. Mantener la espalda estable y realizar el movimiento lentamente, respetando el rango de movimiento indicado.',
-
-            video:
-                'https://tu-video.com/estiramiento.mp4',
-        },
-
-          {
-            id: 4,
-            type: 'rest',
-            time: '1 minuto',
-          },
-        ],
-      },
-    ],
-  };
+  const day = route?.params?.day;
 
     const [modalVisible, setModalVisible] = useState(false);
     const [modalType, setModalType] = useState('');
     const [selectedExercise, setSelectedExercise] = useState(null);
 
     const showVideo = (exercise) => {
-  setSelectedExercise(exercise);
-  setModalType('video');
-  setModalVisible(true);
-};
+      setSelectedExercise(exercise);
+      setModalType('video');
+      setModalVisible(true);
+    };
 
-const showInstructions = (exercise) => {
-  setSelectedExercise(exercise);
-  setModalType('instructions');
-  setModalVisible(true);
-};
+    const showInstructions = (exercise) => {
+      setSelectedExercise(exercise);
+      setModalType('instructions');
+      setModalVisible(true);
+    };
 
-const closeModal = () => {
-  setModalVisible(false);
-  setSelectedExercise(null);
-  setModalType('');
-};
+    const closeModal = () => {
+      setModalVisible(false);
+      setSelectedExercise(null);
+      setModalType('');
+    };
 
 
   return (
@@ -121,8 +56,8 @@ const closeModal = () => {
         ]}
       >
 
-        <TouchableOpacity>
-          <Text style={styles.backIcon}>
+        <TouchableOpacity onPress={() => navigation.navigate('mi_rutina_user')}>
+          <Text style={styles.backIcon} >
             ‹
           </Text>
         </TouchableOpacity>
@@ -355,6 +290,7 @@ const closeModal = () => {
     <UserBottomNav
       activeScreen="routine"
       isLandscape={isLandscape}
+      navigation={navigation}
     />
 
     </SafeAreaView>
@@ -446,7 +382,7 @@ const styles = StyleSheet.create({
   blockHeader: {
     backgroundColor: '#292929',
     paddingHorizontal: '2.5%',
-    paddingVertical: '2%',
+    paddingVertical: '2.5%',
   },
 
   blockContent: {
@@ -455,7 +391,7 @@ const styles = StyleSheet.create({
 
   blockTitle: {
     color: '#FFFFFF',
-    fontSize: 9,
+    fontSize: 11,
     fontWeight: '700',
   },
 
@@ -464,12 +400,15 @@ const styles = StyleSheet.create({
   /* EJERCICIO */
 
   item: {
-    marginBottom: 5,
+    marginBottom: 10,
+    paddingBottom: 10,
+    borderBottomWidth: 1,
+    borderBottomColor: '#3A3A3A',
   },
 
   exerciseName: {
     color: '#FFFFFF',
-    fontSize: 9,
+    fontSize: 12,
     fontWeight: '600',
     marginBottom: 7,
   },
@@ -493,13 +432,13 @@ const styles = StyleSheet.create({
 
   dataLabel: {
     color: '#777777',
-    fontSize: 6,
+    fontSize: 9,
     marginBottom: 2,
   },
 
   dataValue: {
     color: '#FFFFFF',
-    fontSize: 9,
+    fontSize: 12,
     fontWeight: '600',
   },
 
@@ -508,7 +447,7 @@ const styles = StyleSheet.create({
 
   comments: {
     color: '#888888',
-    fontSize: 7,
+    fontSize: 10,
     marginBottom: 6,
   },
 
@@ -529,7 +468,7 @@ const styles = StyleSheet.create({
 
   buttonText: {
     color: '#FFC107',
-    fontSize: 6.5,
+    fontSize: 10,
     fontWeight: '600',
   },
 
@@ -545,7 +484,7 @@ const styles = StyleSheet.create({
 
   restText: {
     color: '#66B8FF',
-    fontSize: 8,
+    fontSize: 11,
     fontWeight: '500',
   },
 

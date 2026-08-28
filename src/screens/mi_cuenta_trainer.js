@@ -1,16 +1,16 @@
 import {
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
 } from 'react-native';
 
 import { SafeAreaView } from 'react-native-safe-area-context';
-import UserBottomNav from '../components/UserBottomNav';
+import TrainerBottomNav from '../components/TrainerBottomNav';
 import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
 
-export default function UserProfileScreen({ navigation }) {
+export default function TrainerProfileScreen({ navigation }) {
   const { isLandscape } = useResponsiveLayout();
 
   return (
@@ -169,29 +169,6 @@ export default function UserProfileScreen({ navigation }) {
         </View>
 
 
-        {/* OBJETIVOS */}
-
-        <View style={styles.card}>
-
-          <Text style={styles.sectionTitle}>
-            Objetivos
-          </Text>
-
-          <View style={styles.objective}>
-
-            <Text style={styles.objectiveIcon}>
-              ◎
-            </Text>
-
-            <Text style={styles.objectiveText}>
-              Tonificar
-            </Text>
-
-          </View>
-
-        </View>
-
-
         {/* CERRAR SESIÓN */}
 
         <TouchableOpacity style={styles.logoutButton}
@@ -206,7 +183,7 @@ export default function UserProfileScreen({ navigation }) {
       </ScrollView>
 
 
-      <UserBottomNav
+      <TrainerBottomNav
         activeScreen="account"
         navigation={navigation}
       />

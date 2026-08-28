@@ -9,9 +9,10 @@ import {
 } from 'react-native';
 
 import { SafeAreaView } from 'react-native-safe-area-context';
+import TrainerBottomNav from '../components/TrainerBottomNav';
 import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
 
-export default function SearchUserScreen() {
+export default function SearchUserScreen({ navigation }) {
   const { isLandscape } = useResponsiveLayout();
 
   // Usuarios de ejemplo
@@ -66,10 +67,6 @@ export default function SearchUserScreen() {
           isLandscape && styles.headerLandscape,
         ]}
       >
-
-        <TouchableOpacity>
-          <Text style={styles.backIcon}>‹</Text>
-        </TouchableOpacity>
 
         <Text style={styles.headerTitle}>
           Buscar Usuario
@@ -194,6 +191,12 @@ export default function SearchUserScreen() {
 
       </View>
 
+      <TrainerBottomNav
+        activeScreen="search"
+        isLandscape={isLandscape}
+        navigation={navigation}
+      />
+
     </SafeAreaView>
   );
 }
@@ -276,7 +279,7 @@ const styles = StyleSheet.create({
   searchInput: {
     flex: 1,
     color: '#FFFFFF',
-    fontSize: 10,
+    fontSize: 13,
     paddingVertical: 0,
   },
 
@@ -293,7 +296,7 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     borderWidth: 1,
     borderColor: '#292929',
-      padding: '2.5%',
+      padding: '3.5%',
     marginBottom: '2%',
     flexDirection: 'row',
     alignItems: 'center',
@@ -318,7 +321,7 @@ const styles = StyleSheet.create({
 
   avatarText: {
     color: '#FFC107',
-    fontSize: 11,
+    fontSize: 13,
     fontWeight: '700',
   },
 
@@ -337,13 +340,13 @@ const styles = StyleSheet.create({
 
   userName: {
     color: '#FFFFFF',
-    fontSize: 11,
+    fontSize: 13,
     fontWeight: '700',
   },
 
   userEmail: {
     color: '#858585',
-    fontSize: 9,
+    fontSize: 11,
     marginTop: 3,
   },
 
@@ -359,7 +362,7 @@ const styles = StyleSheet.create({
 
   trainerText: {
     color: '#FFC107',
-    fontSize: 7,
+    fontSize: 10,
     fontWeight: '800',
   },
 
@@ -375,7 +378,7 @@ const styles = StyleSheet.create({
   dataButton: {
     flex: 1,
     paddingVertical: '2.5%',
-    height: 32,
+    height: 42,
     backgroundColor: '#363636',
     borderRadius: 6,
     alignItems: 'center',
@@ -391,13 +394,13 @@ const styles = StyleSheet.create({
 
   dataButtonText: {
     color: '#FFFFFF',
-    fontSize: 9,
+    fontSize: 12,
     fontWeight: '700',
   },
 
   routineButton: {
     flex: 1,
-    height: 32,
+    height: 42,
     backgroundColor: '#FFC107',
     borderRadius: 6,
     alignItems: 'center',
@@ -414,7 +417,7 @@ const styles = StyleSheet.create({
 
   routineButtonText: {
     color: '#111111',
-    fontSize: 9,
+    fontSize: 12,
     fontWeight: '700',
   },
 

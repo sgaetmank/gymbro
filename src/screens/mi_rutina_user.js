@@ -10,7 +10,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import UserBottomNav from '../components/UserBottomNav';
 import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
 
-export default function UserRoutineScreen() {
+export default function UserRoutineScreen({ navigation }) {
   const { isLandscape } = useResponsiveLayout();
 
   // ============================================================
@@ -41,6 +41,11 @@ export default function UserRoutineScreen() {
                 repetitions: '10',
                 weight: '0 kg',
                 comments: '',
+                instructions:
+                'Comenzar en posición de cuatro apoyos. Mantener la espalda estable y realizar el movimiento lentamente, respetando el rango de movimiento indicado.',
+
+                video:
+                'https://tu-video.com/estiramiento.mp4',
               },
 
               {
@@ -65,6 +70,11 @@ export default function UserRoutineScreen() {
                 repetitions: '20',
                 weight: '0 kg',
                 comments: '',
+                instructions:
+                'Comenzar en posición de cuatro apoyos. Mantener la espalda estable y realizar el movimiento lentamente, respetando el rango de movimiento indicado.',
+
+                video:
+                'https://tu-video.com/estiramiento.mp4',
               },
             ],
           },
@@ -89,6 +99,11 @@ export default function UserRoutineScreen() {
                 repetitions: '15',
                 weight: '1 kg',
                 comments: '',
+                instructions:
+                'Comenzar en posición de cuatro apoyos. Mantener la espalda estable y realizar el movimiento lentamente, respetando el rango de movimiento indicado.',
+
+              video:
+                'https://tu-video.com/estiramiento.mp4',
               },
 
               {
@@ -99,6 +114,11 @@ export default function UserRoutineScreen() {
                 repetitions: '23',
                 weight: '5 kg',
                 comments: 'Nota: 32 PER LADO',
+                instructions:
+                'Comenzar en posición de cuatro apoyos. Mantener la espalda estable y realizar el movimiento lentamente, respetando el rango de movimiento indicado.',
+
+                video:
+                'https://tu-video.com/estiramiento.mp4',
               },
             ],
           },
@@ -168,6 +188,7 @@ export default function UserRoutineScreen() {
 
               <TouchableOpacity
                 style={styles.dayButton}
+                onPress={() => navigation.navigate('ver_dia_x_user', { day })}
               >
                 <Text style={styles.dayButtonText}>
                   Ver día
@@ -271,6 +292,7 @@ export default function UserRoutineScreen() {
       <UserBottomNav
         activeScreen="routine"
         isLandscape={isLandscape}
+        navigation={navigation}
       />
 
     </SafeAreaView>
@@ -356,20 +378,20 @@ const styles = StyleSheet.create({
 
   dayTitle: {
     color: '#FFC107',
-    fontSize: 12,
+    fontSize: 14,
     fontWeight: '700',
   },
 
   dayButton: {
     backgroundColor: '#3A2B0D',
     borderRadius: 12,
-    paddingHorizontal: '2.5%',
-    paddingVertical: '1.3%',
+    paddingHorizontal: '3.5%',
+    paddingVertical: '2%',
   },
 
   dayButtonText: {
     color: '#FFC107',
-    fontSize: 7,
+    fontSize: 10,
     fontWeight: '600',
   },
 
@@ -386,10 +408,10 @@ const styles = StyleSheet.create({
   blockTitle: {
     color: '#FFFFFF',
     backgroundColor: '#292929',
-    fontSize: 9,
+    fontSize: 11,
     fontWeight: '700',
     paddingHorizontal: '3%',
-    paddingVertical: '2%',
+    paddingVertical: '2.5%',
   },
 
 
@@ -416,7 +438,7 @@ const styles = StyleSheet.create({
 
   itemIconText: {
     color: '#FFC107',
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: '700',
   },
 
@@ -426,25 +448,25 @@ const styles = StyleSheet.create({
 
   exerciseName: {
     color: '#FFFFFF',
-    fontSize: 9,
+    fontSize: 11,
     fontWeight: '600',
     marginBottom: 3,
   },
 
   exerciseDetails: {
     color: '#888888',
-    fontSize: 7,
+    fontSize: 10,
   },
 
   comments: {
     color: '#FFC107',
-    fontSize: 7,
+    fontSize: 10,
     marginTop: 3,
   },
 
   restText: {
     color: '#888888',
-    fontSize: 8,
+    fontSize: 11,
   },
 
 

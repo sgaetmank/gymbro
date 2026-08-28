@@ -10,7 +10,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import UserBottomNav from '../components/UserBottomNav';
 import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
 
-export default function UserHomeScreen() {
+export default function UserHomeScreen({ navigation }) {
   const { isLandscape } = useResponsiveLayout();
 
   return (
@@ -84,25 +84,6 @@ export default function UserHomeScreen() {
 
           </View>
 
-
-          {/* PUESTO EN EL GIMNASIO */}
-
-          <View style={styles.statCard}>
-
-            <Text style={styles.statIcon}>
-              ◎
-            </Text>
-
-            <Text style={styles.statNumber}>
-              #12
-            </Text>
-
-            <Text style={styles.statLabel}>
-              Puesto en el gimnasio
-            </Text>
-
-          </View>
-
         </View>
 
 
@@ -152,11 +133,11 @@ export default function UserHomeScreen() {
           <View style={styles.workoutInfo}>
 
             <Text style={styles.workoutTitle}>
-              Sin rutinas
+              Tu rutina
             </Text>
 
             <Text style={styles.workoutSubtitle}>
-              Contacta al entrenador
+              Clickea para ver los ejercicios de tu rutina.
             </Text>
 
           </View>
@@ -166,9 +147,7 @@ export default function UserHomeScreen() {
 
           <TouchableOpacity
             style={styles.trainButton}
-            onPress={() => {
-              
-            }}
+            onPress={() => navigation.navigate('mi_rutina_user')}
           >
 
             <Text style={styles.trainIcon}>
@@ -189,6 +168,7 @@ export default function UserHomeScreen() {
       <UserBottomNav
         activeScreen="home"
         isLandscape={isLandscape}
+        navigation={navigation}
       />
 
     </SafeAreaView>
@@ -270,7 +250,7 @@ const styles = StyleSheet.create({
 
   subtitle: {
     color: '#777777',
-    fontSize: 9,
+    fontSize: 12,
   },
 
 
@@ -280,7 +260,7 @@ const styles = StyleSheet.create({
 
   statsRow: {
     flexDirection: 'row',
-    gap: 8,
+    gap: 12,
     marginBottom: 17,
   },
 
@@ -290,25 +270,25 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: '4%',
-    paddingHorizontal: '2%',
+    paddingVertical: '5%',
+    paddingHorizontal: '3%',
   },
 
   statIcon: {
     color: '#FFC107',
-    fontSize: 21,
+    fontSize: 24,
     marginBottom: 2,
   },
 
   statNumber: {
     color: '#FFFFFF',
-    fontSize: 16,
+    fontSize: 19,
     fontWeight: '700',
   },
 
   statLabel: {
     color: '#888888',
-    fontSize: 7,
+    fontSize: 10,
     marginTop: 2,
     textAlign: 'center',
   },
@@ -320,7 +300,7 @@ const styles = StyleSheet.create({
 
   sectionTitle: {
     color: '#FFFFFF',
-    fontSize: 11,
+    fontSize: 13,
     fontWeight: '700',
     marginBottom: 7,
   },
@@ -333,7 +313,7 @@ const styles = StyleSheet.create({
   progressCard: {
     backgroundColor: '#1D1D1D',
     borderRadius: 8,
-    padding: '3%',
+    padding: '4%',
     flexDirection: 'row',
     alignItems: 'center',
     marginBottom: '4%',
@@ -354,27 +334,27 @@ const styles = StyleSheet.create({
 
   progressTitle: {
     color: '#FFFFFF',
-    fontSize: 10,
+    fontSize: 12,
     fontWeight: '700',
     marginBottom: 4,
   },
 
   progressSubtitle: {
     color: '#777777',
-    fontSize: 7,
-    lineHeight: 10,
+    fontSize: 10,
+    lineHeight: 14,
   },
 
   smallButton: {
     backgroundColor: '#FFC107',
     borderRadius: 18,
-    paddingHorizontal: '3.5%',
-    paddingVertical: '2%',
+    paddingHorizontal: '4.5%',
+    paddingVertical: '3%',
   },
 
   smallButtonText: {
     color: '#111111',
-    fontSize: 8,
+    fontSize: 11,
     fontWeight: '700',
   },
 
@@ -386,8 +366,8 @@ const styles = StyleSheet.create({
   nextWorkoutCard: {
     backgroundColor: '#1D1D1D',
     borderRadius: 8,
-    padding: 11,
-    minHeight: 61,
+    padding: 14,
+    minHeight: 72,
     flexDirection: 'row',
     alignItems: 'center',
   },
@@ -398,21 +378,21 @@ const styles = StyleSheet.create({
 
   workoutTitle: {
     color: '#FFFFFF',
-    fontSize: 10,
+    fontSize: 12,
     fontWeight: '700',
     marginBottom: 4,
   },
 
   workoutSubtitle: {
     color: '#777777',
-    fontSize: 7,
+    fontSize: 10,
   },
 
   trainButton: {
     backgroundColor: '#FFC107',
     borderRadius: 18,
-    paddingHorizontal: '3.5%',
-    paddingVertical: '2%',
+    paddingHorizontal: '4.5%',
+    paddingVertical: '3%',
     flexDirection: 'row',
     alignItems: 'center',
   },
@@ -425,7 +405,7 @@ const styles = StyleSheet.create({
 
   trainButtonText: {
     color: '#111111',
-    fontSize: 8,
+    fontSize: 11,
     fontWeight: '700',
   },
 

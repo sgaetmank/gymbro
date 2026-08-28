@@ -10,7 +10,7 @@ import CustomInput from '../components/CustomInput';
 import PrimaryButton from '../components/PrimaryButton';
 import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
 
-export default function LoginScreen() {
+export default function LoginScreen({ navigation }) {
   const { isLandscape } = useResponsiveLayout();
 
   return (
@@ -100,14 +100,14 @@ const styles = StyleSheet.create({
   },
 
   iconContainer: {
-    width: 42,
-    height: 42,
-    borderRadius: 21,
+    width: 50,
+    height: 50,
+    borderRadius: 25,
     backgroundColor: '#2B2615',
     alignSelf: 'center',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 12,
+    marginBottom: 16,
   },
 
   scrollContent: {
@@ -132,17 +132,17 @@ const styles = StyleSheet.create({
 
   title: {
     color: '#FFFFFF',
-    fontSize: 17,
+    fontSize: 21,
     fontWeight: '700',
     textAlign: 'center',
   },
 
   subtitle: {
     color: '#999999',
-    fontSize: 10,
+    fontSize: 13,
     textAlign: 'center',
     marginTop: 4,
-    marginBottom: 22,
+    marginBottom: 26,
   },
 
   rememberContainer: {
@@ -153,17 +153,17 @@ const styles = StyleSheet.create({
   },
 
   checkbox: {
-    width: 12,
-    height: 12,
+    width: 16,
+    height: 16,
     borderWidth: 1,
     borderColor: '#777777',
     borderRadius: 2,
-    marginRight: 6,
+    marginRight: 8,
   },
 
   rememberText: {
     color: '#999999',
-    fontSize: 9,
+    fontSize: 12,
   },
 
   registerContainer: {
@@ -174,12 +174,12 @@ const styles = StyleSheet.create({
 
   registerText: {
     color: '#777777',
-    fontSize: 9,
+    fontSize: 12,
   },
 
   registerLink: {
     color: '#FFC107',
-    fontSize: 9,
+    fontSize: 12,
     fontWeight: '700',
     marginLeft: 3,
   },

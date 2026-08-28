@@ -11,17 +11,17 @@ export default function PrimaryButton({ title }) {
 const styles = StyleSheet.create({
   button: {
     width: '100%',
-    height: 42,
+    height: 52,
     backgroundColor: '#FFC107',
     borderRadius: 7,
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: 8,
+    marginTop: 10,
   },
 
   text: {
     color: '#111111',
-    fontSize: 12,
+    fontSize: 15,
     fontWeight: '700',
   },
 });

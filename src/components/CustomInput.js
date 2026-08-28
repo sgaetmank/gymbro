@@ -27,23 +27,23 @@ export default function CustomInput({
 const styles = StyleSheet.create({
   container: {
     width: '100%',
-    marginBottom: 14,
+    marginBottom: 16,
   },
 
   label: {
     color: '#FFFFFF',
-    fontSize: 11,
+    fontSize: 14,
     fontWeight: '600',
-    marginBottom: 6,
+    marginBottom: 7,
   },
 
   input: {
     width: '100%',
-    height: 40,
+    height: 52,
     backgroundColor: '#292929',
     borderRadius: 7,
-    paddingHorizontal: 12,
+    paddingHorizontal: 14,
     color: '#FFFFFF',
-    fontSize: 12,
+    fontSize: 15,
   },
 });

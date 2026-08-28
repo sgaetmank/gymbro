@@ -5,7 +5,7 @@ import {
     View,
 } from 'react-native';
 
-export default function UserBottomNav({ activeScreen, isLandscape, navigation }) {
+export default function TrainerBottomNav({ activeScreen, isLandscape, navigation }) {
   return (
     <View
       style={[
@@ -15,77 +15,30 @@ export default function UserBottomNav({ activeScreen, isLandscape, navigation })
     >
       <TouchableOpacity
         style={styles.navItem}
-        onPress={() => navigation.navigate('home_user')}
+        onPress={() => navigation.navigate('buscar_usuario_trainer')}
       >
         <Text
           style={[
             styles.navIcon,
-            activeScreen === 'home' && styles.active,
+            activeScreen === 'search' && styles.active,
           ]}
         >
-          ⌂
+          ⌕
         </Text>
 
         <Text
           style={[
             styles.navText,
-            activeScreen === 'home' && styles.active,
+            activeScreen === 'search' && styles.active,
           ]}
         >
-          Inicio
+          Buscar Usuario
         </Text>
       </TouchableOpacity>
 
       <TouchableOpacity
         style={styles.navItem}
-        onPress={() => navigation.navigate('mi_rutina_user')}
-      >
-        <Text
-          style={[
-            styles.navIcon,
-            activeScreen === 'routine' && styles.active,
-          ]}
-        >
-          ⚒
-        </Text>
-
-        <Text
-          style={[
-            styles.navText,
-            activeScreen === 'routine' && styles.active,
-          ]}
-        >
-          Rutinas
-        </Text>
-      </TouchableOpacity>
-
-
-      <TouchableOpacity
-        style={styles.navItem}
-        onPress={() => navigation.navigate('reloj')}
-      >
-        <Text
-          style={[
-            styles.navIcon,
-            activeScreen === 'clock' && styles.active,
-          ]}
-        >
-          ◷
-        </Text>
-
-        <Text
-          style={[
-            styles.navText,
-            activeScreen === 'clock' && styles.active,
-          ]}
-        >
-          Reloj
-        </Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity
-        style={styles.navItem}
-        onPress={() => navigation.navigate('mi_cuenta_user')}
+        onPress={() => navigation.navigate('mi_cuenta_trainer')}
       >
         <Text
           style={[
@@ -105,7 +58,6 @@ export default function UserBottomNav({ activeScreen, isLandscape, navigation })
           Mi Cuenta
         </Text>
       </TouchableOpacity>
-
     </View>
   );
 }
@@ -133,13 +85,13 @@ const styles = StyleSheet.create({
 
   navIcon: {
     color: '#666666',
-    fontSize: 16,
-    marginBottom: 3,
+    fontSize: 20,
+    marginBottom: 4,
   },
 
   navText: {
     color: '#666666',
-    fontSize: 6.5,
+    fontSize: 10,
   },
 
   active: {

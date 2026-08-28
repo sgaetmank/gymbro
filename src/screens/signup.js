@@ -1,8 +1,8 @@
 import {
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
+    ScrollView,
+    StyleSheet,
+    Text,
+    View,
 } from 'react-native';
 
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -10,7 +10,7 @@ import CustomInput from '../components/CustomInput';
 import PrimaryButton from '../components/PrimaryButton';
 import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
 
-export default function SignUpScreen() {
+export default function SignUpScreen({ navigation }) {
   const { isLandscape } = useResponsiveLayout();
 
   return (
@@ -255,14 +255,14 @@ const styles = StyleSheet.create({
   },
 
   iconContainer: {
-    width: 42,
-    height: 42,
-    borderRadius: 21,
+    width: 50,
+    height: 50,
+    borderRadius: 25,
     backgroundColor: '#2B2615',
     alignSelf: 'center',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 10,
+    marginBottom: 14,
   },
 
   icon: {
@@ -273,17 +273,17 @@ const styles = StyleSheet.create({
 
   title: {
     color: '#FFFFFF',
-    fontSize: 17,
+    fontSize: 21,
     fontWeight: '700',
     textAlign: 'center',
   },
 
   subtitle: {
     color: '#999999',
-    fontSize: 10,
+    fontSize: 13,
     textAlign: 'center',
     marginTop: 4,
-    marginBottom: 18,
+    marginBottom: 22,
   },
 
   section: {
@@ -295,14 +295,14 @@ const styles = StyleSheet.create({
 
   sectionTitle: {
     color: '#FFC107',
-    fontSize: 12,
+    fontSize: 15,
     fontWeight: '700',
     marginBottom: 14,
   },
 
   label: {
     color: '#FFFFFF',
-    fontSize: 10,
+    fontSize: 13,
     fontWeight: '600',
     marginBottom: 6,
   },
@@ -317,13 +317,13 @@ const styles = StyleSheet.create({
   option: {
     backgroundColor: '#292929',
     borderRadius: 15,
-    paddingVertical: 7,
-    paddingHorizontal: 12,
+    paddingVertical: 10,
+    paddingHorizontal: 14,
   },
 
   optionText: {
     color: '#AAAAAA',
-    fontSize: 9,
+    fontSize: 12,
   },
 
   physicalRow: {
@@ -337,7 +337,7 @@ const styles = StyleSheet.create({
   },
 
   smallInput: {
-    height: 40,
+    height: 48,
     backgroundColor: '#292929',
     borderRadius: 7,
     justifyContent: 'center',
@@ -346,6 +346,6 @@ const styles = StyleSheet.create({
 
   placeholder: {
     color: '#777777',
-    fontSize: 11,
+    fontSize: 14,
   },
 });

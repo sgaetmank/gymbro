@@ -1,15 +1,16 @@
 import {
-  ScrollView,
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
+    ScrollView,
+    StyleSheet,
+    Text,
+    TouchableOpacity,
+    View,
 } from 'react-native';
 
 import { SafeAreaView } from 'react-native-safe-area-context';
+import TrainerBottomNav from '../components/TrainerBottomNav';
 import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
 
-export default function UserDataScreen() {
+export default function UserDataScreen({ navigation }) {
   const { isLandscape } = useResponsiveLayout();
 
   return (
@@ -207,6 +208,12 @@ export default function UserDataScreen() {
 
       </ScrollView>
 
+      <TrainerBottomNav
+        activeScreen="search"
+        isLandscape={isLandscape}
+        navigation={navigation}
+      />
+
     </SafeAreaView>
   );
 }
@@ -303,7 +310,7 @@ const styles = StyleSheet.create({
 
   email: {
     color: '#888888',
-    fontSize: 9,
+    fontSize: 12,
     marginTop: 4,
   },
 
@@ -312,7 +319,7 @@ const styles = StyleSheet.create({
 
   title: {
     color: '#FFC107',
-    fontSize: 11,
+    fontSize: 13,
     fontWeight: '700',
     marginBottom: 10,
   },
@@ -336,13 +343,13 @@ const styles = StyleSheet.create({
 
   label: {
     color: '#777777',
-    fontSize: 8,
+    fontSize: 11,
     marginBottom: 4,
   },
 
   value: {
     color: '#FFFFFF',
-    fontSize: 10,
+    fontSize: 13,
     fontWeight: '500',
   },
 
@@ -360,7 +367,7 @@ const styles = StyleSheet.create({
 
   tagText: {
     color: '#FFC107',
-    fontSize: 9,
+    fontSize: 12,
     fontWeight: '600',
   },
 
