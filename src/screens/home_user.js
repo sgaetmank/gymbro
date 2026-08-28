@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 
 import { SafeAreaView } from 'react-native-safe-area-context';
+import UserBottomNav from '../components/UserBottomNav';
 import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
 
 export default function UserHomeScreen() {
@@ -185,102 +186,10 @@ export default function UserHomeScreen() {
       </ScrollView>
 
 
-      {/* ======================================================
-          BARRA DE NAVEGACIÓN INFERIOR
-      ====================================================== */}
-
-      <View
-        style={[
-          styles.bottomNav,
-          isLandscape && styles.bottomNavLandscape,
-        ]}
-      >
-
-        {/* INICIO */}
-
-        <TouchableOpacity
-          style={styles.navItem}
-        >
-
-          <Text style={[styles.navIcon, styles.activeNavIcon]}>
-            ⌂
-          </Text>
-
-          <Text style={[styles.navText, styles.activeNavText]}>
-            Inicio
-          </Text>
-
-        </TouchableOpacity>
-
-
-        {/* RUTINAS */}
-
-        <TouchableOpacity
-          style={styles.navItem}
-        >
-
-          <Text style={styles.navIcon}>
-            ⚒
-          </Text>
-
-          <Text style={styles.navText}>
-            Rutinas
-          </Text>
-
-        </TouchableOpacity>
-
-
-        {/* MI CUENTA */}
-
-        <TouchableOpacity
-          style={styles.navItem}
-        >
-
-          <Text style={styles.navIcon}>
-            ♙
-          </Text>
-
-          <Text style={styles.navText}>
-            Mi Cuenta
-          </Text>
-
-        </TouchableOpacity>
-
-
-        {/* RELOJ */}
-
-        <TouchableOpacity
-          style={styles.navItem}
-        >
-
-          <Text style={styles.navIcon}>
-            ◷
-          </Text>
-
-          <Text style={styles.navText}>
-            Reloj
-          </Text>
-
-        </TouchableOpacity>
-
-
-        {/* EXPLORAR */}
-
-        <TouchableOpacity
-          style={styles.navItem}
-        >
-
-          <Text style={styles.navIcon}>
-            ▣
-          </Text>
-
-          <Text style={styles.navText}>
-            Explorar
-          </Text>
-
-        </TouchableOpacity>
-
-      </View>
+      <UserBottomNav
+        activeScreen="home"
+        isLandscape={isLandscape}
+      />
 
     </SafeAreaView>
   );
@@ -520,48 +429,5 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
 
-
-  /* ==========================================================
-     BARRA DE NAVEGACIÓN
-  ========================================================== */
-
-  bottomNav: {
-    minHeight: '8%',
-    backgroundColor: '#1D1D1D',
-    borderTopWidth: 1,
-    borderTopColor: '#292929',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-around',
-  },
-
-  bottomNavLandscape: {
-    minHeight: 56,
-  },
-
-  navItem: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-
-  navIcon: {
-    color: '#666666',
-    fontSize: 16,
-    marginBottom: 3,
-  },
-
-  navText: {
-    color: '#666666',
-    fontSize: 6.5,
-  },
-
-  activeNavIcon: {
-    color: '#FFC107',
-  },
-
-  activeNavText: {
-    color: '#FFC107',
-  },
 
 });

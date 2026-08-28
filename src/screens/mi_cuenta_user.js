@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 
 import { SafeAreaView } from 'react-native-safe-area-context';
+import UserBottomNav from '../components/UserBottomNav';
 import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
 
 export default function UserProfileScreen() {
@@ -204,41 +205,7 @@ export default function UserProfileScreen() {
       </ScrollView>
 
 
-      {/* NAVEGACIÓN INFERIOR */}
-
-      <View style={styles.bottomNav}>
-
-        <TouchableOpacity style={styles.navItem}>
-          <Text style={styles.navIcon}>⌂</Text>
-          <Text style={styles.navText}>Inicio</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.navItem}>
-          <Text style={styles.navIcon}>⚒</Text>
-          <Text style={styles.navText}>Rutinas</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.navItem}>
-          <Text style={[styles.navIcon, styles.active]}>
-            ♙
-          </Text>
-
-          <Text style={[styles.navText, styles.active]}>
-            Mi Cuenta
-          </Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.navItem}>
-          <Text style={styles.navIcon}>◷</Text>
-          <Text style={styles.navText}>Reloj</Text>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={styles.navItem}>
-          <Text style={styles.navIcon}>▣</Text>
-          <Text style={styles.navText}>Explorar</Text>
-        </TouchableOpacity>
-
-      </View>
+      <UserBottomNav activeScreen="account" />
 
     </SafeAreaView>
   );
@@ -417,38 +384,5 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
 
-
-  /* NAVEGACIÓN */
-
-  bottomNav: {
-    minHeight: '8%',
-    backgroundColor: '#1D1D1D',
-    borderTopWidth: 1,
-    borderTopColor: '#292929',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-around',
-  },
-
-  navItem: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-
-  navIcon: {
-    color: '#666666',
-    fontSize: 16,
-    marginBottom: 3,
-  },
-
-  navText: {
-    color: '#666666',
-    fontSize: 6.5,
-  },
-
-  active: {
-    color: '#FFC107',
-  },
 
 });

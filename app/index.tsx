@@ -1,11 +1,11 @@
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
-import UserRoutineScreen from '../src/screens/mi_rutina_user';
+import UserProfileScreen from '../src/screens/mi_cuenta_user';
 
 export default function App() {
   return (
     <SafeAreaProvider>
-      <UserRoutineScreen />
+      <UserProfileScreen />
     </SafeAreaProvider>
   );
 }

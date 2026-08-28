@@ -12,6 +12,7 @@ import {
 import { VideoView, useVideoPlayer } from 'expo-video';
 
 import { SafeAreaView } from 'react-native-safe-area-context';
+import UserBottomNav from '../components/UserBottomNav';
 import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
 
 function ExerciseVideo({ video }) {
@@ -376,6 +377,11 @@ const closeModal = () => {
         </View>
 
     </Modal>
+
+    <UserBottomNav
+      activeScreen="routine"
+      isLandscape={isLandscape}
+    />
 
     </SafeAreaView>
   );

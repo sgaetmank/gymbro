@@ -7,6 +7,7 @@ import {
 } from 'react-native';
 
 import { SafeAreaView } from 'react-native-safe-area-context';
+import UserBottomNav from '../components/UserBottomNav';
 import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
 
 export default function UserRoutineScreen() {
@@ -267,70 +268,10 @@ export default function UserRoutineScreen() {
       </ScrollView>
 
 
-      {/* NAVEGACIÓN INFERIOR */}
-
-      <View
-        style={[
-          styles.bottomNav,
-          isLandscape && styles.bottomNavLandscape,
-        ]}
-      >
-
-        <TouchableOpacity style={styles.navItem}>
-          <Text style={styles.navIcon}>
-            ⌂
-          </Text>
-
-          <Text style={styles.navText}>
-            Inicio
-          </Text>
-        </TouchableOpacity>
-
-
-        <TouchableOpacity style={styles.navItem}>
-          <Text style={[styles.navIcon, styles.active]}>
-            ⚒
-          </Text>
-
-          <Text style={[styles.navText, styles.active]}>
-            Rutinas
-          </Text>
-        </TouchableOpacity>
-
-
-        <TouchableOpacity style={styles.navItem}>
-          <Text style={styles.navIcon}>
-            ♙
-          </Text>
-
-          <Text style={styles.navText}>
-            Mi Cuenta
-          </Text>
-        </TouchableOpacity>
-
-
-        <TouchableOpacity style={styles.navItem}>
-          <Text style={styles.navIcon}>
-            ◷
-          </Text>
-
-          <Text style={styles.navText}>
-            Reloj
-          </Text>
-        </TouchableOpacity>
-
-
-        <TouchableOpacity style={styles.navItem}>
-          <Text style={styles.navIcon}>
-            ▣
-          </Text>
-
-          <Text style={styles.navText}>
-            Explorar
-          </Text>
-        </TouchableOpacity>
-
-      </View>
+      <UserBottomNav
+        activeScreen="routine"
+        isLandscape={isLandscape}
+      />
 
     </SafeAreaView>
   );
@@ -506,42 +447,5 @@ const styles = StyleSheet.create({
     fontSize: 8,
   },
 
-
-  /* NAVEGACIÓN */
-
-  bottomNav: {
-    minHeight: '8%',
-    backgroundColor: '#1D1D1D',
-    borderTopWidth: 1,
-    borderTopColor: '#292929',
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-around',
-  },
-
-  bottomNavLandscape: {
-    minHeight: 56,
-  },
-
-  navItem: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-
-  navIcon: {
-    color: '#666666',
-    fontSize: 16,
-    marginBottom: 3,
-  },
-
-  navText: {
-    color: '#666666',
-    fontSize: 6.5,
-  },
-
-  active: {
-    color: '#FFC107',
-  },
 
 });
