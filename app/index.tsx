@@ -21,8 +21,9 @@ export default function App() {
     <SafeAreaProvider>
       <NavigationContainer>
         <Stack.Navigator screenOptions={{ headerShown: false }}>
-            <Stack.Screen name="home_user" component={UserHomeScreen} />
             <Stack.Screen name="buscar_usuario_trainer" component={SearchUserScreen} />
+            <Stack.Screen name="home_user" component={UserHomeScreen} />
+            
             
           
           <Stack.Screen name="editar_rutina_trainer" component={EditRoutineScreen} />

@@ -11,89 +11,18 @@ import {
 
 import { SafeAreaView } from 'react-native-safe-area-context';
 import TrainerBottomNav from '../components/TrainerBottomNav';
+import { getRoutineById } from '../data/routines';
 import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
 
-export default function EditRoutineScreen({ navigation }) {
+export default function EditRoutineScreen({ navigation, route }) {
   const { isLandscape } = useResponsiveLayout();
+  const routine = getRoutineById(route?.params?.user?.routineId);
 
   // ============================================================
   // DATOS INICIALES DE EJEMPLO
   // ============================================================
 
-  const [days, setDays] = useState([
-    {
-      id: 1,
-      name: 'Día 1',
-      blocks: [
-        {
-          id: 1,
-          name: 'Bloque 1',
-          items: [
-            {
-              id: 1,
-              type: 'exercise',
-              name: 'Curva lateral de 45°',
-              series: '4',
-              repetitions: '10',
-              weight: '0 kg',
-              comments: '',
-            },
-            {
-              id: 2,
-              type: 'rest',
-              time: '1',
-              unit: 'minutos',
-            },
-          ],
-        },
-        {
-          id: 2,
-          name: 'Bloque 2',
-          items: [
-            {
-              id: 3,
-              type: 'exercise',
-              name: 'Estiramiento del equipo a cuatro patas',
-              series: '2',
-              repetitions: '2',
-              weight: '2 kg',
-              comments: '',
-            },
-          ],
-        },
-      ],
-    },
-    {
-      id: 2,
-      name: 'Día 2',
-      blocks: [
-        {
-          id: 3,
-          name: 'Bloque 1',
-          items: [
-            {
-              id: 4,
-              type: 'exercise',
-              name: 'Bicicleta de aire',
-              series: '2',
-              repetitions: '33 reps',
-              weight: '1 kg',
-              comments: 'Nota: 33 por lado',
-            },
-            {
-              id: 5,
-              type: 'exercise',
-              name: 'Jalón lateral alternativo',
-              series: '4',
-              repetitions: '22 reps',
-              weight: '5 kg',
-              comments: '',
-            },
-          ],
-        },
-      ],
-    },
-  ]);
+  const [days, setDays] = useState(routine.days);
 
   // ============================================================
   // ESTADOS DE LOS MODALES
@@ -524,19 +453,6 @@ const moveItem = (dayId, blockId, itemId, direction) => {
           Editar
         </Text>
 
-        <View style={styles.headerSpacer} />
-
-        <TouchableOpacity
-          style={[
-            styles.saveButton,
-            isLandscape && styles.saveButtonLandscape,
-          ]}
-        >
-          <Text style={styles.saveIcon}>
-            ▣
-          </Text>
-        </TouchableOpacity>
-
       </View>
 
 
@@ -558,12 +474,6 @@ const moveItem = (dayId, blockId, itemId, direction) => {
           <Text style={styles.routineTitle}>
             Rutina de Sol
           </Text>
-
-          <View style={styles.unsavedBadge}>
-            <Text style={styles.unsavedText}>
-              Cambios sin guardar
-            </Text>
-          </View>
 
         </View>
 
@@ -1349,29 +1259,6 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
   },
 
-  headerSpacer: {
-    flex: 1,
-  },
-
-  saveButton: {
-    width: 40,
-    height: 40,
-    backgroundColor: '#FFC107',
-    borderRadius: 6,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-
-  saveButtonLandscape: {
-    width: 36,
-    height: 36,
-  },
-
-  saveIcon: {
-    color: '#111111',
-    fontSize: 15,
-  },
-
 
   /* ==============================================================
      TÍTULO
@@ -1388,19 +1275,6 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '700',
     flex: 1,
-  },
-
-  unsavedBadge: {
-    backgroundColor: '#D63E3E',
-    borderRadius: 3,
-    paddingHorizontal: 6,
-    paddingVertical: 4,
-  },
-
-  unsavedText: {
-    color: '#FFFFFF',
-    fontSize: 9,
-    fontWeight: '700',
   },
 
 

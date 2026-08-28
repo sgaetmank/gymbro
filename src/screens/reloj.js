@@ -16,16 +16,19 @@ export default function StopwatchScreen({ navigation }) {
 	const [elapsedTime, setElapsedTime] = useState(0);
 	const [isRunning, setIsRunning] = useState(false);
 
+    /* useEffect se ejecuta cuando ocurre algun cambio en el componente isRunning */
 	useEffect(() => {
+        /* si se esta ejecutando, no modifica nada */
 		if (!isRunning) {
 			return undefined;
 		}
 
+        /* setInterval definido con 1000 hace que la funcion setElapsedTime se ejecute cada segundo, agregando un seg a elapsedTime */
 		const interval = setInterval(() => {
 			setElapsedTime((currentTime) => currentTime + 1000);
 		}, 1000);
 
-		return () => clearInterval(interval);
+		return () => clearInterval(interval); /* cuando isRunning es false se frena la ejecucuin del intervalo cada 1 segundo */
 	}, [isRunning]);
 
 	const minutes = Math.floor(elapsedTime / 60000);

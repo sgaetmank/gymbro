@@ -1,17 +1,18 @@
 import {
-    ScrollView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 
 import { SafeAreaView } from 'react-native-safe-area-context';
 import TrainerBottomNav from '../components/TrainerBottomNav';
 import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
 
-export default function UserDataScreen({ navigation }) {
+export default function UserDataScreen({ navigation, route }) {
   const { isLandscape } = useResponsiveLayout();
+  const user = route?.params?.user;
 
   return (
     <SafeAreaView style={styles.container}>
@@ -25,7 +26,7 @@ export default function UserDataScreen({ navigation }) {
         ]}
       >
 
-        <TouchableOpacity>
+        <TouchableOpacity onPress={() => navigation.navigate('buscar_usuario_trainer')}>
           <Text style={styles.backIcon}>‹</Text>
         </TouchableOpacity>
 
@@ -53,17 +54,17 @@ export default function UserDataScreen({ navigation }) {
 
           <View style={styles.avatar}>
             <Text style={styles.avatarText}>
-              SG
+              {user?.initials || '--'}
             </Text>
           </View>
 
           <View>
             <Text style={styles.name}>
-              Sol Gaetmank
+              {user ? `${user.firstName} ${user.lastName}` : 'Sin usuario seleccionado'}
             </Text>
 
             <Text style={styles.email}>
-              solgaetmank@gmail.com
+              {user?.email || '-'}
             </Text>
           </View>
 
@@ -81,24 +82,24 @@ export default function UserDataScreen({ navigation }) {
           <View style={styles.row}>
             <View style={styles.box}>
               <Text style={styles.label}>Nombre</Text>
-              <Text style={styles.value}>Sol</Text>
+              <Text style={styles.value}>{user?.firstName || '-'}</Text>
             </View>
 
             <View style={styles.box}>
               <Text style={styles.label}>Apellido</Text>
-              <Text style={styles.value}>Gaetmank</Text>
+              <Text style={styles.value}>{user?.lastName || '-'}</Text>
             </View>
           </View>
 
           <View style={styles.row}>
             <View style={styles.box}>
               <Text style={styles.label}>DNI</Text>
-              <Text style={styles.value}>12345678</Text>
+              <Text style={styles.value}>{user?.dni || '-'}</Text>
             </View>
 
             <View style={styles.box}>
               <Text style={styles.label}>Género</Text>
-              <Text style={styles.value}>Femenino</Text>
+              <Text style={styles.value}>{user?.gender || '-'}</Text>
             </View>
           </View>
 
@@ -117,17 +118,17 @@ export default function UserDataScreen({ navigation }) {
 
             <View style={styles.box}>
               <Text style={styles.label}>Edad</Text>
-              <Text style={styles.value}>23 años</Text>
+              <Text style={styles.value}>{user?.age || '-'}</Text>
             </View>
 
             <View style={styles.box}>
               <Text style={styles.label}>Peso</Text>
-              <Text style={styles.value}>70.5 kg</Text>
+              <Text style={styles.value}>{user?.weight || '-'}</Text>
             </View>
 
             <View style={styles.box}>
               <Text style={styles.label}>Altura</Text>
-              <Text style={styles.value}>175 cm</Text>
+              <Text style={styles.value}>{user?.height || '-'}</Text>
             </View>
 
           </View>
@@ -149,7 +150,7 @@ export default function UserDataScreen({ navigation }) {
             </Text>
 
             <Text style={styles.value}>
-              1123456789
+              {user?.phone || '-'}
             </Text>
           </View>
 
@@ -159,7 +160,7 @@ export default function UserDataScreen({ navigation }) {
             </Text>
 
             <Text style={styles.value}>
-              1122344556
+              {user?.emergencyPhone || '-'}
             </Text>
           </View>
 
@@ -169,7 +170,7 @@ export default function UserDataScreen({ navigation }) {
             </Text>
 
             <Text style={styles.value}>
-              OSDE
+              {user?.healthInsurance || '-'}
             </Text>
           </View>
 
@@ -179,7 +180,7 @@ export default function UserDataScreen({ navigation }) {
             </Text>
 
             <Text style={styles.value}>
-              Ninguna registrada
+              {user?.contraindications || '-'}
             </Text>
           </View>
 
@@ -200,7 +201,7 @@ export default function UserDataScreen({ navigation }) {
 
           <View style={styles.tag}>
             <Text style={styles.tagText}>
-              Ganar fuerza
+              {user?.goal || '-'}
             </Text>
           </View>
 

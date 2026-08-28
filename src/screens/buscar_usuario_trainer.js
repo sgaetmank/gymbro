@@ -23,6 +23,19 @@ export default function SearchUserScreen({ navigation }) {
       email: 'entrenadormaniana@gmail.com',
       initials: 'EM',
       isTrainer: true,
+      routineId: 1,
+      firstName: 'Entrenador',
+      lastName: 'Mañana',
+      dni: '30123456',
+      gender: 'Masculino',
+      age: '32 años',
+      weight: '82 kg',
+      height: '180 cm',
+      phone: '3794112233',
+      emergencyPhone: '3794112244',
+      healthInsurance: 'OSDE',
+      contraindications: 'Ninguna registrada',
+      goal: 'Ganar fuerza',
     },
     {
       id: 2,
@@ -30,6 +43,19 @@ export default function SearchUserScreen({ navigation }) {
       email: 'solgaetmank@gmail.com',
       initials: 'SG',
       isTrainer: false,
+      routineId: 1,
+      firstName: 'Sol',
+      lastName: 'Gaetmank',
+      dni: '44363966',
+      gender: 'Femenino',
+      age: '23 años',
+      weight: '75.5 kg',
+      height: '160 cm',
+      phone: '3794033628',
+      emergencyPhone: '3794033620',
+      healthInsurance: '-',
+      contraindications: 'Ninguna',
+      goal: 'Tonificar',
     },
     {
       id: 3,
@@ -37,6 +63,19 @@ export default function SearchUserScreen({ navigation }) {
       email: 'luciafernandez@gmail.com',
       initials: 'LF',
       isTrainer: false,
+      routineId: 1,
+      firstName: 'Lucía',
+      lastName: 'Fernández',
+      dni: '42123456',
+      gender: 'Femenino',
+      age: '26 años',
+      weight: '64 kg',
+      height: '168 cm',
+      phone: '3794223344',
+      emergencyPhone: '3794223355',
+      healthInsurance: 'Swiss Medical',
+      contraindications: 'Lesión leve en rodilla',
+      goal: 'Bajar de peso',
     },
     {
       id: 4,
@@ -44,6 +83,19 @@ export default function SearchUserScreen({ navigation }) {
       email: 'martinrodriguez@gmail.com',
       initials: 'MR',
       isTrainer: false,
+      routineId: 1,
+      firstName: 'Martín',
+      lastName: 'Rodríguez',
+      dni: '39876543',
+      gender: 'Masculino',
+      age: '29 años',
+      weight: '88 kg',
+      height: '182 cm',
+      phone: '3794334455',
+      emergencyPhone: '3794334466',
+      healthInsurance: 'Medifé',
+      contraindications: 'Ninguna',
+      goal: 'Ganar fuerza',
     },
     {
       id: 5,
@@ -51,6 +103,19 @@ export default function SearchUserScreen({ navigation }) {
       email: 'entrenadortarde@gmail.com',
       initials: 'ET',
       isTrainer: true,
+      routineId: 1,
+      firstName: 'Entrenador',
+      lastName: 'Tarde',
+      dni: '28987654',
+      gender: 'Masculino',
+      age: '35 años',
+      weight: '90 kg',
+      height: '185 cm',
+      phone: '3794556677',
+      emergencyPhone: '3794556688',
+      healthInsurance: 'OSDE',
+      contraindications: 'Ninguna registrada',
+      goal: 'Mantener masa muscular',
     },
   ];
 
@@ -157,6 +222,7 @@ export default function SearchUserScreen({ navigation }) {
                     <TouchableOpacity
                       style={styles.dataButton}
                       activeOpacity={0.8}
+                      onPress={() => navigation.navigate('ver_datos_trainer', { user })}
                     >
                       <Text style={styles.dataIcon}>
                         ♙
@@ -170,6 +236,7 @@ export default function SearchUserScreen({ navigation }) {
                     <TouchableOpacity
                       style={styles.routineButton}
                       activeOpacity={0.8}
+                      onPress={() => navigation.navigate('editar_rutina_trainer', { user })}
                     >
                       <Text style={styles.routineIcon}>
                         ✎
