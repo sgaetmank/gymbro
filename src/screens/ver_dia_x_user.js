@@ -9,27 +9,10 @@ import {
   View
 } from 'react-native';
 
-import { VideoView, useVideoPlayer } from 'expo-video';
-
 import { SafeAreaView } from 'react-native-safe-area-context';
+import ExerciseVideo from '../components/ExerciseVideo';
 import UserBottomNav from '../components/UserBottomNav';
 import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
-
-function ExerciseVideo({ video }) {
-
-  const player = useVideoPlayer(video, (player) => {
-    player.loop = false;
-    player.play();
-  });
-
-  return (
-    <VideoView
-      player={player}
-      style={styles.video}
-      nativeControls
-    />
-  );
-}
 
 export default function UserDayScreen() {
   const { isLandscape } = useResponsiveLayout();
@@ -309,7 +292,6 @@ const closeModal = () => {
             visible={modalVisible}
             transparent={true}
             animationType="fade"
-            onRequestClose={closeModal}
         >
 
         <View style={styles.modalBackground}>
@@ -320,14 +302,6 @@ const closeModal = () => {
                 isLandscape && styles.modalLandscape,
               ]}
             >
-
-            {/* TÍTULO */}
-
-            <Text style={styles.modalTitle}>
-                {modalType === 'video'
-                ? 'Ver ejercicio'
-                : 'Instrucciones'}
-            </Text>
 
 
             {/* CONTENIDO */}
@@ -576,12 +550,11 @@ const styles = StyleSheet.create({
   },
 
    /* MODAL */
-  modal: {
-    width: '100%',
-    maxHeight: '80%',
-    backgroundColor: '#1D1D1D',
-    borderRadius: 10,
-    padding: '4%',
+  modalBackground: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: 'rgba(0, 0, 0, 0.8)',
   },
 
   modal: {
@@ -589,7 +562,7 @@ const styles = StyleSheet.create({
     maxHeight: '80%',
     backgroundColor: '#1D1D1D',
     borderRadius: 10,
-    padding: 15,
+    padding: '4%',
   },
 
   modalLandscape: {
@@ -609,15 +582,6 @@ const styles = StyleSheet.create({
     fontSize: 11,
     fontWeight: '600',
     marginBottom: 10,
-  },
-
-  /* VIDEO */
-
-  video: {
-    width: '100%',
-    aspectRatio: 16 / 9,   // reemplaza el height: 200 fijo
-    backgroundColor: '#000000',
-    borderRadius: 7,
   },
 
   /* INSTRUCCIONES */

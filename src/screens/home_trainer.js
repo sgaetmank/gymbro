@@ -21,7 +21,6 @@ export default function HomeTrainerScreen() {
           isLandscape && styles.headerLandscape,
         ]}
       >
-        <Text style={styles.backIcon}>‹</Text>
 
         <Text style={styles.headerTitle}>
           Panel de Entrenador
@@ -102,13 +101,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     paddingHorizontal: '4%',
-  },
-
-  backIcon: {
-    color: '#FFFFFF',
-    fontSize: 27,
-    marginRight: 12,
-    fontWeight: '300',
   },
 
   headerTitle: {
