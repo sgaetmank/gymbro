@@ -17,7 +17,7 @@ import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
 
 export default function EditRoutineScreen({ navigation, route }) {
   const { isLandscape } = useResponsiveLayout();
-  const routine = getRoutineById(route?.params?.user?.routineId);
+  const routine = getRoutineById(route?.params?.user?.id_rutina);
 
   // Saca tildes/acentos para que la búsqueda no dependa de escribirlos bien
   const normalizar = (texto) =>

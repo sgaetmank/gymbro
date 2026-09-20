@@ -10,6 +10,7 @@ import {
 
 import { SafeAreaView } from 'react-native-safe-area-context';
 import TrainerBottomNav from '../components/TrainerBottomNav';
+import { users } from '../data/users';
 import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
 
 export default function SearchUserScreen({ navigation }) {
@@ -21,110 +22,6 @@ export default function SearchUserScreen({ navigation }) {
       .normalize('NFD')
       .replace(/[̀-ͯ]/g, '')
       .toLowerCase();
-
-  // Usuarios de ejemplo
-  const users = [
-    {
-      id: 1,
-      name: 'Entrenador Mañana',
-      email: 'entrenadormaniana@gmail.com',
-      initials: 'EM',
-      isTrainer: true,
-      routineId: 2,
-      firstName: 'Entrenador',
-      lastName: 'Mañana',
-      dni: '30123456',
-      gender: 'Masculino',
-      age: '32 años',
-      weight: '82 kg',
-      height: '180 cm',
-      phone: '3794112233',
-      emergencyPhone: '3794112244',
-      healthInsurance: 'OSDE',
-      contraindications: 'Ninguna registrada',
-      goal: 'Ganar fuerza',
-    },
-    {
-      id: 2,
-      name: 'Sol Gaetmank',
-      email: 'solgaetmank@gmail.com',
-      initials: 'SG',
-      isTrainer: false,
-      routineId: 1,
-      firstName: 'Sol',
-      lastName: 'Gaetmank',
-      dni: '44363966',
-      gender: 'Femenino',
-      age: '23 años',
-      weight: '75.5 kg',
-      height: '160 cm',
-      phone: '3794033628',
-      emergencyPhone: '3794033620',
-      healthInsurance: '-',
-      contraindications: 'Ninguna',
-      goal: 'Tonificar',
-    },
-    {
-      id: 3,
-      name: 'Lucía Fernández',
-      email: 'luciafernandez@gmail.com',
-      initials: 'LF',
-      isTrainer: false,
-      routineId: 3,
-      firstName: 'Lucía',
-      lastName: 'Fernández',
-      dni: '42123456',
-      gender: 'Femenino',
-      age: '26 años',
-      weight: '64 kg',
-      height: '168 cm',
-      phone: '3794223344',
-      emergencyPhone: '3794223355',
-      healthInsurance: 'Swiss Medical',
-      contraindications: 'Lesión leve en rodilla',
-      goal: 'Bajar de peso',
-    },
-    {
-      id: 4,
-      name: 'Martín Rodríguez',
-      email: 'martinrodriguez@gmail.com',
-      initials: 'MR',
-      isTrainer: false,
-      routineId: 4,
-      firstName: 'Martín',
-      lastName: 'Rodríguez',
-      dni: '39876543',
-      gender: 'Masculino',
-      age: '29 años',
-      weight: '88 kg',
-      height: '182 cm',
-      phone: '3794334455',
-      emergencyPhone: '3794334466',
-      healthInsurance: 'Medifé',
-      contraindications: 'Ninguna',
-      goal: 'Ganar fuerza',
-    },
-    {
-      id: 5,
-      name: 'Entrenador Tarde',
-      email: 'entrenadortarde@gmail.com',
-      initials: 'ET',
-      isTrainer: true,
-      routineId: 5,
-      firstName: 'Entrenador',
-      lastName: 'Tarde',
-      dni: '28987654',
-      gender: 'Masculino',
-      age: '35 años',
-      weight: '90 kg',
-      height: '185 cm',
-      phone: '3794556677',
-      emergencyPhone: '3794556688',
-      healthInsurance: 'OSDE',
-      contraindications: 'Ninguna registrada',
-      goal: 'Mantener masa muscular',
-    },
-  ];
 
   // Usuario actualmente seleccionado
   const [selectedUser, setSelectedUser] = useState(null);
