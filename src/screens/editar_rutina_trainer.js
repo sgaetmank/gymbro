@@ -11,12 +11,20 @@ import {
 
 import { SafeAreaView } from 'react-native-safe-area-context';
 import TrainerBottomNav from '../components/TrainerBottomNav';
+import { exercises } from '../data/exercises';
 import { getRoutineById } from '../data/routines';
 import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
 
 export default function EditRoutineScreen({ navigation, route }) {
   const { isLandscape } = useResponsiveLayout();
   const routine = getRoutineById(route?.params?.user?.routineId);
+
+  // Saca tildes/acentos para que la búsqueda no dependa de escribirlos bien
+  const normalizar = (texto) =>
+    texto
+      .normalize('NFD')
+      .replace(/[̀-ͯ]/g, '')
+      .toLowerCase();
 
   // ============================================================
   // DATOS INICIALES DE EJEMPLO
@@ -106,6 +114,13 @@ export default function EditRoutineScreen({ navigation, route }) {
 
     setExerciseModalVisible(true);
   };
+
+  // Ejercicios que coinciden con lo buscado (nombre o grupo muscular), sin importar tildes
+  const ejerciciosFiltrados = exercises.filter((exercise) =>
+    normalizar(`${exercise.name} ${exercise.muscleGroup}`).includes(
+      normalizar(exerciseName)
+    )
+  ).slice(0, 5);
 
   // ============================================================
   // ABRIR MODAL DE DESCANSO
@@ -927,6 +942,11 @@ const moveItem = (dayId, blockId, itemId, direction) => {
             </View>
 
 
+            <ScrollView
+              keyboardShouldPersistTaps="handled"
+              showsVerticalScrollIndicator={false}
+            >
+
             {/* BUSCADOR */}
 
             <TextInput
@@ -946,47 +966,20 @@ const moveItem = (dayId, blockId, itemId, direction) => {
                 Ejercicios sugeridos
               </Text>
 
-              <TouchableOpacity
-                onPress={() =>
-                  setExerciseName('3/4 abdominales')
-                }
-              >
-                <Text style={styles.suggestion}>
-                  3/4 abdominales
-                </Text>
+              {ejerciciosFiltrados.map((exercise) => (
+                <TouchableOpacity
+                  key={exercise.id}
+                  onPress={() => setExerciseName(exercise.name)}
+                >
+                  <Text style={styles.suggestion}>
+                    {exercise.name}
+                  </Text>
 
-                <Text style={styles.suggestionCategory}>
-                  Abdomen
-                </Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                onPress={() =>
-                  setExerciseName('Curva lateral de 45°')
-                }
-              >
-                <Text style={styles.suggestion}>
-                  Curva lateral de 45°
-                </Text>
-
-                <Text style={styles.suggestionCategory}>
-                  Abdomen
-                </Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                onPress={() =>
-                  setExerciseName('Bicicleta de aire')
-                }
-              >
-                <Text style={styles.suggestion}>
-                  Bicicleta de aire
-                </Text>
-
-                <Text style={styles.suggestionCategory}>
-                  Abdomen
-                </Text>
-              </TouchableOpacity>
+                  <Text style={styles.suggestionCategory}>
+                    {exercise.muscleGroup}
+                  </Text>
+                </TouchableOpacity>
+              ))}
 
             </View>
 
@@ -1054,6 +1047,8 @@ const moveItem = (dayId, blockId, itemId, direction) => {
                 Añadir a la rutina
               </Text>
             </TouchableOpacity>
+
+            </ScrollView>
 
           </View>
 
