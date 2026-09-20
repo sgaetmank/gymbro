@@ -2,6 +2,7 @@ import {
   ScrollView,
   StyleSheet,
   Text,
+  TouchableOpacity,
   View,
 } from 'react-native';
 
@@ -70,9 +71,11 @@ export default function LoginScreen({ navigation }) {
             ¿No tienes cuenta?
           </Text>
 
-          <Text style={styles.registerLink}>
-            Regístrate
-          </Text>
+          <TouchableOpacity onPress={() => navigation.navigate('signup')}>
+            <Text style={styles.registerLink}>
+              Regístrate
+            </Text>
+          </TouchableOpacity>
         </View>
 
       </View>

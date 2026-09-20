@@ -21,11 +21,13 @@ export default function App() {
     <SafeAreaProvider>
       <NavigationContainer>
         <Stack.Navigator screenOptions={{ headerShown: false }}>
+            <Stack.Screen name="buscar_usuario_trainer" component={SearchUserScreen} />
+            <Stack.Screen name="editar_rutina_trainer" component={EditRoutineScreen} />
             <Stack.Screen name="mi_cuenta_trainer" component={TrainerProfileScreen} />
             <Stack.Screen name="mi_rutina_user" component={UserRoutineScreen} />
-            <Stack.Screen name="buscar_usuario_trainer" component={SearchUserScreen} />
+            
             <Stack.Screen name="home_user" component={UserHomeScreen} />
-            <Stack.Screen name="editar_rutina_trainer" component={EditRoutineScreen} />
+            
             
           
           

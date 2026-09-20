@@ -15,6 +15,13 @@ import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
 export default function SearchUserScreen({ navigation }) {
   const { isLandscape } = useResponsiveLayout();
 
+  // Saca tildes/acentos para que la búsqueda no dependa de escribirlos bien
+  const normalizar = (texto) =>
+    texto
+      .normalize('NFD')
+      .replace(/[̀-ͯ]/g, '')
+      .toLowerCase();
+
   // Usuarios de ejemplo
   const users = [
     {
@@ -122,6 +129,19 @@ export default function SearchUserScreen({ navigation }) {
   // Usuario actualmente seleccionado
   const [selectedUser, setSelectedUser] = useState(null);
 
+  // Texto escrito en el buscador
+  const [filtro, setFiltro] = useState('');
+
+  // Usuarios que coinciden con lo escrito (nombre, apellido o email), sin importar tildes.
+  // Se excluyen los entrenadores: esta pantalla es solo para buscar usuarios.
+  const usuariosFiltrados = users
+    .filter((user) => !user.isTrainer)
+    .filter((user) =>
+      normalizar(`${user.firstName} ${user.lastName} ${user.email}`).includes(
+        normalizar(filtro)
+      )
+    );
+
   return (
     <SafeAreaView style={styles.container}>
 
@@ -158,6 +178,8 @@ export default function SearchUserScreen({ navigation }) {
             style={styles.searchInput}
             placeholder="Buscar por nombre, apellido o email..."
             placeholderTextColor="#777777"
+            value={filtro}
+            onChangeText={setFiltro}
           />
 
         </View>
@@ -168,7 +190,7 @@ export default function SearchUserScreen({ navigation }) {
           contentContainerStyle={styles.list}
         >
 
-          {users.map((user) => {
+          {usuariosFiltrados.map((user) => {
 
             const isSelected = selectedUser === user.id;
 
@@ -198,14 +220,6 @@ export default function SearchUserScreen({ navigation }) {
                     <Text style={styles.userName}>
                       {user.name}
                     </Text>
-
-                    {user.isTrainer && (
-                      <View style={styles.trainerBadge}>
-                        <Text style={styles.trainerText}>
-                          ENTRENADOR
-                        </Text>
-                      </View>
-                    )}
 
                   </View>
 
@@ -415,22 +429,6 @@ const styles = StyleSheet.create({
     color: '#858585',
     fontSize: 11,
     marginTop: 3,
-  },
-
-  /* ETIQUETA ENTRENADOR */
-
-  trainerBadge: {
-    backgroundColor: '#3A2B0D',
-    borderRadius: 3,
-    paddingHorizontal: '2%',
-    paddingVertical: '1%',
-    marginLeft: '2%',
-  },
-
-  trainerText: {
-    color: '#FFC107',
-    fontSize: 10,
-    fontWeight: '800',
   },
 
   /* BOTONES */
