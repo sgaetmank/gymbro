@@ -8,6 +8,7 @@ import {
 
 import { SafeAreaView } from 'react-native-safe-area-context';
 import UserBottomNav from '../components/UserBottomNav';
+import { getExerciseById } from '../data/exercises';
 import { getRoutineById } from '../data/routines';
 import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
 
@@ -137,7 +138,7 @@ export default function UserRoutineScreen({ navigation }) {
 
                         <>
                           <Text style={styles.exerciseName}>
-                            {item.name}
+                            {getExerciseById(item.exerciseId)?.name}
                           </Text>
 
                           <Text style={styles.exerciseDetails}>

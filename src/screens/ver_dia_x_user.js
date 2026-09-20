@@ -12,6 +12,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ExerciseVideo from '../components/ExerciseVideo';
 import UserBottomNav from '../components/UserBottomNav';
+import { getExerciseById } from '../data/exercises';
 import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
 
 export default function UserDayScreen({ navigation, route }) {
@@ -125,7 +126,7 @@ export default function UserDayScreen({ navigation, route }) {
                       {/* NOMBRE DEL EJERCICIO */}
 
                       <Text style={styles.exerciseName}>
-                        {item.name}
+                        {getExerciseById(item.exerciseId)?.name}
                       </Text>
 
 
@@ -181,13 +182,13 @@ export default function UserDayScreen({ navigation, route }) {
 
                       <View style={styles.buttons}>
 
-                        <TouchableOpacity style={styles.button} onPress={() => showVideo(item)}>
+                        <TouchableOpacity style={styles.button} onPress={() => showVideo(getExerciseById(item.exerciseId))}>
                             <Text style={styles.buttonText}>
                                 Ver ejercicio
                             </Text>
                         </TouchableOpacity>
 
-                        <TouchableOpacity style={styles.button} onPress={() => showInstructions(item)}>
+                        <TouchableOpacity style={styles.button} onPress={() => showInstructions(getExerciseById(item.exerciseId))}>
                             <Text style={styles.buttonText}>
                                 Ver instrucciones
                             </Text>
@@ -260,7 +261,7 @@ export default function UserDayScreen({ navigation, route }) {
                 </Text>
 
                 <Text style={styles.instructionsText}>
-                    {selectedExercise.instructions}
+                    {selectedExercise.description}
                 </Text>
 
                 </ScrollView>

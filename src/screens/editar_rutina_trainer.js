@@ -11,7 +11,7 @@ import {
 
 import { SafeAreaView } from 'react-native-safe-area-context';
 import TrainerBottomNav from '../components/TrainerBottomNav';
-import { exercises } from '../data/exercises';
+import { exercises, getExerciseById } from '../data/exercises';
 import { getRoutineById } from '../data/routines';
 import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
 
@@ -47,6 +47,7 @@ export default function EditRoutineScreen({ navigation, route }) {
   // ============================================================
 
   const [exerciseName, setExerciseName] = useState('');
+  const [selectedExerciseId, setSelectedExerciseId] = useState(null);
   const [series, setSeries] = useState('');
   const [repetitions, setRepetitions] = useState('');
   const [weight, setWeight] = useState('');
@@ -107,6 +108,7 @@ export default function EditRoutineScreen({ navigation, route }) {
     setSelectedBlockId(blockId);
 
     setExerciseName('');
+    setSelectedExerciseId(null);
     setSeries('');
     setRepetitions('');
     setWeight('');
@@ -120,7 +122,7 @@ export default function EditRoutineScreen({ navigation, route }) {
     normalizar(`${exercise.name} ${exercise.muscleGroup}`).includes(
       normalizar(exerciseName)
     )
-  ).slice(0, 5);
+  ).slice(0, 3);
 
   // ============================================================
   // ABRIR MODAL DE DESCANSO
@@ -142,14 +144,14 @@ export default function EditRoutineScreen({ navigation, route }) {
 
   const addExercise = () => {
 
-    if (!exerciseName.trim()) {
+    if (!selectedExerciseId) {
       return;
     }
 
     const newExercise = {
       id: Date.now(),
       type: 'exercise',
-      name: exerciseName,
+      exerciseId: selectedExerciseId,
       series: series || '0',
       repetitions: repetitions || '0',
       weight: weight || '0 kg',
@@ -768,7 +770,7 @@ const moveItem = (dayId, blockId, itemId, direction) => {
 
                           <>
                             <Text style={styles.exerciseName}>
-                              {item.name}
+                              {getExerciseById(item.exerciseId)?.name}
                             </Text>
 
                             <Text style={styles.exerciseDetails}>
@@ -954,7 +956,10 @@ const moveItem = (dayId, blockId, itemId, direction) => {
               placeholder="Buscar ejercicio o grupo muscular..."
               placeholderTextColor="#777777"
               value={exerciseName}
-              onChangeText={setExerciseName}
+              onChangeText={(text) => {
+                setExerciseName(text);
+                setSelectedExerciseId(null);
+              }}
             />
 
 
@@ -969,7 +974,10 @@ const moveItem = (dayId, blockId, itemId, direction) => {
               {ejerciciosFiltrados.map((exercise) => (
                 <TouchableOpacity
                   key={exercise.id}
-                  onPress={() => setExerciseName(exercise.name)}
+                  onPress={() => {
+                    setExerciseName(exercise.name);
+                    setSelectedExerciseId(exercise.id);
+                  }}
                 >
                   <Text style={styles.suggestion}>
                     {exercise.name}

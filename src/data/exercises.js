@@ -55,4 +55,36 @@ export const exercises = [
     video: 'https://tu-video.com/elevacion-lateral.mp4',
     description: 'Elevar los brazos hasta la altura de los hombros sin balancear el cuerpo.',
   },
+  {
+    id: 9,
+    name: 'Estiramiento del equipo a cuatro patas',
+    muscleGroup: 'Movilidad',
+    video: 'https://tu-video.com/estiramiento.mp4',
+    description: 'Comenzar en posición de cuatro apoyos. Mantener la espalda estable y realizar el movimiento lentamente, respetando el rango de movimiento indicado.',
+  },
+  {
+    id: 10,
+    name: 'Saltos de tijera',
+    muscleGroup: 'Cardio',
+    video: 'https://tu-video.com/saltos-tijera.mp4',
+    description: 'Saltar abriendo y cerrando piernas y brazos de forma coordinada, aterrizando con las rodillas semiflexionadas.',
+  },
+  {
+    id: 11,
+    name: 'Extensión de cuádriceps',
+    muscleGroup: 'Pierna',
+    video: 'https://tu-video.com/extension-cuadriceps.mp4',
+    description: 'Extender la pierna de forma controlada hasta casi estirarla del todo, sin bloquear la rodilla.',
+  },
+  {
+    id: 12,
+    name: 'Estiramiento de cadera',
+    muscleGroup: 'Movilidad',
+    video: 'https://tu-video.com/estiramiento-cadera.mp4',
+    description: 'Mantener la posición de estiramiento sin rebotar, respirando de forma calmada durante todo el ejercicio.',
+  },
 ];
+
+export function getExerciseById(exerciseId) {
+  return exercises.find((exercise) => exercise.id === exerciseId);
+}
