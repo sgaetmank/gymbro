@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
   ScrollView,
   StyleSheet,
@@ -9,10 +10,29 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CustomInput from '../components/CustomInput';
 import PrimaryButton from '../components/PrimaryButton';
+import { useAuth } from '../context/AuthContext';
 import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
 
 export default function LoginScreen({ navigation }) {
   const { isLandscape } = useResponsiveLayout();
+  const { login } = useAuth();
+
+  // Lo que el usuario escribe y el mensaje de error a mostrar
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+
+  // Valida que no haya campos vacíos y luego las credenciales.
+  // Si son correctas, el navegador cambia de pantalla solo.
+  const handleLogin = () => {
+    if (!email.trim() || !password) {
+      setError('Completa email y contraseña');
+      return;
+    }
+
+    const result = login(email, password);
+    if (!result.ok) setError(result.error ?? '');
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -44,6 +64,12 @@ export default function LoginScreen({ navigation }) {
         <CustomInput
           label="Email"
           placeholder="tu@email.com"
+          keyboardType="email-address"
+          value={email}
+          onChangeText={(text) => {
+            setEmail(text);
+            setError('');
+          }}
         />
 
         {/* Contraseña */}
@@ -51,6 +77,11 @@ export default function LoginScreen({ navigation }) {
           label="Contraseña"
           placeholder="••••••••"
           secureTextEntry
+          value={password}
+          onChangeText={(text) => {
+            setPassword(text);
+            setError('');
+          }}
         />
 
         {/* Recordarme */}
@@ -62,8 +93,11 @@ export default function LoginScreen({ navigation }) {
           </Text>
         </View>
 
+        {/* Mensaje de error (campos vacíos o credenciales incorrectas) */}
+        {error !== '' && <Text style={styles.error}>{error}</Text>}
+
         {/* Botón */}
-        <PrimaryButton title="Iniciar Sesión" />
+        <PrimaryButton title="Iniciar Sesión" onPress={handleLogin} />
 
         {/* Registro */}
         <View style={styles.registerContainer}>
@@ -167,6 +201,12 @@ const styles = StyleSheet.create({
   rememberText: {
     color: '#999999',
     fontSize: 12,
+  },
+
+  error: {
+    color: '#FF4D4D',
+    fontSize: 12,
+    marginBottom: 6,
   },
 
   registerContainer: {

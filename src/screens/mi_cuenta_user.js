@@ -8,10 +8,15 @@ import {
 
 import { SafeAreaView } from 'react-native-safe-area-context';
 import UserBottomNav from '../components/UserBottomNav';
+import { useAuth } from '../context/AuthContext';
 import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
 
 export default function UserProfileScreen({ navigation }) {
   const { isLandscape } = useResponsiveLayout();
+  const { user, logout } = useAuth();
+
+  // Sin sesión (ej: mientras se anima el cierre de sesión) no se dibuja nada
+  if (!user) return null;
 
   return (
     <SafeAreaView style={styles.container}>
@@ -45,16 +50,16 @@ export default function UserProfileScreen({ navigation }) {
 
           <View style={styles.avatar}>
             <Text style={styles.avatarText}>
-              SG
+              {user.initials}
             </Text>
           </View>
 
           <Text style={styles.name}>
-            Sol Gaetmank
+            {user.name}
           </Text>
 
           <Text style={styles.email}>
-            solgaetmank@gmail.com
+            {user.email}
           </Text>
 
         </View>
@@ -73,7 +78,7 @@ export default function UserProfileScreen({ navigation }) {
 
             <View>
               <Text style={styles.label}>DNI</Text>
-              <Text style={styles.value}>44363966</Text>
+              <Text style={styles.value}>{user.dni}</Text>
             </View>
           </View>
 
@@ -82,7 +87,7 @@ export default function UserProfileScreen({ navigation }) {
 
             <View>
               <Text style={styles.label}>Género</Text>
-              <Text style={styles.value}>Femenino</Text>
+              <Text style={styles.value}>{user.gender}</Text>
             </View>
           </View>
 
@@ -91,7 +96,7 @@ export default function UserProfileScreen({ navigation }) {
 
             <View>
               <Text style={styles.label}>Edad</Text>
-              <Text style={styles.value}>23 años</Text>
+              <Text style={styles.value}>{user.age}</Text>
             </View>
           </View>
 
@@ -100,7 +105,7 @@ export default function UserProfileScreen({ navigation }) {
 
             <View>
               <Text style={styles.label}>Peso</Text>
-              <Text style={styles.value}>75.5 kg</Text>
+              <Text style={styles.value}>{user.weight}</Text>
             </View>
 
           </View>
@@ -110,7 +115,7 @@ export default function UserProfileScreen({ navigation }) {
 
             <View>
               <Text style={styles.label}>Altura</Text>
-              <Text style={styles.value}>160 cm</Text>
+              <Text style={styles.value}>{user.height}</Text>
             </View>
           </View>
 
@@ -130,7 +135,7 @@ export default function UserProfileScreen({ navigation }) {
 
             <View>
               <Text style={styles.label}>Teléfono</Text>
-              <Text style={styles.value}>3794033628</Text>
+              <Text style={styles.value}>{user.phone}</Text>
             </View>
           </View>
 
@@ -139,7 +144,7 @@ export default function UserProfileScreen({ navigation }) {
 
             <View>
               <Text style={styles.label}>Tel. Emergencia</Text>
-              <Text style={styles.value}>3794033620</Text>
+              <Text style={styles.value}>{user.emergencyPhone}</Text>
             </View>
           </View>
 
@@ -148,7 +153,7 @@ export default function UserProfileScreen({ navigation }) {
 
             <View>
               <Text style={styles.label}>Obra Social</Text>
-              <Text style={styles.value}>-</Text>
+              <Text style={styles.value}>{user.healthInsurance}</Text>
             </View>
           </View>
 
@@ -161,7 +166,7 @@ export default function UserProfileScreen({ navigation }) {
               </Text>
 
               <Text style={styles.value}>
-                Ninguna
+                {user.contraindications}
               </Text>
             </View>
           </View>
@@ -184,7 +189,7 @@ export default function UserProfileScreen({ navigation }) {
             </Text>
 
             <Text style={styles.objectiveText}>
-              Tonificar
+              {user.goal}
             </Text>
 
           </View>
@@ -195,7 +200,7 @@ export default function UserProfileScreen({ navigation }) {
         {/* CERRAR SESIÓN */}
 
         <TouchableOpacity style={styles.logoutButton}
-        onPress={() => navigation.navigate('login')}>
+        onPress={logout}>
 
           <Text style={styles.logoutText}>
             Cerrar Sesión

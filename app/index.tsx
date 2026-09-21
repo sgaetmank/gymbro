@@ -2,6 +2,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
+import { AuthProvider, useAuth } from '../src/context/AuthContext';
 import SearchUserScreen from '../src/screens/buscar_usuario_trainer';
 import EditRoutineScreen from '../src/screens/editar_rutina_trainer';
 import UserHomeScreen from '../src/screens/home_user';
@@ -16,30 +17,48 @@ import UserDayScreen from '../src/screens/ver_dia_x_user';
 
 const Stack = createNativeStackNavigator();
 
+// Elige qué pantallas existen según la sesión. La primera de cada grupo es la inicial.
+function AppNavigator() {
+  const { user } = useAuth();
+
+  return (
+    <Stack.Navigator screenOptions={{ headerShown: false }}>
+      {!user ? (
+        // Sin sesión: solo login y registro
+        <>
+          <Stack.Screen name="login" component={LooginScreen} />
+          <Stack.Screen name="signup" component={SignUpScreen} />
+        </>
+      ) : user.isTrainer ? (
+        // Entrenador
+        <>
+          <Stack.Screen name="buscar_usuario_trainer" component={SearchUserScreen} />
+          <Stack.Screen name="editar_rutina_trainer" component={EditRoutineScreen} />
+          <Stack.Screen name="mi_cuenta_trainer" component={TrainerProfileScreen} />
+          <Stack.Screen name="ver_datos_trainer" component={UserDataScreen} />
+        </>
+      ) : (
+        // Usuario común
+        <>
+          <Stack.Screen name="home_user" component={UserHomeScreen} />
+          <Stack.Screen name="mi_rutina_user" component={UserRoutineScreen} />
+          <Stack.Screen name="mi_cuenta_user" component={UserProfileScreen} />
+          <Stack.Screen name="ver_dia_x_user" component={UserDayScreen} />
+          <Stack.Screen name="reloj" component={StopwatchScreen} />
+        </>
+      )}
+    </Stack.Navigator>
+  );
+}
+
 export default function App() {
   return (
     <SafeAreaProvider>
-      <NavigationContainer>
-        <Stack.Navigator screenOptions={{ headerShown: false }}>
-            <Stack.Screen name="buscar_usuario_trainer" component={SearchUserScreen} />
-            <Stack.Screen name="editar_rutina_trainer" component={EditRoutineScreen} />
-            <Stack.Screen name="mi_cuenta_trainer" component={TrainerProfileScreen} />
-            <Stack.Screen name="mi_rutina_user" component={UserRoutineScreen} />
-            
-            <Stack.Screen name="home_user" component={UserHomeScreen} />
-            
-            
-          
-          
-          <Stack.Screen name="login" component={LooginScreen} />
-          <Stack.Screen name="mi_cuenta_user" component={UserProfileScreen} />
-          <Stack.Screen name="signup" component={SignUpScreen} />
-          <Stack.Screen name="ver_datos_trainer" component={UserDataScreen} />
-          <Stack.Screen name="ver_dia_x_user" component={UserDayScreen} />
-          <Stack.Screen name="reloj" component={StopwatchScreen} />
-          
-        </Stack.Navigator>
-      </NavigationContainer>
+      <AuthProvider>
+        <NavigationContainer>
+          <AppNavigator />
+        </NavigationContainer>
+      </AuthProvider>
     </SafeAreaProvider>
   );
 }

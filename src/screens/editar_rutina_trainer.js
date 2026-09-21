@@ -459,18 +459,18 @@ const moveItem = (dayId, blockId, itemId, direction) => {
   // ============================================================
 
   const saveChanges = () => {
-    updateRoutineDays(routine.id, days);
-    setSavedSnapshot(JSON.stringify(days));
+    updateRoutineDays(routine.id, days); // borrador → datos guardados
+    setSavedSnapshot(JSON.stringify(days)); // anota "esto es lo último guardado"
   };
 
   useEffect(() => {
     const unsubscribe = navigation.addListener('beforeRemove', (e) => {
-      if (!hasUnsavedChanges || skipExitPrompt.current) {
+      if (!hasUnsavedChanges || skipExitPrompt.current) { // nada que avisar: dejá pasar
         return;
       }
 
-      // Frena la salida hasta que el entrenador elija
-      e.preventDefault();
+      // congela la salida. El usuario sigue en la pantalla hasta que el entrenador elija
+      e.preventDefault(); 
 
       const leave = () => {
         skipExitPrompt.current = true;
@@ -478,7 +478,8 @@ const moveItem = (dayId, blockId, itemId, direction) => {
         navigation.dispatch(e.data.action);
       };
 
-      Alert.alert(
+      // Preguntá qué hacer
+      Alert.alert( 
         'Cambios sin guardar',
         'Hiciste cambios en la rutina que todavía no se guardaron.',
         [
@@ -504,7 +505,7 @@ const moveItem = (dayId, blockId, itemId, direction) => {
     return unsubscribe;
   }, [navigation, hasUnsavedChanges, days, routine.id]);
 
-  // La barra inferior usa "navigate"; lo redirijo para que pase por el aviso
+  //"Buscar Usuario" hace goBack() y "Mi Cuenta" hace replace(...), que reemplaza la pantalla
   const guardedNavigation = {
     navigate: (screen) =>
       screen === 'buscar_usuario_trainer'

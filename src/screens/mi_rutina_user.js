@@ -8,14 +8,20 @@ import {
 
 import { SafeAreaView } from 'react-native-safe-area-context';
 import UserBottomNav from '../components/UserBottomNav';
+import { useAuth } from '../context/AuthContext';
 import { getExerciseById } from '../data/exercises';
 import { getRoutineById } from '../data/routines';
 import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
 
 export default function UserRoutineScreen({ navigation }) {
   const { isLandscape } = useResponsiveLayout();
+  const { user } = useAuth();
 
-  const routine = getRoutineById(4);
+  // Sin sesión (ej: mientras se anima el cierre de sesión) no se dibuja nada
+  if (!user) return null;
+
+  // Rutina asignada al usuario logueado (puede no tener)
+  const routine = getRoutineById(user.id_rutina);
 
 
   // ============================================================
@@ -53,7 +59,7 @@ export default function UserRoutineScreen({ navigation }) {
       >
 
         <Text style={styles.screenTitle}>
-          {routine.name}
+          {routine ? routine.name : 'Todavía no tenés una rutina asignada'}
         </Text>
 
 
@@ -61,7 +67,7 @@ export default function UserRoutineScreen({ navigation }) {
             DÍAS
         ====================================================== */}
 
-        {routine.days.map((day) => (
+        {routine?.days.map((day) => (
 
           <View
             key={day.id}

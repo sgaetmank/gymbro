@@ -8,10 +8,15 @@ import {
 
 import { SafeAreaView } from 'react-native-safe-area-context';
 import UserBottomNav from '../components/UserBottomNav';
+import { useAuth } from '../context/AuthContext';
 import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
 
 export default function UserHomeScreen({ navigation }) {
   const { isLandscape } = useResponsiveLayout();
+  const { user } = useAuth();
+
+  // Sin sesión (ej: mientras se anima el cierre de sesión) no se dibuja nada
+  if (!user) return null;
 
   return (
     <SafeAreaView style={styles.container}>
@@ -50,7 +55,7 @@ export default function UserHomeScreen({ navigation }) {
         <View style={styles.greetingContainer}>
 
           <Text style={styles.greeting}>
-            Hola, Sol!
+            Hola, {user.firstName}!
           </Text>
 
           <Text style={styles.subtitle}>

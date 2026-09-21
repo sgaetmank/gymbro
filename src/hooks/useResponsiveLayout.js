@@ -1,3 +1,12 @@
+// Hook que expone las dimensiones de la ventana para adaptar la interfaz según la orientación y el tamaño del dispositivo.
+//
+// Devuelve:
+//   - width / height: dimensiones actuales de la ventana (se actualizan al rotar).
+//   - isLandscape: true si el ancho es mayor que el alto (modo horizontal).
+//   - isWideScreen: true si el ancho es >= 700, útil para detectar tablets.
+//
+// Uso: las pantallas lo importan para aplicar estilos condicionales, p. ej: isLandscape && styles.contentLandscape
+
 import { useWindowDimensions } from 'react-native';
 
 export function useResponsiveLayout() {
@@ -11,8 +20,3 @@ export function useResponsiveLayout() {
   };
 }
 
-"isLandscape indica si el ancho es mayor que el alto"
-"isWideScreen permite identificar pantallas más amplias, como tablets"
-
-"El hook es importado en las pantallas para aplicar estilos específicos cuando el dispositivo está en horizontal. "
-"Se utilizaron estilos condicionales mediante expresiones como: isLandscape && styles.contentLandscape"
