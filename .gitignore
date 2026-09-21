@@ -43,3 +43,5 @@ example
 /android
 
 AGENTS.md
+CLAUDE.md
+.claude/
