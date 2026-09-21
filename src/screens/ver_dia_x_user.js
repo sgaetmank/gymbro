@@ -344,14 +344,14 @@ const styles = StyleSheet.create({
 
   backIcon: {
     color: '#FFFFFF',
-    fontSize: 27,
+    fontSize: 29,
     fontWeight: '300',
     marginRight: 12,
   },
 
   headerTitle: {
     color: '#FFFFFF',
-    fontSize: 13,
+    fontSize: 16,
     fontWeight: '500',
   },
 
@@ -365,7 +365,7 @@ const styles = StyleSheet.create({
 
   title: {
     color: '#FFC107',
-    fontSize: 17,
+    fontSize: 19,
     fontWeight: '700',
     marginBottom: 10,
   },
@@ -392,7 +392,7 @@ const styles = StyleSheet.create({
 
   blockTitle: {
     color: '#FFFFFF',
-    fontSize: 11,
+    fontSize: 14,
     fontWeight: '700',
   },
 
@@ -409,7 +409,7 @@ const styles = StyleSheet.create({
 
   exerciseName: {
     color: '#FFFFFF',
-    fontSize: 12,
+    fontSize: 15,
     fontWeight: '600',
     marginBottom: 7,
   },
@@ -433,13 +433,13 @@ const styles = StyleSheet.create({
 
   dataLabel: {
     color: '#777777',
-    fontSize: 9,
+    fontSize: 12,
     marginBottom: 2,
   },
 
   dataValue: {
     color: '#FFFFFF',
-    fontSize: 12,
+    fontSize: 15,
     fontWeight: '600',
   },
 
@@ -448,7 +448,7 @@ const styles = StyleSheet.create({
 
   comments: {
     color: '#888888',
-    fontSize: 10,
+    fontSize: 13,
     marginBottom: 6,
   },
 
@@ -469,7 +469,7 @@ const styles = StyleSheet.create({
 
   buttonText: {
     color: '#FFC107',
-    fontSize: 10,
+    fontSize: 13,
     fontWeight: '600',
   },
 
@@ -485,7 +485,7 @@ const styles = StyleSheet.create({
 
   restText: {
     color: '#66B8FF',
-    fontSize: 11,
+    fontSize: 14,
     fontWeight: '500',
   },
 
@@ -512,14 +512,14 @@ const styles = StyleSheet.create({
 
   modalTitle: {
     color: '#FFC107',
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: '700',
     marginBottom: 12,
   },
 
   exerciseModalName: {
     color: '#FFFFFF',
-    fontSize: 11,
+    fontSize: 14,
     fontWeight: '600',
     marginBottom: 10,
   },
@@ -532,7 +532,7 @@ const styles = StyleSheet.create({
 
   instructionsText: {
     color: '#CCCCCC',
-    fontSize: 10,
+    fontSize: 13,
     lineHeight: 17,
   },
 
@@ -548,7 +548,7 @@ const styles = StyleSheet.create({
 
   closeButtonText: {
     color: '#111111',
-    fontSize: 9,
+    fontSize: 12,
     fontWeight: '700',
   },
 

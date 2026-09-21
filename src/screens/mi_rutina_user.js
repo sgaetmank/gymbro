@@ -239,7 +239,7 @@ const styles = StyleSheet.create({
 
   headerTitle: {
     color: '#FFFFFF',
-    fontSize: 13,
+    fontSize: 16,
     fontWeight: '500',
   },
 
@@ -253,7 +253,7 @@ const styles = StyleSheet.create({
 
   screenTitle: {
     color: '#FFFFFF',
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: '700',
     marginBottom: 14,
   },
@@ -274,7 +274,7 @@ const styles = StyleSheet.create({
 
   dayTitle: {
     color: '#FFC107',
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: '700',
   },
 
@@ -287,7 +287,7 @@ const styles = StyleSheet.create({
 
   dayButtonText: {
     color: '#FFC107',
-    fontSize: 10,
+    fontSize: 13,
     fontWeight: '600',
   },
 
@@ -304,7 +304,7 @@ const styles = StyleSheet.create({
   blockTitle: {
     color: '#FFFFFF',
     backgroundColor: '#292929',
-    fontSize: 11,
+    fontSize: 14,
     fontWeight: '700',
     paddingHorizontal: '3%',
     paddingVertical: '2.5%',
@@ -334,7 +334,7 @@ const styles = StyleSheet.create({
 
   itemIconText: {
     color: '#FFC107',
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: '700',
   },
 
@@ -344,25 +344,25 @@ const styles = StyleSheet.create({
 
   exerciseName: {
     color: '#FFFFFF',
-    fontSize: 11,
+    fontSize: 14,
     fontWeight: '600',
     marginBottom: 3,
   },
 
   exerciseDetails: {
     color: '#888888',
-    fontSize: 10,
+    fontSize: 13,
   },
 
   comments: {
     color: '#FFC107',
-    fontSize: 10,
+    fontSize: 13,
     marginTop: 3,
   },
 
   restText: {
     color: '#888888',
-    fontSize: 11,
+    fontSize: 14,
   },
 
 

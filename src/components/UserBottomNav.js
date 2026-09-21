@@ -133,13 +133,13 @@ const styles = StyleSheet.create({
 
   navIcon: {
     color: '#666666',
-    fontSize: 16,
+    fontSize: 18,
     marginBottom: 3,
   },
 
   navText: {
     color: '#666666',
-    fontSize: 6.5,
+    fontSize: 11,
   },
 
   active: {

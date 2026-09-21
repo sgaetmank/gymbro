@@ -260,13 +260,13 @@ const styles = StyleSheet.create({
 
   backIcon: {
     color: '#FFFFFF',
-    fontSize: 27,
+    fontSize: 29,
     marginRight: 12,
   },
 
   headerTitle: {
     color: '#FFFFFF',
-    fontSize: 13,
+    fontSize: 16,
     fontWeight: '500',
   },
 
@@ -299,19 +299,19 @@ const styles = StyleSheet.create({
   },
   avatarText: {
     color: '#FFC107',
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: '700',
   },
 
   name: {
     color: '#FFFFFF',
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: '700',
   },
 
   email: {
     color: '#888888',
-    fontSize: 12,
+    fontSize: 15,
     marginTop: 4,
   },
 
@@ -320,7 +320,7 @@ const styles = StyleSheet.create({
 
   title: {
     color: '#FFC107',
-    fontSize: 13,
+    fontSize: 16,
     fontWeight: '700',
     marginBottom: 10,
   },
@@ -344,13 +344,13 @@ const styles = StyleSheet.create({
 
   label: {
     color: '#777777',
-    fontSize: 11,
+    fontSize: 14,
     marginBottom: 4,
   },
 
   value: {
     color: '#FFFFFF',
-    fontSize: 13,
+    fontSize: 16,
     fontWeight: '500',
   },
 
@@ -368,7 +368,7 @@ const styles = StyleSheet.create({
 
   tagText: {
     color: '#FFC107',
-    fontSize: 12,
+    fontSize: 15,
     fontWeight: '600',
   },
 

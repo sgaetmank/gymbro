@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
 
 	headerTitle: {
 		color: '#FFFFFF',
-		fontSize: 13,
+		fontSize: 16,
 		fontWeight: '500',
 	},
 
@@ -141,7 +141,7 @@ const styles = StyleSheet.create({
 
 	title: {
 		color: '#FFFFFF',
-		fontSize: 20,
+		fontSize: 22,
 		fontWeight: '700',
 		marginBottom: 16,
 	},
@@ -162,18 +162,18 @@ const styles = StyleSheet.create({
 
 	timer: {
 		color: '#FFC107',
-		fontSize: 42,
+		fontSize: 44,
 		fontWeight: '700',
 		letterSpacing: 1,
 		marginBottom: 24,
 	},
 
 	timerSmall: {
-		fontSize: 36,
+		fontSize: 38,
 	},
 
 	timerLandscape: {
-		fontSize: 38,
+		fontSize: 40,
 	},
 
 	buttons: {
@@ -193,7 +193,7 @@ const styles = StyleSheet.create({
 
 	primaryButtonText: {
 		color: '#111111',
-		fontSize: 14,
+		fontSize: 16,
 		fontWeight: '700',
 	},
 
@@ -208,7 +208,7 @@ const styles = StyleSheet.create({
 
 	secondaryButtonText: {
 		color: '#FFFFFF',
-		fontSize: 14,
+		fontSize: 16,
 		fontWeight: '700',
 	},
 });

@@ -19,6 +19,8 @@ import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
 export default function EditRoutineScreen({ navigation, route }) {
   const { isLandscape } = useResponsiveLayout();
   const routine = getRoutineById(route?.params?.user?.id_rutina);
+  // Usuario al que se le está editando la rutina (viene de la pantalla de búsqueda)
+  const editedUser = route?.params?.user;
 
   // Saca tildes/acentos para que la búsqueda no dependa de escribirlos bien
   const normalizar = (texto) =>
@@ -547,12 +549,7 @@ const moveItem = (dayId, blockId, itemId, direction) => {
           disabled={!hasUnsavedChanges}
           onPress={saveChanges}
         >
-          <Text
-            style={[
-              styles.saveText,
-              !hasUnsavedChanges && styles.saveTextDisabled,
-            ]}
-          >
+          <Text style={styles.saveText}>
             {hasUnsavedChanges ? 'Guardar' : 'Guardado ✓'}
           </Text>
         </TouchableOpacity>
@@ -576,7 +573,7 @@ const moveItem = (dayId, blockId, itemId, direction) => {
         <View style={styles.titleRow}>
 
           <Text style={styles.routineTitle}>
-            Rutina de X
+            Rutina de {editedUser?.firstName}
           </Text>
 
         </View>
@@ -1333,14 +1330,14 @@ const styles = StyleSheet.create({
 
   backIcon: {
     color: '#FFFFFF',
-    fontSize: 27,
+    fontSize: 29,
     fontWeight: '300',
     marginRight: 12,
   },
 
   headerTitle: {
     color: '#FFFFFF',
-    fontSize: 13,
+    fontSize: 16,
     fontWeight: '500',
   },
 
@@ -1351,26 +1348,20 @@ const styles = StyleSheet.create({
 
   saveButton: {
     marginLeft: 'auto',
-    backgroundColor: '#FFC107',
+    backgroundColor: '#D93A3F', // rojo: hay cambios sin guardar
     borderRadius: 6,
     paddingHorizontal: 12,
     paddingVertical: 5,
   },
 
   saveButtonDisabled: {
-    backgroundColor: '#302714',
-    borderWidth: 1,
-    borderColor: '#59430E',
+    backgroundColor: '#2E9E5B', // verde: todo guardado
   },
 
   saveText: {
-    color: '#111111',
-    fontSize: 11,
+    color: '#FFFFFF',
+    fontSize: 14,
     fontWeight: '700',
-  },
-
-  saveTextDisabled: {
-    color: '#FFC107',
   },
 
 
@@ -1386,7 +1377,7 @@ const styles = StyleSheet.create({
 
   routineTitle: {
     color: '#FFFFFF',
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: '700',
     flex: 1,
   },
@@ -1438,7 +1429,7 @@ const styles = StyleSheet.create({
 
   arrow: {
     color: '#FFC107',
-    fontSize: 20,
+    fontSize: 22,
     lineHeight: 20,
     textAlign: 'center',
   },
@@ -1449,7 +1440,7 @@ const styles = StyleSheet.create({
 
   dayTitle: {
     color: '#FFC107',
-    fontSize: 14,
+    fontSize: 20,
     fontWeight: '700',
   },
 
@@ -1470,13 +1461,13 @@ const styles = StyleSheet.create({
 
   viewDayText: {
     color: '#FFC107',
-    fontSize: 9,
+    fontSize: 12,
     fontWeight: '700',
   },
 
   deleteIcon: {
     color: '#FF5A5F',
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: '700',
   },
 
@@ -1506,7 +1497,7 @@ const styles = StyleSheet.create({
 
   smallArrow: {
     color: '#8A8A8A',
-    fontSize: 18,
+    fontSize: 20,
     lineHeight: 18,
     textAlign: 'center',
   },
@@ -1525,7 +1516,7 @@ const styles = StyleSheet.create({
 
   blockTitle: {
     color: '#FFFFFF',
-    fontSize: 12,
+    fontSize: 18,
     fontWeight: '700',
     marginLeft: 4,
   },
@@ -1579,7 +1570,7 @@ disabledSmallArrow: {
 
   itemArrow: {
     color: '#FFC107',
-    fontSize: 17,
+    fontSize: 19,
     lineHeight: 17,
     textAlign: 'center',
   },
@@ -1594,25 +1585,25 @@ disabledSmallArrow: {
 
   exerciseName: {
     color: '#FFFFFF',
-    fontSize: 12,
+    fontSize: 17,
     fontWeight: '600',
   },
 
   exerciseDetails: {
     color: '#AAAAAA',
-    fontSize: 10,
+    fontSize: 13,
     marginTop: 3,
   },
 
   comment: {
     color: '#FFC107',
-    fontSize: 9,
+    fontSize: 12,
     marginTop: 3,
   },
 
   restText: {
     color: '#52A9E8',
-    fontSize: 11,
+    fontSize: 17,
     fontWeight: '600',
   },
 
@@ -1625,7 +1616,7 @@ disabledSmallArrow: {
 
   editIcon: {
     color: '#4CA8E8',
-    fontSize: 14,
+    fontSize: 16,
   },
 
 
@@ -1646,7 +1637,7 @@ disabledSmallArrow: {
 
   addItemText: {
     color: '#FFC107',
-    fontSize: 11,
+    fontSize: 14,
     fontWeight: '700',
   },
 
@@ -1666,7 +1657,7 @@ disabledSmallArrow: {
 
   addBlockText: {
     color: '#FFFFFF',
-    fontSize: 11,
+    fontSize: 14,
     fontWeight: '600',
   },
 
@@ -1686,7 +1677,7 @@ disabledSmallArrow: {
 
   addDayText: {
     color: '#111111',
-    fontSize: 13,
+    fontSize: 16,
     fontWeight: '700',
   },
 
@@ -1726,20 +1717,20 @@ disabledSmallArrow: {
 
   modalTitle: {
     color: '#FFFFFF',
-    fontSize: 15,
+    fontSize: 17,
     fontWeight: '700',
     flex: 1,
   },
 
   closeButton: {
     color: '#FFFFFF',
-    fontSize: 24,
+    fontSize: 26,
     fontWeight: '300',
   },
 
   modalLabel: {
     color: '#FFFFFF',
-    fontSize: 11,
+    fontSize: 14,
     fontWeight: '600',
     marginBottom: 6,
     marginTop: 8,
@@ -1753,7 +1744,7 @@ disabledSmallArrow: {
     borderWidth: 1,
     borderColor: '#292929',
     color: '#FFFFFF',
-    fontSize: 12
+    fontSize: 15
   },
 
   commentInput: {
@@ -1764,7 +1755,7 @@ disabledSmallArrow: {
     borderWidth: 1,
     borderColor: '#292929',
     color: '#FFFFFF',
-    fontSize: 12,
+    fontSize: 15,
     paddingTop: 10,
     textAlignVertical: 'top',
     minHeight: '13%',
@@ -1781,14 +1772,14 @@ disabledSmallArrow: {
 
   suggestionTitle: {
     color: '#FFC107',
-    fontSize: 11,
+    fontSize: 14,
     fontWeight: '700',
     marginBottom: 7,
   },
 
   suggestion: {
     color: '#FFFFFF',
-    fontSize: 11,
+    fontSize: 14,
     fontWeight: '600',
     paddingVertical: 6,
     borderBottomWidth: 1,
@@ -1797,7 +1788,7 @@ disabledSmallArrow: {
 
   suggestionCategory: {
     color: '#777777',
-    fontSize: 9,
+    fontSize: 12,
     paddingBottom: 5,
   },
 
@@ -1826,7 +1817,7 @@ disabledSmallArrow: {
 
   unitText: {
     color: '#888888',
-    fontSize: 11,
+    fontSize: 14,
     fontWeight: '600',
   },
 
@@ -1847,7 +1838,7 @@ disabledSmallArrow: {
 
   modalPrimaryText: {
     color: '#111111',
-    fontSize: 12,
+    fontSize: 15,
     fontWeight: '700',
   },
 

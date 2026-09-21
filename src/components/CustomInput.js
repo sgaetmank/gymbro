@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
 
   label: {
     color: '#FFFFFF',
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: '600',
     marginBottom: 7,
   },
@@ -80,7 +80,7 @@ const styles = StyleSheet.create({
     borderRadius: 7,
     paddingHorizontal: 14,
     color: '#FFFFFF',
-    fontSize: 15,
+    fontSize: 17,
   },
 
   // Deja lugar a la derecha para que el texto no quede debajo del ojito

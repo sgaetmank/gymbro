@@ -163,20 +163,20 @@ const styles = StyleSheet.create({
 
   icon: {
     color: '#FFC107',
-    fontSize: 23,
+    fontSize: 25,
     fontWeight: 'bold',
   },
 
   title: {
     color: '#FFFFFF',
-    fontSize: 21,
+    fontSize: 23,
     fontWeight: '700',
     textAlign: 'center',
   },
 
   subtitle: {
     color: '#999999',
-    fontSize: 13,
+    fontSize: 16,
     textAlign: 'center',
     marginTop: 4,
     marginBottom: 26,
@@ -200,12 +200,12 @@ const styles = StyleSheet.create({
 
   rememberText: {
     color: '#999999',
-    fontSize: 12,
+    fontSize: 15,
   },
 
   error: {
     color: '#FF4D4D',
-    fontSize: 12,
+    fontSize: 15,
     marginBottom: 6,
   },
 
@@ -217,12 +217,12 @@ const styles = StyleSheet.create({
 
   registerText: {
     color: '#777777',
-    fontSize: 12,
+    fontSize: 15,
   },
 
   registerLink: {
     color: '#FFC107',
-    fontSize: 12,
+    fontSize: 15,
     fontWeight: '700',
     marginLeft: 3,
   },

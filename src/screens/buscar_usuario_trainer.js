@@ -201,14 +201,14 @@ const styles = StyleSheet.create({
 
   backIcon: {
     color: '#FFFFFF',
-    fontSize: 27,
+    fontSize: 29,
     fontWeight: '300',
     marginRight: 12,
   },
 
   headerTitle: {
     color: '#FFFFFF',
-    fontSize: 13,
+    fontSize: 16,
     fontWeight: '500',
   },
 
@@ -250,14 +250,14 @@ const styles = StyleSheet.create({
 
   searchIcon: {
     color: '#BBBBBB',
-    fontSize: 19,
+    fontSize: 21,
     marginRight: 7,
   },
 
   searchInput: {
     flex: 1,
     color: '#FFFFFF',
-    fontSize: 13,
+    fontSize: 16,
     paddingVertical: 0,
   },
 
@@ -299,7 +299,7 @@ const styles = StyleSheet.create({
 
   avatarText: {
     color: '#FFC107',
-    fontSize: 13,
+    fontSize: 16,
     fontWeight: '700',
   },
 
@@ -318,13 +318,13 @@ const styles = StyleSheet.create({
 
   userName: {
     color: '#FFFFFF',
-    fontSize: 13,
+    fontSize: 16,
     fontWeight: '700',
   },
 
   userEmail: {
     color: '#858585',
-    fontSize: 11,
+    fontSize: 14,
     marginTop: 3,
   },
 
@@ -350,13 +350,13 @@ const styles = StyleSheet.create({
 
   dataIcon: {
     color: '#FFFFFF',
-    fontSize: 11,
+    fontSize: 14,
     marginRight: 5,
   },
 
   dataButtonText: {
     color: '#FFFFFF',
-    fontSize: 12,
+    fontSize: 15,
     fontWeight: '700',
   },
 
@@ -373,13 +373,13 @@ const styles = StyleSheet.create({
 
   routineIcon: {
     color: '#111111',
-    fontSize: 11,
+    fontSize: 14,
     marginRight: 5,
   },
 
   routineButtonText: {
     color: '#111111',
-    fontSize: 12,
+    fontSize: 15,
     fontWeight: '700',
   },
 

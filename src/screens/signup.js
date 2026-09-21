@@ -267,20 +267,20 @@ const styles = StyleSheet.create({
 
   icon: {
     color: '#FFC107',
-    fontSize: 23,
+    fontSize: 25,
     fontWeight: 'bold',
   },
 
   title: {
     color: '#FFFFFF',
-    fontSize: 21,
+    fontSize: 23,
     fontWeight: '700',
     textAlign: 'center',
   },
 
   subtitle: {
     color: '#999999',
-    fontSize: 13,
+    fontSize: 16,
     textAlign: 'center',
     marginTop: 4,
     marginBottom: 22,
@@ -295,14 +295,14 @@ const styles = StyleSheet.create({
 
   sectionTitle: {
     color: '#FFC107',
-    fontSize: 15,
+    fontSize: 17,
     fontWeight: '700',
     marginBottom: 14,
   },
 
   label: {
     color: '#FFFFFF',
-    fontSize: 13,
+    fontSize: 16,
     fontWeight: '600',
     marginBottom: 6,
   },
@@ -323,7 +323,7 @@ const styles = StyleSheet.create({
 
   optionText: {
     color: '#AAAAAA',
-    fontSize: 12,
+    fontSize: 15,
   },
 
   physicalRow: {
@@ -346,6 +346,6 @@ const styles = StyleSheet.create({
 
   placeholder: {
     color: '#777777',
-    fontSize: 14,
+    fontSize: 16,
   },
 });

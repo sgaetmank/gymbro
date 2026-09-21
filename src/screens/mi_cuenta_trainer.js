@@ -234,7 +234,7 @@ const styles = StyleSheet.create({
 
   headerTitle: {
     color: '#FFFFFF',
-    fontSize: 13,
+    fontSize: 16,
     fontWeight: '500',
   },
 
@@ -264,19 +264,19 @@ const styles = StyleSheet.create({
 
   avatarText: {
     color: '#111111',
-    fontSize: 15,
+    fontSize: 17,
     fontWeight: '700',
   },
 
   name: {
     color: '#FFFFFF',
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: '700',
   },
 
   email: {
     color: '#777777',
-    fontSize: 11,
+    fontSize: 14,
     marginTop: 3,
   },
 
@@ -292,7 +292,7 @@ const styles = StyleSheet.create({
 
   sectionTitle: {
     color: '#FFC107',
-    fontSize: 12,
+    fontSize: 15,
     fontWeight: '700',
     marginBottom: 8,
   },
@@ -309,7 +309,7 @@ const styles = StyleSheet.create({
 
   icon: {
     color: '#FFC107',
-    fontSize: 13,
+    fontSize: 16,
     width: '9%',
     textAlign: 'center',
     marginRight: '1.5%',
@@ -317,13 +317,13 @@ const styles = StyleSheet.create({
 
   label: {
     color: '#777777',
-    fontSize: 10,
+    fontSize: 13,
     marginBottom: 2,
   },
 
   value: {
     color: '#FFFFFF',
-    fontSize: 12,
+    fontSize: 15,
     fontWeight: '600',
   },
 
@@ -342,13 +342,13 @@ const styles = StyleSheet.create({
 
   objectiveIcon: {
     color: '#FFC107',
-    fontSize: 15,
+    fontSize: 17,
     marginRight: 9,
   },
 
   objectiveText: {
     color: '#FFFFFF',
-    fontSize: 12,
+    fontSize: 15,
     fontWeight: '600',
   },
 
@@ -366,7 +366,7 @@ const styles = StyleSheet.create({
 
   logoutText: {
     color: '#FFFFFF',
-    fontSize: 13,
+    fontSize: 16,
     fontWeight: '700',
   },
 

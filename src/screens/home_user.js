@@ -228,7 +228,7 @@ const styles = StyleSheet.create({
 
   headerTitle: {
     color: '#FFFFFF',
-    fontSize: 13,
+    fontSize: 16,
     fontWeight: '500',
   },
 
@@ -248,14 +248,14 @@ const styles = StyleSheet.create({
 
   greeting: {
     color: '#FFFFFF',
-    fontSize: 18,
+    fontSize: 20,
     fontWeight: '700',
     marginBottom: 4,
   },
 
   subtitle: {
     color: '#777777',
-    fontSize: 12,
+    fontSize: 15,
   },
 
 
@@ -281,19 +281,19 @@ const styles = StyleSheet.create({
 
   statIcon: {
     color: '#FFC107',
-    fontSize: 24,
+    fontSize: 26,
     marginBottom: 2,
   },
 
   statNumber: {
     color: '#FFFFFF',
-    fontSize: 19,
+    fontSize: 21,
     fontWeight: '700',
   },
 
   statLabel: {
     color: '#888888',
-    fontSize: 10,
+    fontSize: 13,
     marginTop: 2,
     textAlign: 'center',
   },
@@ -305,7 +305,7 @@ const styles = StyleSheet.create({
 
   sectionTitle: {
     color: '#FFFFFF',
-    fontSize: 13,
+    fontSize: 16,
     fontWeight: '700',
     marginBottom: 7,
   },
@@ -339,14 +339,14 @@ const styles = StyleSheet.create({
 
   progressTitle: {
     color: '#FFFFFF',
-    fontSize: 12,
+    fontSize: 15,
     fontWeight: '700',
     marginBottom: 4,
   },
 
   progressSubtitle: {
     color: '#777777',
-    fontSize: 10,
+    fontSize: 13,
     lineHeight: 14,
   },
 
@@ -359,7 +359,7 @@ const styles = StyleSheet.create({
 
   smallButtonText: {
     color: '#111111',
-    fontSize: 11,
+    fontSize: 14,
     fontWeight: '700',
   },
 
@@ -383,14 +383,14 @@ const styles = StyleSheet.create({
 
   workoutTitle: {
     color: '#FFFFFF',
-    fontSize: 12,
+    fontSize: 15,
     fontWeight: '700',
     marginBottom: 4,
   },
 
   workoutSubtitle: {
     color: '#777777',
-    fontSize: 10,
+    fontSize: 13,
   },
 
   trainButton: {
@@ -404,13 +404,13 @@ const styles = StyleSheet.create({
 
   trainIcon: {
     color: '#111111',
-    fontSize: 10,
+    fontSize: 13,
     marginRight: 4,
   },
 
   trainButtonText: {
     color: '#111111',
-    fontSize: 11,
+    fontSize: 14,
     fontWeight: '700',
   },
 

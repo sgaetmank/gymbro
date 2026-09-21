@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
 
   text: {
     color: '#111111',
-    fontSize: 15,
+    fontSize: 17,
     fontWeight: '700',
   },
 });
