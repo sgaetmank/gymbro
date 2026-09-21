@@ -78,39 +78,6 @@ export const routines = [
     ],
   },
   {
-    id: 2,
-    name: 'Rutina Fuerza',
-    days: [
-      {
-        id: 21,
-        name: 'Día 1',
-        blocks: [
-          {
-            id: 21,
-            name: 'Fuerza de tren superior',
-            items: [
-              {
-                id: 21,
-                type: 'exercise',
-                exerciseId: 4,
-                series: '4',
-                repetitions: '8',
-                weight: '40 kg',
-                comments: '',
-              },
-              {
-                id: 22,
-                type: 'rest',
-                time: '2',
-                unit: 'minutos',
-              },
-            ],
-          },
-        ],
-      },
-    ],
-  },
-  {
     id: 3,
     name: 'Rutina Pérdida de Peso',
     days: [
@@ -179,80 +146,23 @@ export const routines = [
       },
     ],
   },
-  {
-    id: 5,
-    name: 'Rutina Tren Inferior',
-    days: [
-      {
-        id: 51,
-        name: 'Día 1',
-        blocks: [
-          {
-            id: 51,
-            name: 'Piernas',
-            items: [
-              {
-                id: 51,
-                type: 'exercise',
-                exerciseId: 6,
-                series: '4',
-                repetitions: '10',
-                weight: '60 kg',
-                comments: '',
-              },
-              {
-                id: 52,
-                type: 'exercise',
-                exerciseId: 11,
-                series: '3',
-                repetitions: '12',
-                weight: '20 kg',
-                comments: '',
-              },
-            ],
-          },
-        ],
-      },
-    ],
-  },
-  {
-    id: 6,
-    name: 'Rutina Movilidad',
-    days: [
-      {
-        id: 61,
-        name: 'Día 1',
-        blocks: [
-          {
-            id: 61,
-            name: 'Movilidad general',
-            items: [
-              {
-                id: 61,
-                type: 'exercise',
-                exerciseId: 12,
-                series: '3',
-                repetitions: '30 segundos',
-                weight: '0 kg',
-                comments: '',
-              },
-              {
-                id: 62,
-                type: 'rest',
-                time: '1',
-                unit: 'minutos',
-              },
-            ],
-          },
-        ],
-      },
-    ],
-  },
 ];
 
 export function getRoutineById(routineId) {
   // Busca la rutina asociada al usuario mediante su routineId.
   return routines.find((routine) => routine.id === routineId);
+}
+
+export function createRoutine(days) {
+  // Alta de una rutina nueva (equivale a un INSERT en la base de datos).
+  const routine = {
+    id: Math.max(...routines.map((routine) => routine.id)) + 1,
+    name: 'Mi Rutina',
+    // Copia profunda para no compartir referencias con el estado de la pantalla
+    days: JSON.parse(JSON.stringify(days)),
+  };
+  routines.push(routine);
+  return routine;
 }
 
 export function updateRoutineDays(routineId, days) {

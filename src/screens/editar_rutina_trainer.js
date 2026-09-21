@@ -13,14 +13,18 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import TrainerBottomNav from '../components/TrainerBottomNav';
 import { exercises, getExerciseById } from '../data/exercises';
-import { getRoutineById, updateRoutineDays } from '../data/routines';
+import { createRoutine, getRoutineById, updateRoutineDays } from '../data/routines';
+import { setUserRoutine } from '../data/users';
 import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
 
 export default function EditRoutineScreen({ navigation, route }) {
   const { isLandscape } = useResponsiveLayout();
-  const routine = getRoutineById(route?.params?.user?.id_rutina);
   // Usuario al que se le está editando la rutina (viene de la pantalla de búsqueda)
   const editedUser = route?.params?.user;
+  // Un alumno recién registrado todavía no tiene rutina: se crea al guardar por primera vez
+  const routine = getRoutineById(editedUser?.id_rutina);
+  // Id de la rutina del alumno (null hasta que se cree), para no crearla dos veces
+  const routineId = useRef(routine?.id ?? null);
 
   // Saca tildes/acentos para que la búsqueda no dependa de escribirlos bien
   const normalizar = (texto) =>
@@ -33,11 +37,11 @@ export default function EditRoutineScreen({ navigation, route }) {
   // DATOS INICIALES DE EJEMPLO
   // ============================================================
 
-  const [days, setDays] = useState(routine.days);
+  const [days, setDays] = useState(routine?.days ?? []);
 
   // Foto de lo último guardado, para detectar cambios pendientes
   const [savedSnapshot, setSavedSnapshot] = useState(() =>
-    JSON.stringify(routine.days)
+    JSON.stringify(routine?.days ?? [])
   );
   const hasUnsavedChanges = JSON.stringify(days) !== savedSnapshot;
 
@@ -460,8 +464,19 @@ const moveItem = (dayId, blockId, itemId, direction) => {
   // GUARDAR Y AVISO AL SALIR
   // ============================================================
 
+  // Pasa el borrador a datos guardados. Si el alumno no tenía rutina, la crea y se la asigna.
+  const persistRoutine = () => {
+    if (routineId.current === null) {
+      const created = createRoutine(days);
+      setUserRoutine(editedUser.id, created.id);
+      routineId.current = created.id;
+    } else {
+      updateRoutineDays(routineId.current, days);
+    }
+  };
+
   const saveChanges = () => {
-    updateRoutineDays(routine.id, days); // borrador → datos guardados
+    persistRoutine();
     setSavedSnapshot(JSON.stringify(days)); // anota "esto es lo último guardado"
   };
 
@@ -494,7 +509,7 @@ const moveItem = (dayId, blockId, itemId, direction) => {
           {
             text: 'Guardar y salir',
             onPress: () => {
-              updateRoutineDays(routine.id, days);
+              persistRoutine();
               leave();
             },
           },
@@ -505,7 +520,7 @@ const moveItem = (dayId, blockId, itemId, direction) => {
     });
 
     return unsubscribe;
-  }, [navigation, hasUnsavedChanges, days, routine.id]);
+  }, [navigation, hasUnsavedChanges, persistRoutine]);
 
   //"Buscar Usuario" hace goBack() y "Mi Cuenta" hace replace(...), que reemplaza la pantalla
   const guardedNavigation = {

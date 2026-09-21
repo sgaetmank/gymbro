@@ -2,7 +2,6 @@ export const users = [
   {
     id: 1,
     isTrainer: true,
-    id_rutina: 2,
     name: 'Entrenador Mañana',
     initials: 'EM',
     firstName: 'Entrenador',
@@ -86,7 +85,6 @@ export const users = [
   {
     id: 5,
     isTrainer: true,
-    id_rutina: 5,
     name: 'Entrenador Tarde',
     initials: 'ET',
     firstName: 'Entrenador',
@@ -108,4 +106,45 @@ export const users = [
 
 export function getUserById(userId) {
   return users.find((user) => user.id === userId);
+}
+
+export function addUser(data) {
+  // Alta de un alumno nuevo (equivale a un INSERT en la base de datos).
+  // Nace sin rutina: se la arma el entrenador desde su pantalla de edición.
+  const firstName = data.firstName.trim();
+  const lastName = data.lastName.trim();
+
+  const newUser = {
+    id: Math.max(...users.map((user) => user.id)) + 1,
+    isTrainer: false,
+    id_rutina: null,
+    name: `${firstName} ${lastName}`,
+    initials: `${firstName[0]}${lastName[0]}`.toUpperCase(),
+    firstName,
+    lastName,
+    email: data.email.trim().toLowerCase(),
+    dni: data.dni.trim(),
+    password: data.password,
+    gender: data.gender,
+    // Mismo formato con unidad que los usuarios existentes
+    age: `${data.age} años`,
+    weight: `${data.weight} kg`,
+    height: `${data.height} cm`,
+    phone: data.phone.trim(),
+    emergencyPhone: data.emergencyPhone.trim(),
+    healthInsurance: data.healthInsurance.trim() || '-',
+    contraindications: data.contraindications.trim() || 'Ninguna',
+    goal: data.goal,
+  };
+
+  users.push(newUser);
+  return newUser;
+}
+
+export function setUserRoutine(userId, routineId) {
+  // Asigna una rutina a un usuario (equivale a un UPDATE en la base de datos).
+  const user = getUserById(userId);
+  if (!user) return false;
+  user.id_rutina = routineId;
+  return true;
 }
