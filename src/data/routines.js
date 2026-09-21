@@ -254,3 +254,12 @@ export function getRoutineById(routineId) {
   // Busca la rutina asociada al usuario mediante su routineId.
   return routines.find((routine) => routine.id === routineId);
 }
+
+export function updateRoutineDays(routineId, days) {
+  // Reemplaza los días de la rutina (equivale a un UPDATE en la base de datos).
+  const routine = getRoutineById(routineId);
+  if (!routine) return false;
+  // Copia profunda para no compartir referencias con el estado de la pantalla
+  routine.days = JSON.parse(JSON.stringify(days));
+  return true;
+}

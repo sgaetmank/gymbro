@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
+  Alert,
   Modal,
   ScrollView,
   StyleSheet,
@@ -12,7 +13,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import TrainerBottomNav from '../components/TrainerBottomNav';
 import { exercises, getExerciseById } from '../data/exercises';
-import { getRoutineById } from '../data/routines';
+import { getRoutineById, updateRoutineDays } from '../data/routines';
 import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
 
 export default function EditRoutineScreen({ navigation, route }) {
@@ -31,6 +32,15 @@ export default function EditRoutineScreen({ navigation, route }) {
   // ============================================================
 
   const [days, setDays] = useState(routine.days);
+
+  // Foto de lo último guardado, para detectar cambios pendientes
+  const [savedSnapshot, setSavedSnapshot] = useState(() =>
+    JSON.stringify(routine.days)
+  );
+  const hasUnsavedChanges = JSON.stringify(days) !== savedSnapshot;
+
+  // Se activa justo antes de salir para que el aviso no se repita
+  const skipExitPrompt = useRef(false);
 
   // ============================================================
   // ESTADOS DE LOS MODALES
@@ -445,6 +455,64 @@ const moveItem = (dayId, blockId, itemId, direction) => {
   };
 
   // ============================================================
+  // GUARDAR Y AVISO AL SALIR
+  // ============================================================
+
+  const saveChanges = () => {
+    updateRoutineDays(routine.id, days);
+    setSavedSnapshot(JSON.stringify(days));
+  };
+
+  useEffect(() => {
+    const unsubscribe = navigation.addListener('beforeRemove', (e) => {
+      if (!hasUnsavedChanges || skipExitPrompt.current) {
+        return;
+      }
+
+      // Frena la salida hasta que el entrenador elija
+      e.preventDefault();
+
+      const leave = () => {
+        skipExitPrompt.current = true;
+        // Retoma la salida original (atrás, cambio de pestaña, etc.)
+        navigation.dispatch(e.data.action);
+      };
+
+      Alert.alert(
+        'Cambios sin guardar',
+        'Hiciste cambios en la rutina que todavía no se guardaron.',
+        [
+          { text: 'Seguir editando', style: 'cancel' },
+          {
+            text: 'Salir sin guardar',
+            style: 'destructive',
+            onPress: leave,
+          },
+          {
+            text: 'Guardar y salir',
+            onPress: () => {
+              updateRoutineDays(routine.id, days);
+              leave();
+            },
+          },
+        ],
+        // Tocar afuera equivale a "Seguir editando"
+        { cancelable: true }
+      );
+    });
+
+    return unsubscribe;
+  }, [navigation, hasUnsavedChanges, days, routine.id]);
+
+  // La barra inferior usa "navigate"; lo redirijo para que pase por el aviso
+  const guardedNavigation = {
+    navigate: (screen) =>
+      screen === 'buscar_usuario_trainer'
+        ? navigation.goBack()
+        : navigation.replace(screen),
+  };
+
+  // ============================================================
   // RENDER
   // ============================================================
 
@@ -462,13 +530,31 @@ const moveItem = (dayId, blockId, itemId, direction) => {
         ]}
       >
 
-        <TouchableOpacity onPress={() => navigation.navigate('buscar_usuario_trainer')}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
           <Text style={styles.backIcon}>‹</Text>
         </TouchableOpacity>
 
         <Text style={styles.headerTitle}>
           Editar
         </Text>
+
+        <TouchableOpacity
+          style={[
+            styles.saveButton,
+            !hasUnsavedChanges && styles.saveButtonDisabled,
+          ]}
+          disabled={!hasUnsavedChanges}
+          onPress={saveChanges}
+        >
+          <Text
+            style={[
+              styles.saveText,
+              !hasUnsavedChanges && styles.saveTextDisabled,
+            ]}
+          >
+            {hasUnsavedChanges ? 'Guardar' : 'Guardado ✓'}
+          </Text>
+        </TouchableOpacity>
 
       </View>
 
@@ -1189,7 +1275,7 @@ const moveItem = (dayId, blockId, itemId, direction) => {
       <TrainerBottomNav
         activeScreen="search"
         isLandscape={isLandscape}
-        navigation={navigation}
+        navigation={guardedNavigation}
       />
 
     </SafeAreaView>
@@ -1260,6 +1346,30 @@ const styles = StyleSheet.create({
   headerLandscape: {
     minHeight: 48,
     paddingHorizontal: 16,
+  },
+
+  saveButton: {
+    marginLeft: 'auto',
+    backgroundColor: '#FFC107',
+    borderRadius: 6,
+    paddingHorizontal: 12,
+    paddingVertical: 5,
+  },
+
+  saveButtonDisabled: {
+    backgroundColor: '#302714',
+    borderWidth: 1,
+    borderColor: '#59430E',
+  },
+
+  saveText: {
+    color: '#111111',
+    fontSize: 11,
+    fontWeight: '700',
+  },
+
+  saveTextDisabled: {
+    color: '#FFC107',
   },
 
 
