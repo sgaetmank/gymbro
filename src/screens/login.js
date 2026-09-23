@@ -68,7 +68,7 @@ export default function LoginScreen({ navigation }) {
           value={email}
           onChangeText={(text) => {
             setEmail(text);
-            setError('');
+            setError(''); //el mensaje de error no debe quedar pegado en pantalla mientras el usuario ya está corrigiendo lo que escribió
           }}
         />
 
@@ -93,7 +93,7 @@ export default function LoginScreen({ navigation }) {
           </Text>
         </View>
 
-        {/* Mensaje de error (campos vacíos o credenciales incorrectas) */}
+        {/*Renderizado condicional (si hay errores): Mensaje de error (campos vacíos o credenciales incorrectas) */}
         {error !== '' && <Text style={styles.error}>{error}</Text>}
 
         {/* Botón */}

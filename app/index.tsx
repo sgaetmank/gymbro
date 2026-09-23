@@ -17,9 +17,11 @@ import UserDayScreen from '../src/screens/ver_dia_x_user';
 
 const Stack = createNativeStackNavigator();
 
-// Elige qué pantallas existen según la sesión. La primera de cada grupo es la inicial.
+// Elige qué pantallas existen según la sesión.
 function AppNavigator() {
-  const { user } = useAuth();
+  // useAuth() lee el AuthContext. Cuando login()/logout() cambian "user" con
+  // setUser, este componente se re-renderiza solo, sin llamarlo manualmente.
+  const { user } = useAuth(); // guarda quien esta logueado
 
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>
@@ -38,7 +40,8 @@ function AppNavigator() {
           <Stack.Screen name="ver_datos_trainer" component={UserDataScreen} />
         </>
       ) : (
-        // Usuario común
+        // Usuario común. React Navigation muestra la primera screen de este
+        // grupo (home_user) apenas cambia el conjunto de rutas disponibles.
         <>
           <Stack.Screen name="home_user" component={UserHomeScreen} />
           <Stack.Screen name="mi_rutina_user" component={UserRoutineScreen} />
@@ -54,9 +57,9 @@ function AppNavigator() {
 export default function App() {
   return (
     <SafeAreaProvider>
-      <AuthProvider>
-        <NavigationContainer>
-          <AppNavigator />
+      <AuthProvider> {/* guarda quien esta logueado */ }
+        <NavigationContainer> 
+          <AppNavigator /> {/* decide qué pantallas existen según haya o no usuario */ }
         </NavigationContainer>
       </AuthProvider>
     </SafeAreaProvider>

@@ -128,6 +128,7 @@ export default function SignUpScreen({ navigation }) {
       return;
     }
 
+    // register es la función del AuthContext que hace las validaciones de email/DNI duplicado y llama addUser + setUser.
     const result = register({
       ...form,
       age: String(age),

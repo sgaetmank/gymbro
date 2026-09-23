@@ -1,4 +1,5 @@
-//Es un campo de texto reutilizable. Muestra una etiqueta arriba (por ejemplo "Email") y debajo el input, con el estilo oscuro de la app. Si es un campo de contraseña, agrega un ojito para mostrar u ocultar el texto.
+/*Es un campo de texto reutilizable. Muestra una etiqueta arriba (por ejemplo "Email") y debajo el input, 
+con el estilo oscuro de la app. Si es un campo de contraseña, agrega un ojito para mostrar u ocultar el texto.*/
 
 //Sin este componente habría que repetir en cada pantalla el Text de la etiqueta, el TextInput, los estilos y la lógica del ojito. Se usa en dos pantallas:
 
@@ -22,7 +23,7 @@ export default function CustomInput({
   secureTextEntry = false, //Si es true, es un campo de contraseña. Por defecto false.
   value, //	El texto actual del campo
   onChangeText, //Función que se llama cuando el texto cambia. Recibe el nuevo texto como argumento.
-  autoCapitalize = 'none', // Por defecto 'none', para que el teclado no ponga mayúscula automática (útil en emails).
+  autoCapitalize = 'none', // Por defecto 'none', para que el teclado no ponga mayúscula automática
   keyboardType, //	Tipo de teclado, por ejemplo email-address para que aparezca la arroba
 }) {
   // Si la contraseña se ve o no (solo aplica cuando secureTextEntry es true)

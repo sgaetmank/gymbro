@@ -1,5 +1,8 @@
 import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 
+// title: el texto que se muestra dentro del botón (string). Ej: "Iniciar Sesión", "Registrarme".
+// onPress: la función que se ejecuta cuando el usuario toca el botón
+
 export default function PrimaryButton({ title, onPress }) {
   return (
     <TouchableOpacity style={styles.button} onPress={onPress}>

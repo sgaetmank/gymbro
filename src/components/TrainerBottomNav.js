@@ -1,9 +1,13 @@
 import {
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
+
+
+/* activeScreen: un string ("search" o "account") que cada pantalla define manualmente 
+para decirle a la barra "yo soy esta pestaña, resaltame a mí"*/
 
 export default function TrainerBottomNav({ activeScreen, isLandscape, navigation }) {
   return (
@@ -13,50 +17,14 @@ export default function TrainerBottomNav({ activeScreen, isLandscape, navigation
         isLandscape && styles.bottomNavLandscape,
       ]}
     >
-      <TouchableOpacity
-        style={styles.navItem}
-        onPress={() => navigation.navigate('buscar_usuario_trainer')}
-      >
-        <Text
-          style={[
-            styles.navIcon,
-            activeScreen === 'search' && styles.active,
-          ]}
-        >
-          ⌕
-        </Text>
-
-        <Text
-          style={[
-            styles.navText,
-            activeScreen === 'search' && styles.active,
-          ]}
-        >
-          Buscar Usuario
-        </Text>
+      <TouchableOpacity onPress={() => navigation.navigate('buscar_usuario_trainer')}>
+        <Text style={[styles.navIcon, activeScreen === 'search' && styles.active]}>⌕</Text>
+        <Text style={[styles.navText, activeScreen === 'search' && styles.active]}>Buscar Usuario</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity
-        style={styles.navItem}
-        onPress={() => navigation.navigate('mi_cuenta_trainer')}
-      >
-        <Text
-          style={[
-            styles.navIcon,
-            activeScreen === 'account' && styles.active,
-          ]}
-        >
-          ♙
-        </Text>
-
-        <Text
-          style={[
-            styles.navText,
-            activeScreen === 'account' && styles.active,
-          ]}
-        >
-          Mi Cuenta
-        </Text>
+      <TouchableOpacity onPress={() => navigation.navigate('mi_cuenta_trainer')}>
+        <Text style={[styles.navIcon, activeScreen === 'account' && styles.active]}>♙</Text>
+        <Text style={[styles.navText, activeScreen === 'account' && styles.active]}>Mi Cuenta</Text>
       </TouchableOpacity>
     </View>
   );
