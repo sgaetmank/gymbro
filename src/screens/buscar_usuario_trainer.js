@@ -19,9 +19,9 @@ export default function SearchUserScreen({ navigation }) {
   // Saca tildes/acentos para que la búsqueda no dependa de escribirlos bien
   const normalizar = (texto) =>
     texto
-      .normalize('NFD')
-      .replace(/[̀-ͯ]/g, '')
-      .toLowerCase();
+      .normalize('NFD') // descompone los caracteres acentuados en su letra base + el acento como carácter separado
+      .replace(/[̀-ͯ]/g, '') // elimina esos símbolos de acento sueltos con una expresión regular
+      .toLowerCase(); // uniforma mayúsculas/minúsculas
 
   // Usuario actualmente seleccionado
   const [selectedUser, setSelectedUser] = useState(null);
@@ -43,12 +43,7 @@ export default function SearchUserScreen({ navigation }) {
     <SafeAreaView style={styles.container}>
 
       {/* HEADER */}
-      <View
-        style={[
-          styles.header,
-          isLandscape && styles.headerLandscape,
-        ]}
-      >
+      <View style={[styles.header,isLandscape && styles.headerLandscape,]} >
 
         <Text style={styles.headerTitle}>
           Buscar Usuario
@@ -57,12 +52,7 @@ export default function SearchUserScreen({ navigation }) {
       </View>
 
       {/* CONTENIDO */}
-      <View
-        style={[
-          styles.content,
-          isLandscape && styles.contentLandscape,
-        ]}
-      >
+      <View style={[styles.content, isLandscape && styles.contentLandscape,]}>
 
         {/* BUSCADOR */}
         <View style={styles.searchContainer}>
@@ -94,10 +84,7 @@ export default function SearchUserScreen({ navigation }) {
             return (
               <TouchableOpacity
                 key={user.id}
-                style={[
-                  styles.userCard,
-                  isSelected && styles.selectedCard,
-                ]}
+                style={[styles.userCard,isSelected && styles.selectedCard,]}
                 onPress={() => setSelectedUser(user.id)}
                 activeOpacity={0.8}
               >

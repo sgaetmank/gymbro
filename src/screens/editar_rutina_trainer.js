@@ -138,7 +138,7 @@ export default function EditRoutineScreen({ navigation, route }) {
     normalizar(`${exercise.name} ${exercise.muscleGroup}`).includes(
       normalizar(exerciseName)
     )
-  ).slice(0, 3);
+  ).slice(0, 3); //limita el resultado a los primeros 3 matches para no saturar la pantalla con una lista larga
 
   // ============================================================
   // ABRIR MODAL DE DESCANSO

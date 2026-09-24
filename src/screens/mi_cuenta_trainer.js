@@ -1,12 +1,13 @@
 import {
-    ScrollView,
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
 } from 'react-native';
 
 import { SafeAreaView } from 'react-native-safe-area-context';
+import ProfileDataCard from '../components/ProfileDataCard';
 import TrainerBottomNav from '../components/TrainerBottomNav';
 import { useAuth } from '../context/AuthContext';
 import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
@@ -23,24 +24,14 @@ export default function TrainerProfileScreen({ navigation }) {
 
       {/* HEADER */}
 
-      <View
-        style={[
-          styles.header,
-          isLandscape && styles.headerLandscape,
-        ]}
-      >
-        <Text style={styles.headerTitle}>
-          Mi Cuenta
-        </Text>
+      <View style={[styles.header, isLandscape && styles.headerLandscape,]}>
+        <Text style={styles.headerTitle}> Mi Cuenta </Text>
       </View>
 
 
       <ScrollView
         style={styles.scroll}
-        contentContainerStyle={[
-          styles.content,
-          isLandscape && styles.contentLandscape,
-        ]}
+        contentContainerStyle={[styles.content, isLandscape && styles.contentLandscape,]}
         showsVerticalScrollIndicator={false}
       >
 
@@ -49,139 +40,48 @@ export default function TrainerProfileScreen({ navigation }) {
         <View style={styles.profile}>
 
           <View style={styles.avatar}>
-            <Text style={styles.avatarText}>
-              {user.initials}
-            </Text>
+            <Text style={styles.avatarText}> {user.initials} </Text>
           </View>
 
-          <Text style={styles.name}>
-            {user.name}
-          </Text>
+          <Text style={styles.name}> {user.name} </Text>
 
-          <Text style={styles.email}>
-            {user.email}
-          </Text>
+          <Text style={styles.email}> {user.email} </Text>
 
         </View>
 
 
         {/* DATOS PERSONALES */}
 
-        <View style={styles.card}>
-
-          <Text style={styles.sectionTitle}>
-            Datos Personales
-          </Text>
-
-          <View style={styles.dataRow}>
-            <Text style={styles.icon}>◉</Text>
-
-            <View>
-              <Text style={styles.label}>DNI</Text>
-              <Text style={styles.value}>{user.dni}</Text>
-            </View>
-          </View>
-
-          <View style={styles.dataRow}>
-            <Text style={styles.icon}>♙</Text>
-
-            <View>
-              <Text style={styles.label}>Género</Text>
-              <Text style={styles.value}>{user.gender}</Text>
-            </View>
-          </View>
-
-          <View style={styles.dataRow}>
-            <Text style={styles.icon}>〽</Text>
-
-            <View>
-              <Text style={styles.label}>Edad</Text>
-              <Text style={styles.value}>{user.age}</Text>
-            </View>
-          </View>
-
-          <View style={styles.dataRow}>
-            <Text style={styles.icon}>〽</Text>
-
-            <View>
-              <Text style={styles.label}>Peso</Text>
-              <Text style={styles.value}>{user.weight}</Text>
-            </View>
-
-          </View>
-
-          <View style={styles.dataRow}>
-            <Text style={styles.icon}>〽</Text>
-
-            <View>
-              <Text style={styles.label}>Altura</Text>
-              <Text style={styles.value}>{user.height}</Text>
-            </View>
-          </View>
-
-        </View>
+        <ProfileDataCard
+          title="Datos Personales"
+          rows={[
+            { icon: '◉', label: 'DNI', value: user.dni },
+            { icon: '♙', label: 'Género', value: user.gender },
+            { icon: '〽', label: 'Edad', value: user.age },
+            { icon: '〽', label: 'Peso', value: user.weight },
+            { icon: '〽', label: 'Altura', value: user.height },
+          ]}
+        />
 
 
         {/* CONTACTO Y SALUD */}
 
-        <View style={styles.card}>
-
-          <Text style={styles.sectionTitle}>
-            Contacto y Salud
-          </Text>
-
-          <View style={styles.dataRow}>
-            <Text style={styles.icon}>☎</Text>
-
-            <View>
-              <Text style={styles.label}>Teléfono</Text>
-              <Text style={styles.value}>{user.phone}</Text>
-            </View>
-          </View>
-
-          <View style={styles.dataRow}>
-            <Text style={styles.icon}>☎</Text>
-
-            <View>
-              <Text style={styles.label}>Tel. Emergencia</Text>
-              <Text style={styles.value}>{user.emergencyPhone}</Text>
-            </View>
-          </View>
-
-          <View style={styles.dataRow}>
-            <Text style={styles.icon}>♡</Text>
-
-            <View>
-              <Text style={styles.label}>Obra Social</Text>
-              <Text style={styles.value}>{user.healthInsurance}</Text>
-            </View>
-          </View>
-
-          <View style={styles.dataRow}>
-            <Text style={styles.icon}>▣</Text>
-
-            <View>
-              <Text style={styles.label}>
-                Contraindicaciones
-              </Text>
-
-              <Text style={styles.value}>
-                {user.contraindications}
-              </Text>
-            </View>
-          </View>
-
-        </View>
+        <ProfileDataCard
+          title="Contacto y Salud"
+          rows={[
+            { icon: '☎', label: 'Teléfono', value: user.phone },
+            { icon: '☎', label: 'Tel. Emergencia', value: user.emergencyPhone },
+            { icon: '♡', label: 'Obra Social', value: user.healthInsurance },
+            { icon: '▣', label: 'Contraindicaciones', value: user.contraindications },
+          ]}
+        />
 
 
         {/* CERRAR SESIÓN */}
 
-        <TouchableOpacity style={styles.logoutButton}
-        onPress={logout}>
+        <TouchableOpacity style={styles.logoutButton} onPress={logout}>
 
-          <Text style={styles.logoutText}>
-            Cerrar Sesión
-          </Text>
+          <Text style={styles.logoutText}> Cerrar Sesión </Text>
 
         </TouchableOpacity>
 
@@ -190,6 +90,7 @@ export default function TrainerProfileScreen({ navigation }) {
 
       <TrainerBottomNav
         activeScreen="account"
+        isLandscape={isLandscape}
         navigation={navigation}
       />
 
@@ -278,78 +179,6 @@ const styles = StyleSheet.create({
     color: '#777777',
     fontSize: 14,
     marginTop: 3,
-  },
-
-
-  /* CARDS */
-
-  card: {
-    backgroundColor: '#1D1D1D',
-    borderRadius: 8,
-    padding: '3%',
-    marginBottom: '2.3%',
-  },
-
-  sectionTitle: {
-    color: '#FFC107',
-    fontSize: 15,
-    fontWeight: '700',
-    marginBottom: 8,
-  },
-
-
-  /* DATOS */
-  dataRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: '3.5%',
-    borderTopWidth: 1,
-    borderTopColor: '#292929',
-  },
-
-  icon: {
-    color: '#FFC107',
-    fontSize: 16,
-    width: '9%',
-    textAlign: 'center',
-    marginRight: '1.5%',
-  },
-
-  label: {
-    color: '#777777',
-    fontSize: 13,
-    marginBottom: 2,
-  },
-
-  value: {
-    color: '#FFFFFF',
-    fontSize: 15,
-    fontWeight: '600',
-  },
-
-
-
-  /* OBJETIVO */
-
-  objective: {
-    paddingVertical: '2.5%',
-    backgroundColor: '#292929',
-    borderRadius: 6,
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingHorizontal: '3%',
-  },
-
-  objectiveIcon: {
-    color: '#FFC107',
-    fontSize: 17,
-    marginRight: 9,
-  },
-
-  objectiveText: {
-    color: '#FFFFFF',
-    fontSize: 15,
-    fontWeight: '600',
   },
 
 

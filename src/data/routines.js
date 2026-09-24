@@ -156,6 +156,7 @@ export function getRoutineById(routineId) {
 export function createRoutine(days) {
   // Alta de una rutina nueva (equivale a un INSERT en la base de datos).
   const routine = {
+    // El id nuevo se calcula tomando el máximo id existente + 1
     id: Math.max(...routines.map((routine) => routine.id)) + 1,
     name: 'Mi Rutina',
     // Copia profunda para no compartir referencias con el estado de la pantalla
