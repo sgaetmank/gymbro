@@ -90,19 +90,19 @@ export default function UserDayScreen({ navigation, route }) {
 
         {/* BLOQUES */}
 
-        {day.blocks.map((block) => (
+        {day.blocks.map((block, blockIndex) => (
 
           <View
             key={block.id}
             style={styles.block}
           >
 
-            {/* ENCABEZADO DEL BLOQUE */}
+            {/* ENCABEZADO DEL BLOQUE (no se guarda: se calcula según la posición) */}
 
             <View style={styles.blockHeader}>
 
               <Text style={styles.blockTitle}>
-                {block.name}
+                {`Bloque ${blockIndex + 1}`}
               </Text>
 
             </View>
@@ -205,7 +205,7 @@ export default function UserDayScreen({ navigation, route }) {
                     <View style={styles.rest}>
 
                       <Text style={styles.restText}>
-                        Descanso: {item.time}
+                        Descanso: {item.time} {item.unit}
                       </Text>
 
                     </View>
@@ -365,9 +365,9 @@ const styles = StyleSheet.create({
 
   title: {
     color: '#FFC107',
-    fontSize: 19,
+    fontSize: 24,
     fontWeight: '700',
-    marginBottom: 10,
+    marginBottom: 14,
   },
 
 
@@ -375,43 +375,48 @@ const styles = StyleSheet.create({
 
   block: {
     backgroundColor: '#1D1D1D',
-    borderRadius: 8,
-    marginBottom: '2.5%',
+    borderRadius: 16,
+    borderWidth: 1.5,
+    borderColor: '#FFE082',
+    marginBottom: 16,
     overflow: 'hidden',
   },
 
   blockHeader: {
     backgroundColor: '#292929',
-    paddingHorizontal: '2.5%',
-    paddingVertical: '2.5%',
+    paddingHorizontal: '4%',
+    paddingVertical: '3.5%',
   },
 
   blockContent: {
-    padding: '2%',
+    padding: '3.5%',
   },
 
   blockTitle: {
     color: '#FFFFFF',
-    fontSize: 14,
+    fontSize: 18,
     fontWeight: '700',
   },
 
 
 
-  /* EJERCICIO */
+  /* EJERCICIO — cada item es su propia tarjeta, para diferenciarlos
+     fácilmente de un vistazo mientras se entrena */
 
   item: {
-    marginBottom: 10,
-    paddingBottom: 10,
-    borderBottomWidth: 1,
-    borderBottomColor: '#3A3A3A',
+    backgroundColor: '#242424',
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: '#3A3A3A',
+    padding: '4%',
+    marginBottom: 12,
   },
 
   exerciseName: {
     color: '#FFFFFF',
-    fontSize: 15,
+    fontSize: 18,
     fontWeight: '600',
-    marginBottom: 7,
+    marginBottom: 10,
   },
 
 
@@ -419,27 +424,27 @@ const styles = StyleSheet.create({
 
   exerciseData: {
     flexDirection: 'row',
-    gap: 6,
-    marginBottom: 6,
+    gap: 8,
+    marginBottom: 10,
   },
 
   dataBox: {
     flex: 1,
-    backgroundColor: '#292929',
-    borderRadius: 5,
-    paddingVertical: '1.5%',
+    backgroundColor: '#2E2E2E',
+    borderRadius: 10,
+    paddingVertical: '2.5%',
     alignItems: 'center',
   },
 
   dataLabel: {
-    color: '#777777',
-    fontSize: 12,
-    marginBottom: 2,
+    color: '#999999',
+    fontSize: 13,
+    marginBottom: 3,
   },
 
   dataValue: {
     color: '#FFFFFF',
-    fontSize: 15,
+    fontSize: 18,
     fontWeight: '600',
   },
 
@@ -447,9 +452,9 @@ const styles = StyleSheet.create({
   /* COMENTARIOS */
 
   comments: {
-    color: '#888888',
-    fontSize: 13,
-    marginBottom: 6,
+    color: '#AAAAAA',
+    fontSize: 15,
+    marginBottom: 10,
   },
 
 
@@ -457,19 +462,21 @@ const styles = StyleSheet.create({
 
   buttons: {
     flexDirection: 'row',
-    gap: 8,
+    gap: 10,
   },
 
   button: {
+    flex: 1,
     backgroundColor: '#3A2B0D',
-    borderRadius: 12,
-    paddingHorizontal: 9,
-    paddingVertical: 5,
+    borderRadius: 14,
+    paddingHorizontal: 12,
+    paddingVertical: 10,
+    alignItems: 'center',
   },
 
   buttonText: {
     color: '#FFC107',
-    fontSize: 13,
+    fontSize: 14,
     fontWeight: '600',
   },
 
@@ -478,14 +485,14 @@ const styles = StyleSheet.create({
 
   rest: {
     backgroundColor: '#202C35',
-    borderRadius: 5,
-    paddingVertical: '2%',
-    paddingHorizontal: '2.3%',
+    borderRadius: 10,
+    paddingVertical: '3%',
+    paddingHorizontal: '3.5%',
   },
 
   restText: {
     color: '#66B8FF',
-    fontSize: 14,
+    fontSize: 17,
     fontWeight: '500',
   },
 
@@ -501,8 +508,8 @@ const styles = StyleSheet.create({
     width: '100%',
     maxHeight: '80%',
     backgroundColor: '#1D1D1D',
-    borderRadius: 10,
-    padding: '4%',
+    borderRadius: 16,
+    padding: '5.5%',
   },
 
   modalLandscape: {
@@ -512,43 +519,43 @@ const styles = StyleSheet.create({
 
   modalTitle: {
     color: '#FFC107',
-    fontSize: 16,
+    fontSize: 19,
     fontWeight: '700',
-    marginBottom: 12,
+    marginBottom: 14,
   },
 
   exerciseModalName: {
     color: '#FFFFFF',
-    fontSize: 14,
+    fontSize: 19,
     fontWeight: '600',
-    marginBottom: 10,
+    marginBottom: 14,
   },
 
   /* INSTRUCCIONES */
 
   instructionsScroll: {
-    maxHeight: 250,
+    maxHeight: 320,
   },
 
   instructionsText: {
     color: '#CCCCCC',
-    fontSize: 13,
-    lineHeight: 17,
+    fontSize: 16,
+    lineHeight: 22,
   },
 
   /* BOTÓN CERRAR */
 
   closeButton: {
     backgroundColor: '#FFC107',
-    borderRadius: 7,
-    paddingVertical: '2.3%',
+    borderRadius: 10,
+    paddingVertical: '3%',
     alignItems: 'center',
-    marginTop: '4%',
+    marginTop: '5%',
   },
 
   closeButtonText: {
     color: '#111111',
-    fontSize: 12,
+    fontSize: 15,
     fontWeight: '700',
   },
 

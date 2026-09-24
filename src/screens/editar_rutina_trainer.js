@@ -101,9 +101,9 @@ export default function EditRoutineScreen({ navigation, route }) {
           return day;
         }
 
+        // "Bloque N" no se guarda: se calcula al mostrarlo, según la posición del bloque
         const newBlock = {
           id: Date.now(),
-          name: `Bloque ${day.blocks.length + 1}`,
           items: [],
         };
 
@@ -588,7 +588,7 @@ const moveItem = (dayId, blockId, itemId, direction) => {
         <View style={styles.titleRow}>
 
           <Text style={styles.routineTitle}>
-            Rutina de {editedUser?.firstName}
+            Rutina de <Text style={styles.routineTitleName}>{editedUser?.firstName}</Text>
           </Text>
 
         </View>
@@ -667,12 +667,6 @@ const moveItem = (dayId, blockId, itemId, direction) => {
 
               <View style={styles.dayActions}>
 
-                <TouchableOpacity style={styles.viewDayButton}>
-                  <Text style={styles.viewDayText}>
-                    ◉ Ver día
-                  </Text>
-                </TouchableOpacity>
-
                 <TouchableOpacity
                   onPress={() => deleteDay(day.id)}
                 >
@@ -690,7 +684,7 @@ const moveItem = (dayId, blockId, itemId, direction) => {
                 BLOQUES DEL DÍA
             ================================================= */}
 
-            {day.blocks.map((block) => (
+            {day.blocks.map((block, blockIndex) => (
 
               <View
                 key={block.id}
@@ -764,7 +758,7 @@ const moveItem = (dayId, blockId, itemId, direction) => {
                     </View>
 
                     <Text style={styles.blockTitle}>
-                        {block.name}
+                        {`Bloque ${blockIndex + 1}`}
                     </Text>
 
                     </View>
@@ -1397,6 +1391,10 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 
+  routineTitleName: {
+    color: '#FFC107',
+  },
+
   
   /* ==============================================================
      DÍA
@@ -1404,11 +1402,11 @@ const styles = StyleSheet.create({
 
   dayContainer: {
     backgroundColor: '#191919',
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: '#292929',
-    padding: '2.3%',
-    marginBottom: '2.5%',
+    borderRadius: 14,
+    borderWidth: 1.5,
+    borderColor: '#FFE082',
+    padding: '2.8%',
+    marginBottom: '3%',
   },
 
   dayHeader: {
@@ -1431,11 +1429,11 @@ const styles = StyleSheet.create({
   },
 
   arrowButton: {
-    width: 40,
-    height: 38,
-    backgroundColor: '#302714',
+    width: 32,
+    height: 28,
+    backgroundColor: '#2A2A2A',
     borderWidth: 1,
-    borderColor: '#59430E',
+    borderColor: '#3A3A3A',
     borderRadius: 6,
     alignItems: 'center',
     justifyContent: 'center',
@@ -1443,9 +1441,9 @@ const styles = StyleSheet.create({
   },
 
   arrow: {
-    color: '#FFC107',
-    fontSize: 22,
-    lineHeight: 20,
+    color: '#AAAAAA',
+    fontSize: 18,
+    lineHeight: 16,
     textAlign: 'center',
   },
 
@@ -1464,22 +1462,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
 
-  viewDayButton: {
-    backgroundColor: '#302714',
-    borderWidth: 1,
-    borderColor: '#59430E',
-    borderRadius: 6,
-    paddingHorizontal: 7,
-    paddingVertical: 4,
-    marginRight: 8,
-  },
-
-  viewDayText: {
-    color: '#FFC107',
-    fontSize: 12,
-    fontWeight: '700',
-  },
-
   deleteIcon: {
     color: '#FF5A5F',
     fontSize: 16,
@@ -1492,10 +1474,12 @@ const styles = StyleSheet.create({
   ============================================================== */
 
   blockContainer: {
-    backgroundColor: '#242424',
-    borderRadius: 7,
-    padding: '2%',
-    marginBottom: '2%',
+    backgroundColor: '#2B2B2B',
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#3A3A3A',
+    padding: '2.3%',
+    marginBottom: '2.3%',
   },
 
   blockHeader: {
@@ -1549,17 +1533,20 @@ disabledSmallArrow: {
   ============================================================== */
 
   itemCard: {
-    borderRadius: 6,
-    padding: '2%',
-    marginBottom: '1.3%',
+    borderRadius: 8,
+    borderWidth: 1,
+    padding: '2.3%',
+    marginBottom: '1.5%',
   },
 
   exerciseCard: {
-    backgroundColor: '#181818',
+    backgroundColor: '#1D1D1D',
+    borderColor: '#2E2E2E',
   },
 
   restCard: {
-    backgroundColor: '#1B1B1B',
+    backgroundColor: '#16232C',
+    borderColor: '#2C4A63',
   },
 
   itemMain: {
@@ -1572,11 +1559,11 @@ disabledSmallArrow: {
   },
 
   itemArrowButton: {
-    width: 38,
-    height: 36,
-    backgroundColor: '#302714',
+    width: 30,
+    height: 26,
+    backgroundColor: '#2A2A2A',
     borderWidth: 1,
-    borderColor: '#59430E',
+    borderColor: '#3A3A3A',
     borderRadius: 6,
     alignItems: 'center',
     justifyContent: 'center',
@@ -1584,9 +1571,9 @@ disabledSmallArrow: {
   },
 
   itemArrow: {
-    color: '#FFC107',
-    fontSize: 19,
-    lineHeight: 17,
+    color: '#AAAAAA',
+    fontSize: 16,
+    lineHeight: 14,
     textAlign: 'center',
   },
 
@@ -1641,13 +1628,18 @@ disabledSmallArrow: {
 
   addItemRow: {
     flexDirection: 'row',
-    marginTop: 4,
+    gap: 8,
+    marginTop: 6,
   },
 
   addItemButton: {
     flex: 1,
     alignItems: 'center',
-    paddingVertical: 7,
+    paddingVertical: 8,
+    backgroundColor: '#302714',
+    borderWidth: 1,
+    borderColor: '#59430E',
+    borderRadius: 7,
   },
 
   addItemText: {

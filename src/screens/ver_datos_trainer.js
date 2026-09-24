@@ -48,9 +48,9 @@ export default function UserDataScreen({ navigation, route }) {
         showsVerticalScrollIndicator={false}
       >
 
-        {/* PERFIL */}
+        {/* PERFIL (sin recuadro amarillo, mismo estilo que mi_cuenta_user.js) */}
 
-        <View style={styles.card}>
+        <View style={styles.profile}>
 
           <View style={styles.avatar}>
             <Text style={styles.avatarText}>
@@ -58,15 +58,13 @@ export default function UserDataScreen({ navigation, route }) {
             </Text>
           </View>
 
-          <View>
-            <Text style={styles.name}>
-              {user ? `${user.firstName} ${user.lastName}` : 'Sin usuario seleccionado'}
-            </Text>
+          <Text style={styles.name}>
+            {user ? `${user.firstName} ${user.lastName}` : 'Sin usuario seleccionado'}
+          </Text>
 
-            <Text style={styles.email}>
-              {user?.email || '-'}
-            </Text>
-          </View>
+          <Text style={styles.email}>
+            {user?.email || '-'}
+          </Text>
 
         </View>
 
@@ -280,39 +278,47 @@ const styles = StyleSheet.create({
 
   card: {
     backgroundColor: '#1D1D1D',
-    borderRadius: 8,
-    padding: '3%',
-    marginBottom: '2.5%',
+    borderRadius: 16,
+    borderWidth: 1.5,
+    borderColor: '#FFE082',
+    padding: '3.5%',
+    marginBottom: '4%',
   },
 
 
-  /* PERFIL */
+  /* PERFIL (sin recuadro amarillo, mismo estilo que mi_cuenta_user.js) */
+
+  profile: {
+    alignItems: 'center',
+    paddingVertical: '3.5%',
+    marginBottom: '3%',
+  },
 
   avatar: {
-    width: '13%',
+    width: '16%',
     aspectRatio: 1,
     borderRadius: 999,
-    backgroundColor: '#3A2B0D',
+    backgroundColor: '#FFC107',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: '2%',
+    marginBottom: '3%',
   },
   avatarText: {
-    color: '#FFC107',
-    fontSize: 16,
+    color: '#111111',
+    fontSize: 19,
     fontWeight: '700',
   },
 
   name: {
     color: '#FFFFFF',
-    fontSize: 16,
+    fontSize: 19,
     fontWeight: '700',
   },
 
   email: {
-    color: '#888888',
-    fontSize: 15,
-    marginTop: 4,
+    color: '#777777',
+    fontSize: 17,
+    marginTop: 5,
   },
 
 
@@ -320,9 +326,9 @@ const styles = StyleSheet.create({
 
   title: {
     color: '#FFC107',
-    fontSize: 16,
+    fontSize: 19,
     fontWeight: '700',
-    marginBottom: 10,
+    marginBottom: 14,
   },
 
 
@@ -330,27 +336,27 @@ const styles = StyleSheet.create({
 
   row: {
     flexDirection: 'row',
-    gap: '2%',
-    marginBottom: '2%',
+    gap: '3%',
+    marginBottom: '3%',
   },
 
   box: {
     flex: 1,
     backgroundColor: '#292929',
-    borderRadius: 6,
-    padding: '2.3%',
-    marginBottom: '2%',
+    borderRadius: 10,
+    padding: '3.2%',
+    marginBottom: '3%',
   },
 
   label: {
-    color: '#777777',
-    fontSize: 14,
-    marginBottom: 4,
+    color: '#999999',
+    fontSize: 15,
+    marginBottom: 5,
   },
 
   value: {
     color: '#FFFFFF',
-    fontSize: 16,
+    fontSize: 19,
     fontWeight: '500',
   },
 
@@ -360,15 +366,15 @@ const styles = StyleSheet.create({
   tag: {
     alignSelf: 'flex-start',
     backgroundColor: '#3A2B0D',
-    borderRadius: 15,
-    paddingHorizontal: '3%',
-    paddingVertical: '1.8%',
-    marginTop: '0.5%',
+    borderRadius: 18,
+    paddingHorizontal: '4%',
+    paddingVertical: '2.5%',
+    marginTop: '1%',
   },
 
   tagText: {
     color: '#FFC107',
-    fontSize: 15,
+    fontSize: 17,
     fontWeight: '600',
   },
 

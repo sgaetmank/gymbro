@@ -28,7 +28,10 @@ export default function TrainerProfileScreen({ navigation }) {
       [
         { text: 'Cancelar', style: 'cancel' },
         { text: 'Cerrar sesión', style: 'destructive', onPress: logout },
-      ]
+      ],
+      // Tocar afuera del cuadro de diálogo equivale a "Cancelar" (solo tiene efecto
+      // en Android; en iOS el sistema no permite cerrar el Alert tocando afuera).
+      { cancelable: true, onDismiss: () => {} }
     );
   };
 

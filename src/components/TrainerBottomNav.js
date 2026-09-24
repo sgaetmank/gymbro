@@ -17,12 +17,12 @@ export default function TrainerBottomNav({ activeScreen, isLandscape, navigation
         isLandscape && styles.bottomNavLandscape,
       ]}
     >
-      <TouchableOpacity onPress={() => navigation.navigate('buscar_usuario_trainer')}>
+      <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('buscar_usuario_trainer')}>
         <Text style={[styles.navIcon, activeScreen === 'search' && styles.active]}>⌕</Text>
         <Text style={[styles.navText, activeScreen === 'search' && styles.active]}>Buscar Usuario</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => navigation.navigate('mi_cuenta_trainer')}>
+      <TouchableOpacity style={styles.navItem} onPress={() => navigation.navigate('mi_cuenta_trainer')}>
         <Text style={[styles.navIcon, activeScreen === 'account' && styles.active]}>♙</Text>
         <Text style={[styles.navText, activeScreen === 'account' && styles.active]}>Mi Cuenta</Text>
       </TouchableOpacity>

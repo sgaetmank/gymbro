@@ -98,17 +98,17 @@ export default function UserRoutineScreen({ navigation }) {
                 BLOQUES
             ================================================== */}
 
-            {day.blocks.map((block) => (
+            {day.blocks.map((block, blockIndex) => (
 
               <View
                 key={block.id}
                 style={styles.block}
               >
 
-                {/* NOMBRE DEL BLOQUE */}
+                {/* NOMBRE DEL BLOQUE (no se guarda: se calcula según la posición) */}
 
                 <Text style={styles.blockTitle}>
-                  {block.name}
+                  {`Bloque ${blockIndex + 1}`}
                 </Text>
 
 
@@ -253,41 +253,41 @@ const styles = StyleSheet.create({
 
   screenTitle: {
     color: '#FFFFFF',
-    fontSize: 20,
+    fontSize: 26,
     fontWeight: '700',
-    marginBottom: 14,
+    marginBottom: 20,
   },
 
 
   /* DÍA */
 
   dayContainer: {
-    marginBottom: 14,
+    marginBottom: 26,
   },
 
   dayHeader: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 7,
+    marginBottom: 12,
   },
 
   dayTitle: {
     color: '#FFC107',
-    fontSize: 16,
+    fontSize: 21,
     fontWeight: '700',
   },
 
   dayButton: {
     backgroundColor: '#3A2B0D',
-    borderRadius: 12,
-    paddingHorizontal: '3.5%',
-    paddingVertical: '2%',
+    borderRadius: 16,
+    paddingHorizontal: '5.5%',
+    paddingVertical: '3.5%',
   },
 
   dayButtonText: {
     color: '#FFC107',
-    fontSize: 13,
+    fontSize: 15,
     fontWeight: '600',
   },
 
@@ -296,18 +296,20 @@ const styles = StyleSheet.create({
 
   block: {
     backgroundColor: '#1D1D1D',
-    borderRadius: 8,
-    marginBottom: 7,
+    borderRadius: 16,
+    borderWidth: 1.5,
+    borderColor: '#FFE082',
+    marginBottom: 14,
     overflow: 'hidden',
   },
 
   blockTitle: {
     color: '#FFFFFF',
     backgroundColor: '#292929',
-    fontSize: 14,
+    fontSize: 18,
     fontWeight: '700',
-    paddingHorizontal: '3%',
-    paddingVertical: '2.5%',
+    paddingHorizontal: '4.5%',
+    paddingVertical: '3.8%',
   },
 
 
@@ -316,25 +318,25 @@ const styles = StyleSheet.create({
   item: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingHorizontal: '3%',
-    paddingVertical: '2.3%',
+    paddingHorizontal: '4.5%',
+    paddingVertical: '3.8%',
     borderTopWidth: 1,
     borderTopColor: '#292929',
   },
 
   itemIcon: {
-    width: '7%',
+    width: '11%',
     aspectRatio: 1,
     borderRadius: 999,
     backgroundColor: '#3A2B0D',
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: '2.5%',
+    marginRight: '3.5%',
   },
 
   itemIconText: {
     color: '#FFC107',
-    fontSize: 18,
+    fontSize: 23,
     fontWeight: '700',
   },
 
@@ -344,25 +346,25 @@ const styles = StyleSheet.create({
 
   exerciseName: {
     color: '#FFFFFF',
-    fontSize: 14,
+    fontSize: 18,
     fontWeight: '600',
-    marginBottom: 3,
+    marginBottom: 5,
   },
 
   exerciseDetails: {
     color: '#888888',
-    fontSize: 13,
+    fontSize: 15,
   },
 
   comments: {
     color: '#FFC107',
-    fontSize: 13,
-    marginTop: 3,
+    fontSize: 15,
+    marginTop: 5,
   },
 
   restText: {
-    color: '#888888',
-    fontSize: 14,
+    color: '#66B8FF',
+    fontSize: 18,
   },
 
 

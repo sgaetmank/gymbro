@@ -30,9 +30,11 @@ export default function ProfileDataCard({ title, rows }) {
 const styles = StyleSheet.create({
   card: {
     backgroundColor: '#1D1D1D',
-    borderRadius: 8,
-    padding: '3%',
-    marginBottom: '2.3%',
+    borderRadius: 16,
+    borderWidth: 1.5,
+    borderColor: '#FFE082',
+    padding: '5.5%',
+    marginBottom: '5%',
   },
 
   sectionTitle: {

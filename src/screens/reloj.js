@@ -150,14 +150,16 @@ const styles = StyleSheet.create({
 		width: '100%',
 		maxWidth: 520,
 		backgroundColor: '#1D1D1D',
-		borderRadius: 8,
+		borderRadius: 16,
+		borderWidth: 1.5,
+		borderColor: '#FFE082',
 		alignItems: 'center',
 		alignSelf: 'center',
-		padding: 24,
+		padding: 28,
 	},
 
 	timerCardSmall: {
-		padding: 18,
+		padding: 20,
 	},
 
 	timer: {

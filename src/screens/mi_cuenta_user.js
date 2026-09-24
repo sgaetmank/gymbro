@@ -28,7 +28,10 @@ export default function UserProfileScreen({ navigation }) {
       [
         { text: 'Cancelar', style: 'cancel' },
         { text: 'Cerrar sesión', style: 'destructive', onPress: logout },
-      ]
+      ],
+      // Tocar afuera del cuadro de diálogo equivale a "Cancelar" (solo tiene efecto
+      // en Android; en iOS el sistema no permite cerrar el Alert tocando afuera).
+      { cancelable: true, onDismiss: () => {} }
     );
   };
 
@@ -218,9 +221,11 @@ const styles = StyleSheet.create({
 
   card: {
     backgroundColor: '#1D1D1D',
-    borderRadius: 8,
-    padding: '3%',
-    marginBottom: '2.3%',
+    borderRadius: 16,
+    borderWidth: 1.5,
+    borderColor: '#FFE082',
+    padding: '5.5%',
+    marginBottom: '5%',
   },
 
   sectionTitle: {

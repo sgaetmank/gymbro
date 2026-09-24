@@ -138,6 +138,34 @@ export default function UserHomeScreen({ navigation }) {
 
         </View>
 
+
+        {/* ====================================================
+            CÓMO LLEGAR AL GYM
+            (falta implementar la lógica: abrir el mapa)
+        ==================================================== */}
+
+        <View style={styles.sectionBox}>
+
+          <View style={styles.mapRow}>
+
+            <View style={styles.mapInfo}>
+
+              <Text style={styles.mapTitle}> ¿Cómo llegar al gym? </Text>
+
+              <Text style={styles.mapSubtitle}> Clickea para abrir el mapa. </Text>
+
+            </View>
+
+            <TouchableOpacity style={styles.smallButton}>
+
+              <Text style={styles.smallButtonText}> Ver mapa </Text>
+
+            </TouchableOpacity>
+
+          </View>
+
+        </View>
+
       </ScrollView>
 
 
@@ -375,6 +403,34 @@ const styles = StyleSheet.create({
     color: '#111111',
     fontSize: 14,
     fontWeight: '700',
+  },
+
+
+  /* ==========================================================
+     CÓMO LLEGAR AL GYM
+  ========================================================== */
+
+  mapRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+
+  mapInfo: {
+    flex: 1,
+    paddingRight: 8,
+  },
+
+  mapTitle: {
+    color: '#FFFFFF',
+    fontSize: 15,
+    fontWeight: '700',
+    marginBottom: 4,
+  },
+
+  mapSubtitle: {
+    color: '#777777',
+    fontSize: 13,
+    lineHeight: 14,
   },
 
 
