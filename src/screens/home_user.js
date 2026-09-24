@@ -25,15 +25,8 @@ export default function UserHomeScreen({ navigation }) {
           HEADER
       ====================================================== */}
 
-      <View
-        style={[
-          styles.header,
-          isLandscape && styles.headerLandscape,
-        ]}
-      >
-        <Text style={styles.headerTitle}>
-          Inicio
-        </Text>
+      <View style={[styles.header, isLandscape && styles.headerLandscape, ]}>
+        <Text style={styles.headerTitle}>Inicio</Text>
       </View>
 
 
@@ -54,13 +47,9 @@ export default function UserHomeScreen({ navigation }) {
 
         <View style={styles.greetingContainer}>
 
-          <Text style={styles.greeting}>
-            Hola, {user.firstName}!
-          </Text>
+          <Text style={styles.greeting}> Hola, {user.firstName}! </Text>
 
-          <Text style={styles.subtitle}>
-            Listo para destruir tus metas de hoy?
-          </Text>
+          <Text style={styles.subtitle}> Listo para destruir tus metas de hoy? </Text>
 
         </View>
 
@@ -69,23 +58,23 @@ export default function UserHomeScreen({ navigation }) {
             ESTADÍSTICAS
         ==================================================== */}
 
-        <View style={styles.statsRow}>
+        <View style={styles.sectionBox}>
 
-          {/* DÍAS EN RACHA */}
+          <Text style={styles.sectionTitle}> Estadísticas </Text>
 
-          <View style={styles.statCard}>
+          <View style={styles.statsRow}>
 
-            <Text style={styles.statIcon}>
-              〽
-            </Text>
+            {/* DÍAS EN RACHA */}
 
-            <Text style={styles.statNumber}>
-              0
-            </Text>
+            <View style={styles.statCard}>
 
-            <Text style={styles.statLabel}>
-              Días en racha
-            </Text>
+              <Text style={styles.statIcon}> 〽 </Text>
+
+              <Text style={styles.statNumber}> 0 </Text>
+
+              <Text style={styles.statLabel}> Días en racha </Text>
+
+            </View>
 
           </View>
 
@@ -96,31 +85,25 @@ export default function UserHomeScreen({ navigation }) {
             PROGRESO DIARIO
         ==================================================== */}
 
-        <Text style={styles.sectionTitle}>
-          Progreso Diario
-        </Text>
+        <View style={styles.sectionBox}>
 
-        <View style={styles.progressCard}>
+          <View style={styles.progressRow}>
 
-          <View style={styles.progressInfo}>
+            <View style={styles.progressInfo}>
 
-            <Text style={styles.progressTitle}>
-              ¿Ya entrenaste hoy?
-            </Text>
+              <Text style={styles.progressTitle}> ¿Ya entrenaste hoy? </Text>
 
-            <Text style={styles.progressSubtitle}>
-              Registra tu sesión para no perder la racha.
-            </Text>
+              <Text style={styles.progressSubtitle}> Escanea el QR para no perder la racha. </Text>
+
+            </View>
+
+            <TouchableOpacity style={styles.smallButton}>
+
+              <Text style={styles.smallButtonText}> Escanear </Text>
+
+            </TouchableOpacity>
 
           </View>
-
-          <TouchableOpacity style={styles.smallButton}>
-
-            <Text style={styles.smallButtonText}>
-              Sí, entrené
-            </Text>
-
-          </TouchableOpacity>
 
         </View>
 
@@ -129,41 +112,29 @@ export default function UserHomeScreen({ navigation }) {
             PRÓXIMO ENTRENAMIENTO
         ==================================================== */}
 
-        <Text style={styles.sectionTitle}>
-          Tu próximo entrenamiento
-        </Text>
+        <View style={styles.sectionBox}>
 
-        <View style={styles.nextWorkoutCard}>
 
-          <View style={styles.workoutInfo}>
+          <View style={styles.workoutRow}>
 
-            <Text style={styles.workoutTitle}>
-              Tu rutina
-            </Text>
+            <View style={styles.workoutInfo}>
 
-            <Text style={styles.workoutSubtitle}>
-              Clickea para ver los ejercicios de tu rutina.
-            </Text>
+              <Text style={styles.workoutTitle}> Tu rutina </Text>
+
+              <Text style={styles.workoutSubtitle}> Clickea para ver los ejercicios. </Text>
+
+            </View>
+
+
+            {/* BOTÓN A ENTRENAR */}
+
+            <TouchableOpacity style={styles.trainButton} onPress={() => navigation.navigate('mi_rutina_user')} >
+
+              <Text style={styles.trainButtonText}> A entrenar </Text>
+
+            </TouchableOpacity>
 
           </View>
-
-
-          {/* BOTÓN A ENTRENAR */}
-
-          <TouchableOpacity
-            style={styles.trainButton}
-            onPress={() => navigation.navigate('mi_rutina_user')}
-          >
-
-            <Text style={styles.trainIcon}>
-              ◉
-            </Text>
-
-            <Text style={styles.trainButtonText}>
-              A entrenar
-            </Text>
-
-          </TouchableOpacity>
 
         </View>
 
@@ -260,19 +231,39 @@ const styles = StyleSheet.create({
 
 
   /* ==========================================================
+     CONTENEDOR DE SECCIÓN (Estadísticas / Progreso / Próximo
+     entrenamiento). Cada sección es una única "caja" con borde
+     amarillo claro, para diferenciarlas visualmente entre sí.
+  ========================================================== */
+
+  sectionBox: {
+    backgroundColor: '#1D1D1D',
+    borderRadius: 16,
+    borderWidth: 1.5,
+    borderColor: '#FFE082',
+    padding: '5.5%',
+    marginBottom: '5%',
+  },
+
+  sectionTitle: {
+    color: '#FFFFFF',
+    fontSize: 17,
+    fontWeight: '700',
+    marginBottom: 12,
+  },
+
+
+  /* ==========================================================
      ESTADÍSTICAS
   ========================================================== */
 
   statsRow: {
     flexDirection: 'row',
     gap: 12,
-    marginBottom: 17,
   },
 
   statCard: {
     flex: 1,
-    backgroundColor: '#1D1D1D',
-    borderRadius: 8,
     alignItems: 'center',
     justifyContent: 'center',
     paddingVertical: '5%',
@@ -281,13 +272,13 @@ const styles = StyleSheet.create({
 
   statIcon: {
     color: '#FFC107',
-    fontSize: 26,
+    fontSize: 28,
     marginBottom: 2,
   },
 
   statNumber: {
     color: '#FFFFFF',
-    fontSize: 21,
+    fontSize: 23,
     fontWeight: '700',
   },
 
@@ -300,34 +291,10 @@ const styles = StyleSheet.create({
 
 
   /* ==========================================================
-     TÍTULOS DE SECCIÓN
-  ========================================================== */
-
-  sectionTitle: {
-    color: '#FFFFFF',
-    fontSize: 16,
-    fontWeight: '700',
-    marginBottom: 7,
-  },
-
-
-  /* ==========================================================
      PROGRESO DIARIO
   ========================================================== */
 
-  progressCard: {
-    backgroundColor: '#1D1D1D',
-    borderRadius: 8,
-    padding: '4%',
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginBottom: '4%',
-  },
-
-  nextWorkoutCard: {
-    backgroundColor: '#1D1D1D',
-    borderRadius: 8,
-    padding: '3%',
+  progressRow: {
     flexDirection: 'row',
     alignItems: 'center',
   },
@@ -368,11 +335,7 @@ const styles = StyleSheet.create({
      PRÓXIMO ENTRENAMIENTO
   ========================================================== */
 
-  nextWorkoutCard: {
-    backgroundColor: '#1D1D1D',
-    borderRadius: 8,
-    padding: 14,
-    minHeight: 72,
+  workoutRow: {
     flexDirection: 'row',
     alignItems: 'center',
   },

@@ -1,4 +1,5 @@
 import {
+  Alert,
   ScrollView,
   StyleSheet,
   Text,
@@ -18,6 +19,18 @@ export default function TrainerProfileScreen({ navigation }) {
 
   // Sin sesión (ej: mientras se anima el cierre de sesión) no se dibuja nada
   if (!user) return null;
+
+  // Pide confirmación antes de cerrar sesión, para evitar un toque accidental
+  const confirmLogout = () => {
+    Alert.alert(
+      'Cerrar sesión',
+      '¿Estás seguro de que querés cerrar sesión?',
+      [
+        { text: 'Cancelar', style: 'cancel' },
+        { text: 'Cerrar sesión', style: 'destructive', onPress: logout },
+      ]
+    );
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -79,7 +92,7 @@ export default function TrainerProfileScreen({ navigation }) {
 
         {/* CERRAR SESIÓN */}
 
-        <TouchableOpacity style={styles.logoutButton} onPress={logout}>
+        <TouchableOpacity style={styles.logoutButton} onPress={confirmLogout}>
 
           <Text style={styles.logoutText}> Cerrar Sesión </Text>
 

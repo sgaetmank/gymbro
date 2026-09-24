@@ -1,4 +1,5 @@
 import {
+  Alert,
   ScrollView,
   StyleSheet,
   Text,
@@ -7,6 +8,7 @@ import {
 } from 'react-native';
 
 import { SafeAreaView } from 'react-native-safe-area-context';
+import ProfileDataCard from '../components/ProfileDataCard';
 import UserBottomNav from '../components/UserBottomNav';
 import { useAuth } from '../context/AuthContext';
 import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
@@ -18,20 +20,25 @@ export default function UserProfileScreen({ navigation }) {
   // Sin sesión (ej: mientras se anima el cierre de sesión) no se dibuja nada
   if (!user) return null;
 
+  // Pide confirmación antes de cerrar sesión, para evitar un toque accidental
+  const confirmLogout = () => {
+    Alert.alert(
+      'Cerrar sesión',
+      '¿Estás seguro de que querés cerrar sesión?',
+      [
+        { text: 'Cancelar', style: 'cancel' },
+        { text: 'Cerrar sesión', style: 'destructive', onPress: logout },
+      ]
+    );
+  };
+
   return (
     <SafeAreaView style={styles.container}>
 
       {/* HEADER */}
 
-      <View
-        style={[
-          styles.header,
-          isLandscape && styles.headerLandscape,
-        ]}
-      >
-        <Text style={styles.headerTitle}>
-          Mi Cuenta
-        </Text>
+      <View style={[styles.header,isLandscape && styles.headerLandscape,]}>
+        <Text style={styles.headerTitle}>Mi Cuenta</Text>
       </View>
 
 
@@ -49,148 +56,53 @@ export default function UserProfileScreen({ navigation }) {
         <View style={styles.profile}>
 
           <View style={styles.avatar}>
-            <Text style={styles.avatarText}>
-              {user.initials}
-            </Text>
+            <Text style={styles.avatarText}> {user.initials} </Text>
           </View>
 
-          <Text style={styles.name}>
-            {user.name}
-          </Text>
+          <Text style={styles.name}> {user.name}</Text>
 
-          <Text style={styles.email}>
-            {user.email}
-          </Text>
+          <Text style={styles.email}>{user.email}</Text>
 
         </View>
 
 
         {/* DATOS PERSONALES */}
 
-        <View style={styles.card}>
-
-          <Text style={styles.sectionTitle}>
-            Datos Personales
-          </Text>
-
-          <View style={styles.dataRow}>
-            <Text style={styles.icon}>◉</Text>
-
-            <View>
-              <Text style={styles.label}>DNI</Text>
-              <Text style={styles.value}>{user.dni}</Text>
-            </View>
-          </View>
-
-          <View style={styles.dataRow}>
-            <Text style={styles.icon}>♙</Text>
-
-            <View>
-              <Text style={styles.label}>Género</Text>
-              <Text style={styles.value}>{user.gender}</Text>
-            </View>
-          </View>
-
-          <View style={styles.dataRow}>
-            <Text style={styles.icon}>〽</Text>
-
-            <View>
-              <Text style={styles.label}>Edad</Text>
-              <Text style={styles.value}>{user.age}</Text>
-            </View>
-          </View>
-
-          <View style={styles.dataRow}>
-            <Text style={styles.icon}>〽</Text>
-
-            <View>
-              <Text style={styles.label}>Peso</Text>
-              <Text style={styles.value}>{user.weight}</Text>
-            </View>
-
-          </View>
-
-          <View style={styles.dataRow}>
-            <Text style={styles.icon}>〽</Text>
-
-            <View>
-              <Text style={styles.label}>Altura</Text>
-              <Text style={styles.value}>{user.height}</Text>
-            </View>
-          </View>
-
-        </View>
+        <ProfileDataCard
+          title="Datos Personales"
+          rows={[
+            { icon: '◉', label: 'DNI', value: user.dni },
+            { icon: '♙', label: 'Género', value: user.gender },
+            { icon: '〽', label: 'Edad', value: user.age },
+            { icon: '〽', label: 'Peso', value: user.weight },
+            { icon: '〽', label: 'Altura', value: user.height },
+          ]}
+        />
 
 
         {/* CONTACTO Y SALUD */}
 
-        <View style={styles.card}>
-
-          <Text style={styles.sectionTitle}>
-            Contacto y Salud
-          </Text>
-
-          <View style={styles.dataRow}>
-            <Text style={styles.icon}>☎</Text>
-
-            <View>
-              <Text style={styles.label}>Teléfono</Text>
-              <Text style={styles.value}>{user.phone}</Text>
-            </View>
-          </View>
-
-          <View style={styles.dataRow}>
-            <Text style={styles.icon}>☎</Text>
-
-            <View>
-              <Text style={styles.label}>Tel. Emergencia</Text>
-              <Text style={styles.value}>{user.emergencyPhone}</Text>
-            </View>
-          </View>
-
-          <View style={styles.dataRow}>
-            <Text style={styles.icon}>♡</Text>
-
-            <View>
-              <Text style={styles.label}>Obra Social</Text>
-              <Text style={styles.value}>{user.healthInsurance}</Text>
-            </View>
-          </View>
-
-          <View style={styles.dataRow}>
-            <Text style={styles.icon}>▣</Text>
-
-            <View>
-              <Text style={styles.label}>
-                Contraindicaciones
-              </Text>
-
-              <Text style={styles.value}>
-                {user.contraindications}
-              </Text>
-            </View>
-          </View>
-
-        </View>
+        <ProfileDataCard
+          title="Contacto y Salud"
+          rows={[
+            { icon: '☎', label: 'Teléfono', value: user.phone },
+            { icon: '☎', label: 'Tel. Emergencia', value: user.emergencyPhone },
+            { icon: '♡', label: 'Obra Social', value: user.healthInsurance },
+            { icon: '▣', label: 'Contraindicaciones', value: user.contraindications },
+          ]}
+        />
 
 
         {/* OBJETIVOS */}
 
         <View style={styles.card}>
 
-          <Text style={styles.sectionTitle}>
-            Objetivos
-          </Text>
+          <Text style={styles.sectionTitle}> Objetivos </Text>
 
           <View style={styles.objective}>
 
-            <Text style={styles.objectiveIcon}>
-              ◎
-            </Text>
-
-            <Text style={styles.objectiveText}>
-              {user.goal}
-            </Text>
+            <Text style={styles.objectiveIcon}> ◎ </Text>
+            <Text style={styles.objectiveText}> {user.goal} </Text>
 
           </View>
 
@@ -199,12 +111,9 @@ export default function UserProfileScreen({ navigation }) {
 
         {/* CERRAR SESIÓN */}
 
-        <TouchableOpacity style={styles.logoutButton}
-        onPress={logout}>
+        <TouchableOpacity style={styles.logoutButton} onPress={confirmLogout}>
 
-          <Text style={styles.logoutText}>
-            Cerrar Sesión
-          </Text>
+          <Text style={styles.logoutText}> Cerrar Sesión </Text>
 
         </TouchableOpacity>
 
@@ -213,6 +122,7 @@ export default function UserProfileScreen({ navigation }) {
 
       <UserBottomNav
         activeScreen="account"
+        isLandscape={isLandscape}
         navigation={navigation}
       />
 
@@ -319,37 +229,6 @@ const styles = StyleSheet.create({
     fontWeight: '700',
     marginBottom: 8,
   },
-
-
-  /* DATOS */
-  dataRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    paddingVertical: '3.5%',
-    borderTopWidth: 1,
-    borderTopColor: '#292929',
-  },
-
-  icon: {
-    color: '#FFC107',
-    fontSize: 16,
-    width: '9%',
-    textAlign: 'center',
-    marginRight: '1.5%',
-  },
-
-  label: {
-    color: '#777777',
-    fontSize: 13,
-    marginBottom: 2,
-  },
-
-  value: {
-    color: '#FFFFFF',
-    fontSize: 15,
-    fontWeight: '600',
-  },
-
 
 
   /* OBJETIVO */
