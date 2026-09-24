@@ -2,6 +2,7 @@ import { useState } from 'react';
 
 import {
   Modal,
+  Pressable,
   ScrollView,
   StyleSheet,
   Text,
@@ -228,9 +229,16 @@ export default function UserDayScreen({ navigation, route }) {
             visible={modalVisible}
             transparent={true}
             animationType="fade"
+            onRequestClose={closeModal}
         >
 
         <View style={styles.modalBackground}>
+
+            {/* Tocar fuera del modal lo cierra */}
+            <Pressable
+              style={StyleSheet.absoluteFill}
+              onPress={closeModal}
+            />
 
             <View
               style={[
@@ -506,10 +514,10 @@ const styles = StyleSheet.create({
 
   modal: {
     width: '100%',
-    maxHeight: '80%',
+    maxHeight: '85%',
     backgroundColor: '#1D1D1D',
     borderRadius: 16,
-    padding: '5.5%',
+    padding: '6.5%',
   },
 
   modalLandscape: {
@@ -519,28 +527,28 @@ const styles = StyleSheet.create({
 
   modalTitle: {
     color: '#FFC107',
-    fontSize: 19,
+    fontSize: 22,
     fontWeight: '700',
-    marginBottom: 14,
+    marginBottom: 16,
   },
 
   exerciseModalName: {
     color: '#FFFFFF',
-    fontSize: 19,
-    fontWeight: '600',
-    marginBottom: 14,
+    fontSize: 23,
+    fontWeight: '700',
+    marginBottom: 16,
   },
 
   /* INSTRUCCIONES */
 
   instructionsScroll: {
-    maxHeight: 320,
+    maxHeight: 420,
   },
 
   instructionsText: {
     color: '#CCCCCC',
-    fontSize: 16,
-    lineHeight: 22,
+    fontSize: 18,
+    lineHeight: 27,
   },
 
   /* BOTÓN CERRAR */
@@ -548,14 +556,14 @@ const styles = StyleSheet.create({
   closeButton: {
     backgroundColor: '#FFC107',
     borderRadius: 10,
-    paddingVertical: '3%',
+    paddingVertical: '3.5%',
     alignItems: 'center',
-    marginTop: '5%',
+    marginTop: '6%',
   },
 
   closeButtonText: {
     color: '#111111',
-    fontSize: 15,
+    fontSize: 17,
     fontWeight: '700',
   },
 

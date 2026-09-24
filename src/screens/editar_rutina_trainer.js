@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import {
   Alert,
+  KeyboardAvoidingView,
   Modal,
+  Platform,
   ScrollView,
   StyleSheet,
   Text,
@@ -33,8 +35,8 @@ export default function EditRoutineScreen({ navigation, route }) {
       .replace(/[̀-ͯ]/g, '')
       .toLowerCase();
 
-  // Series y repeticiones: número entero, no vacío (ej: "4", no "4.5" ni vacío)
-  const isValidInteger = (value) => /^\d+$/.test(value.trim());
+  // Series y repeticiones: entero mayor a 0, sin ceros adelante (ej: "4", no "0", "00", "04" ni "4.5")
+  const isValidInteger = (value) => /^[1-9]\d*$/.test(value.trim());
 
   // Peso y tiempo de descanso: entero o decimal, no vacío (ej: "60" o "1.5")
   const isValidDecimal = (value) => /^\d+(\.\d+)?$/.test(value.trim());
@@ -170,7 +172,14 @@ export default function EditRoutineScreen({ navigation, route }) {
 
   const addExercise = () => {
 
-  if (!selectedExerciseId) {
+  // Ejercicio, series, repeticiones y peso son obligatorios (comentarios no)
+  if (
+    !selectedExerciseId ||
+    !series.trim() ||
+    !repetitions.trim() ||
+    !weight.trim()
+  ) {
+    setExerciseFormError('Completar todos los campos obligatorios');
     return;
   }
 
@@ -187,7 +196,8 @@ export default function EditRoutineScreen({ navigation, route }) {
   
   const weightValue = Number(weight.replace(',', '.'));
 
-  if (!(weightValue > 0)) {
+  // Se permite 0 para ejercicios con peso corporal
+  if (!(weightValue >= 0)) {
     setExerciseFormError('El peso debe ser un número válido');
     return;
   }
@@ -198,8 +208,8 @@ export default function EditRoutineScreen({ navigation, route }) {
     id: Date.now(),
     type: 'exercise',
     exerciseId: selectedExerciseId,
-    series,
-    repetitions,
+    series: series.trim(),
+    repetitions: repetitions.trim(),
     weight: `${weightValue} kg`,
     comments,
   };
@@ -1041,7 +1051,10 @@ const moveItem = (dayId, blockId, itemId, direction) => {
         }
       >
 
-        <View style={styles.modalOverlay}>
+        <KeyboardAvoidingView
+          style={styles.modalOverlay}
+          behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        >
 
           <View
             style={[
@@ -1188,7 +1201,7 @@ const moveItem = (dayId, blockId, itemId, direction) => {
 
           </View>
 
-        </View>
+        </KeyboardAvoidingView>
 
       </Modal>
 
