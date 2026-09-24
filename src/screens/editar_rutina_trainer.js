@@ -33,6 +33,12 @@ export default function EditRoutineScreen({ navigation, route }) {
       .replace(/[̀-ͯ]/g, '')
       .toLowerCase();
 
+  // Series y repeticiones: número entero, no vacío (ej: "4", no "4.5" ni vacío)
+  const isValidInteger = (value) => /^\d+$/.test(value.trim());
+
+  // Peso y tiempo de descanso: entero o decimal, no vacío (ej: "60" o "1.5")
+  const isValidDecimal = (value) => /^\d+(\.\d+)?$/.test(value.trim());
+
   // ============================================================
   // DATOS INICIALES DE EJEMPLO
   // ============================================================
@@ -68,6 +74,7 @@ export default function EditRoutineScreen({ navigation, route }) {
   const [repetitions, setRepetitions] = useState('');
   const [weight, setWeight] = useState('');
   const [comments, setComments] = useState('');
+  const [exerciseFormError, setExerciseFormError] = useState('');
 
   // ============================================================
   // CAMPOS PARA AGREGAR DESCANSO
@@ -75,6 +82,7 @@ export default function EditRoutineScreen({ navigation, route }) {
 
   const [restTime, setRestTime] = useState('');
   const [restUnit, setRestUnit] = useState('minutos');
+  const [restFormError, setRestFormError] = useState('');
 
   // ============================================================
   // AGREGAR DÍA
@@ -129,6 +137,7 @@ export default function EditRoutineScreen({ navigation, route }) {
     setRepetitions('');
     setWeight('');
     setComments('');
+    setExerciseFormError('');
 
     setExerciseModalVisible(true);
   };
@@ -138,7 +147,7 @@ export default function EditRoutineScreen({ navigation, route }) {
     normalizar(`${exercise.name} ${exercise.muscleGroup}`).includes(
       normalizar(exerciseName)
     )
-  ).slice(0, 3); //limita el resultado a los primeros 3 matches para no saturar la pantalla con una lista larga
+  ).slice(0, 3);
 
   // ============================================================
   // ABRIR MODAL DE DESCANSO
@@ -150,6 +159,7 @@ export default function EditRoutineScreen({ navigation, route }) {
 
     setRestTime('');
     setRestUnit('minutos');
+    setRestFormError('');
 
     setRestModalVisible(true);
   };
@@ -160,57 +170,79 @@ export default function EditRoutineScreen({ navigation, route }) {
 
   const addExercise = () => {
 
-    if (!selectedExerciseId) {
-      return;
-    }
+  if (!selectedExerciseId) {
+    return;
+  }
 
-    const newExercise = {
-      id: Date.now(),
-      type: 'exercise',
-      exerciseId: selectedExerciseId,
-      series: series || '0',
-      repetitions: repetitions || '0',
-      weight: weight || '0 kg',
-      comments: comments,
-    };
+  if (!isValidInteger(series)) {
+    setExerciseFormError('Las series deben ser un número entero');
+    return;
+  }
 
-    setDays(
-      days.map((day) => {
+  if (!isValidInteger(repetitions)) {
+    setExerciseFormError('Las repeticiones deben ser un número entero');
+    return;
+  }
 
-        if (day.id !== selectedDayId) {
-          return day;
-        }
+  
+  const weightValue = Number(weight.replace(',', '.'));
 
-        return {
-          ...day,
+  if (!(weightValue > 0)) {
+    setExerciseFormError('El peso debe ser un número válido');
+    return;
+  }
 
-          blocks: day.blocks.map((block) => {
+  setExerciseFormError('');
 
-            if (block.id !== selectedBlockId) {
-              return block;
-            }
-
-            return {
-              ...block,
-              items: [...block.items, newExercise],
-            };
-          }),
-        };
-      })
-    );
-
-    setExerciseModalVisible(false);
+  const newExercise = {
+    id: Date.now(),
+    type: 'exercise',
+    exerciseId: selectedExerciseId,
+    series,
+    repetitions,
+    weight: `${weightValue} kg`,
+    comments,
   };
 
+  setDays(
+    days.map((day) => {
+
+      if (day.id !== selectedDayId) {
+        return day;
+      }
+
+      return {
+        ...day,
+
+        blocks: day.blocks.map((block) => {
+
+          if (block.id !== selectedBlockId) {
+            return block;
+          }
+
+          return {
+            ...block,
+            items: [...block.items, newExercise],
+          };
+        }),
+      };
+    })
+  );
+
+  setExerciseModalVisible(false);
+};
   // ============================================================
   // AGREGAR DESCANSO A UN BLOQUE
   // ============================================================
 
   const addRest = () => {
 
-    if (!restTime.trim()) {
+    if (!isValidDecimal(restTime)) {
+      setRestFormError('El tiempo debe ser un número válido');
       return;
     }
+
+    setRestFormError('');
 
     const newRest = {
       id: Date.now(),
@@ -1139,6 +1171,9 @@ const moveItem = (dayId, blockId, itemId, direction) => {
               onChangeText={setComments}
             />
 
+            {exerciseFormError !== '' && (
+              <Text style={styles.error}>{exerciseFormError}</Text>
+            )}
 
             <TouchableOpacity
               style={styles.modalPrimaryButton}
@@ -1263,6 +1298,9 @@ const moveItem = (dayId, blockId, itemId, direction) => {
               onChangeText={setRestTime}
             />
 
+            {restFormError !== '' && (
+              <Text style={styles.error}>{restFormError}</Text>
+            )}
 
             <TouchableOpacity
               style={styles.modalPrimaryButton}
@@ -1847,6 +1885,14 @@ disabledSmallArrow: {
     color: '#111111',
     fontSize: 15,
     fontWeight: '700',
+  },
+
+  /* MENSAJE DE ERROR */
+
+  error: {
+    color: '#FF4D4D',
+    fontSize: 15,
+    marginBottom: 6,
   },
 
 });
