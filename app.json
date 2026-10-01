@@ -32,7 +32,9 @@
           "imageWidth": 76
         }
       ],
-      "expo-video"
+      "expo-video",
+      "expo-image",
+      "expo-web-browser"
     ],
     "experiments": {
       "reactCompiler": true

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
 import {
   Modal,
@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Text,
   TouchableOpacity,
+  Vibration,
   View
 } from 'react-native';
 
@@ -45,6 +46,69 @@ export default function UserDayScreen({ navigation, route }) {
       setModalVisible(false);
       setSelectedExercise(null);
       setModalType('');
+    };
+
+
+    // TEMPORIZADOR DE DESCANSO (solo uno activo a la vez)
+
+    const [activeRestId, setActiveRestId] = useState(null);
+    const [remainingSeconds, setRemainingSeconds] = useState(0);
+    const [isRestRunning, setIsRestRunning] = useState(false);
+    const intervalRef = useRef(null);
+
+    const toSeconds = (time, unit) =>
+      unit === 'minutos' ? time * 60 : time;
+
+    const formatRestUnit = (time, unit) =>
+      Number(time) === 1 ? unit.slice(0, -1) : unit;
+
+    const clearRestInterval = () => {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+    };
+
+    useEffect(() => clearRestInterval, []);
+
+    const startRest = (itemId, time, unit) => {
+      clearRestInterval();
+      setActiveRestId(itemId);
+      setRemainingSeconds(toSeconds(time, unit));
+      setIsRestRunning(true);
+    };
+
+    const pauseRest = () => {
+      clearRestInterval();
+      setIsRestRunning(false);
+    };
+
+    const resumeRest = () => {
+      setIsRestRunning(true);
+    };
+
+    useEffect(() => {
+      if (!isRestRunning) return;
+
+      intervalRef.current = setInterval(() => {
+        setRemainingSeconds((prev) => {
+          if (prev <= 1) {
+            clearRestInterval();
+            setIsRestRunning(false);
+            Vibration.vibrate();
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+
+      return clearRestInterval;
+    }, [isRestRunning]);
+
+    const formatRestTime = (totalSeconds) => {
+      const minutes = Math.floor(totalSeconds / 60);
+      const seconds = totalSeconds % 60;
+      return `${minutes}:${String(seconds).padStart(2, '0')}`;
     };
 
 
@@ -185,7 +249,38 @@ export default function UserDayScreen({ navigation, route }) {
 
                     <View style={styles.rest}>
 
-                      <Text style={styles.restText}> Descanso: {item.time} {item.unit} </Text>
+                      <Text style={styles.restText}> Descanso: {item.time} {formatRestUnit(item.time, item.unit)} </Text>
+
+                      <View style={styles.restTimerRow}>
+
+                        <Text style={styles.restTimerText}>
+                          {activeRestId === item.id
+                            ? remainingSeconds === 0
+                              ? '¡Descanso terminado!'
+                              : formatRestTime(remainingSeconds)
+                            : formatRestTime(toSeconds(item.time, item.unit))}
+                        </Text>
+
+                        <TouchableOpacity
+                          style={styles.restPlayButton}
+                          onPress={() => {
+                            if (activeRestId !== item.id) {
+                              startRest(item.id, item.time, item.unit);
+                            } else if (isRestRunning) {
+                              pauseRest();
+                            } else if (remainingSeconds === 0) {
+                              startRest(item.id, item.time, item.unit);
+                            } else {
+                              resumeRest();
+                            }
+                          }}
+                        >
+                          <Text style={styles.restPlayButtonText}>
+                            {activeRestId === item.id && isRestRunning ? '⏸' : '▶'}
+                          </Text>
+                        </TouchableOpacity>
+
+                      </View>
 
                     </View>
 
@@ -461,6 +556,34 @@ const styles = StyleSheet.create({
     color: '#66B8FF',
     fontSize: 17,
     fontWeight: '500',
+  },
+
+  restTimerRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginTop: 10,
+  },
+
+  restTimerText: {
+    color: '#FFFFFF',
+    fontSize: 22,
+    fontWeight: '700',
+  },
+
+  restPlayButton: {
+    backgroundColor: '#66B8FF',
+    borderRadius: 20,
+    width: 40,
+    height: 40,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+
+  restPlayButtonText: {
+    color: '#101010',
+    fontSize: 16,
+    fontWeight: '700',
   },
 
    /* MODAL */

@@ -25,6 +25,9 @@ export default function UserRoutineScreen({ navigation }) {
   // Rutina asignada al usuario logueado (puede no tener)
   const routine = getRoutineById(user.id_rutina);
 
+  const formatRestUnit = (time, unit) =>
+    Number(time) === 1 ? unit.slice(0, -1) : unit;
+
 
   // ============================================================
   // PANTALLA
@@ -165,7 +168,7 @@ export default function UserRoutineScreen({ navigation }) {
                       ) : (
 
                         <Text style={styles.restText}>
-                          Descanso · {item.time} {item.unit}
+                          Descanso · {item.time} {formatRestUnit(item.time, item.unit)}
                         </Text>
 
                       )}
