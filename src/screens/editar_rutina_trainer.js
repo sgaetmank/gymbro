@@ -14,13 +14,15 @@ import {
 
 import { SafeAreaView } from 'react-native-safe-area-context';
 import TrainerBottomNav from '../components/TrainerBottomNav';
-import { exercises, getExerciseById } from '../data/exercises';
+import { useExercises } from '../context/ExercisesContext';
 import { createRoutine, getRoutineById, updateRoutineDays } from '../data/routines';
 import { setUserRoutine } from '../data/users';
 import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
 
 export default function EditRoutineScreen({ navigation, route }) {
   const { isLandscape } = useResponsiveLayout();
+  // Ejercicios traídos de la API (ver ExercisesContext)
+  const { exercises, getExerciseById, loading, error, retry } = useExercises();
   // Usuario al que se le está editando la rutina (viene de la pantalla de búsqueda)
   const editedUser = route?.params?.user;
   // Un alumno recién registrado todavía no tiene rutina: se crea al guardar por primera vez
@@ -144,11 +146,11 @@ export default function EditRoutineScreen({ navigation, route }) {
     setExerciseModalVisible(true);
   };
 
-  // Ejercicios que coinciden con lo buscado (nombre o grupo muscular), sin importar tildes
-  const ejerciciosFiltrados = exercises.filter((exercise) =>
-    normalizar(`${exercise.name} ${exercise.muscleGroup}`).includes(
-      normalizar(exerciseName)
-    )
+  // Ejercicios que coinciden con lo buscado (nombre o grupo muscular), sin importar tildes.
+  // Con ~1300 ejercicios, recién se sugiere a partir de 2 letras.
+  const busqueda = normalizar(exerciseName.trim());
+  const ejerciciosFiltrados = busqueda.length < 2 ? [] : exercises.filter((exercise) =>
+    normalizar(`${exercise.name} ${exercise.muscleGroup}`).includes(busqueda)
   ).slice(0, 3);
 
   // ============================================================
@@ -905,7 +907,7 @@ const moveItem = (dayId, blockId, itemId, direction) => {
 
                           <>
                             <Text style={styles.exerciseName}>
-                              {getExerciseById(item.exerciseId)?.name}
+                              {getExerciseById(item.exerciseId)?.name ?? (loading ? 'Cargando…' : 'Ejercicio no disponible')}
                             </Text>
 
                             <Text style={styles.exerciseDetails}>
@@ -1108,6 +1110,28 @@ const moveItem = (dayId, blockId, itemId, direction) => {
               <Text style={styles.suggestionTitle}>
                 Ejercicios sugeridos
               </Text>
+
+              {/* Estado de la carga desde la API */}
+
+              {loading && (
+                <Text style={styles.suggestionCategory}>Cargando ejercicios…</Text>
+              )}
+
+              {error && (
+                <TouchableOpacity onPress={retry}>
+                  <Text style={styles.suggestionCategory}>
+                    No se pudieron cargar los ejercicios. Tocá para reintentar.
+                  </Text>
+                </TouchableOpacity>
+              )}
+
+              {!loading && !error && busqueda.length < 2 && (
+                <Text style={styles.suggestionCategory}>Escribí al menos 2 letras para buscar</Text>
+              )}
+
+              {!loading && !error && busqueda.length >= 2 && ejerciciosFiltrados.length === 0 && (
+                <Text style={styles.suggestionCategory}>No se encontraron ejercicios</Text>
+              )}
 
               {ejerciciosFiltrados.map((exercise) => (
                 <TouchableOpacity

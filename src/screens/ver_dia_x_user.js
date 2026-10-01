@@ -11,15 +11,17 @@ import {
 } from 'react-native';
 
 import { SafeAreaView } from 'react-native-safe-area-context';
-import ExerciseVideo from '../components/ExerciseVideo';
+import ExerciseGif from '../components/ExerciseGif';
 import UserBottomNav from '../components/UserBottomNav';
-import { getExerciseById } from '../data/exercises';
+import { useExercises } from '../context/ExercisesContext';
 import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
 
 export default function UserDayScreen({ navigation, route }) {
 
   const { isLandscape } = useResponsiveLayout();
 
+  // Ejercicios traídos de la API (ver ExercisesContext)
+  const { getExerciseById, loading, error, retry } = useExercises();
 
   const day = route?.params?.day;
 
@@ -27,9 +29,9 @@ export default function UserDayScreen({ navigation, route }) {
     const [modalType, setModalType] = useState('');
     const [selectedExercise, setSelectedExercise] = useState(null);
 
-    const showVideo = (exercise) => {
+    const showGif = (exercise) => {
       setSelectedExercise(exercise);
-      setModalType('video');
+      setModalType('gif');
       setModalVisible(true);
     };
 
@@ -75,6 +77,18 @@ export default function UserDayScreen({ navigation, route }) {
         <Text style={styles.title}> {day.name} </Text>
 
 
+        {/* ERROR AL CARGAR LOS EJERCICIOS */}
+
+        {error && (
+          <View style={styles.errorBox}>
+            <Text style={styles.errorText}> No se pudieron cargar los ejercicios. Revisá tu conexión. </Text>
+            <TouchableOpacity onPress={retry}>
+              <Text style={styles.retryText}> Reintentar </Text>
+            </TouchableOpacity>
+          </View>
+        )}
+
+
         {/* BLOQUES */}
 
         {day.blocks.map((block, blockIndex) => (
@@ -104,7 +118,9 @@ export default function UserDayScreen({ navigation, route }) {
 
                       {/* NOMBRE DEL EJERCICIO */}
 
-                      <Text style={styles.exerciseName}> {getExerciseById(item.exerciseId)?.name} </Text>
+                      <Text style={styles.exerciseName}>
+                        {' '}{getExerciseById(item.exerciseId)?.name ?? (loading ? 'Cargando…' : 'Ejercicio no disponible')}{' '}
+                      </Text>
 
 
                       {/* DATOS DEL EJERCICIO */}
@@ -139,14 +155,23 @@ export default function UserDayScreen({ navigation, route }) {
 
 
                       {/* BOTONES */}
+                      {/* Deshabilitados hasta que el ejercicio esté cargado */}
 
                       <View style={styles.buttons}>
 
-                        <TouchableOpacity style={styles.button} onPress={() => showVideo(getExerciseById(item.exerciseId))}>
+                        <TouchableOpacity
+                          style={styles.button}
+                          disabled={!getExerciseById(item.exerciseId)}
+                          onPress={() => showGif(getExerciseById(item.exerciseId))}
+                        >
                             <Text style={styles.buttonText}> Ver ejercicio </Text>
                         </TouchableOpacity>
 
-                        <TouchableOpacity style={styles.button} onPress={() => showInstructions(getExerciseById(item.exerciseId))}>
+                        <TouchableOpacity
+                          style={styles.button}
+                          disabled={!getExerciseById(item.exerciseId)}
+                          onPress={() => showInstructions(getExerciseById(item.exerciseId))}
+                        >
                             <Text style={styles.buttonText}> Ver instrucciones </Text>
                         </TouchableOpacity>
 
@@ -195,8 +220,8 @@ export default function UserDayScreen({ navigation, route }) {
 
             {/* CONTENIDO */}
 
-            {selectedExercise && modalType === 'video' && (
-                <ExerciseVideo video={selectedExercise.video} />
+            {selectedExercise && modalType === 'gif' && (
+                <ExerciseGif gif={selectedExercise.gif} />
             )}
 
 
@@ -205,7 +230,11 @@ export default function UserDayScreen({ navigation, route }) {
                 <ScrollView style={styles.instructionsScroll} showsVerticalScrollIndicator={false}>
 
                 <Text style={styles.exerciseModalName}> {selectedExercise.name} </Text>
-                <Text style={styles.instructionsText}> {selectedExercise.description} </Text>
+
+                {/* La API da las instrucciones como lista de pasos */}
+                {selectedExercise.instructions.map((step, index) => (
+                  <Text key={index} style={styles.instructionsText}> {index + 1}. {step} </Text>
+                ))}
 
                 </ScrollView>
 
@@ -479,6 +508,28 @@ const styles = StyleSheet.create({
     color: '#CCCCCC',
     fontSize: 18,
     lineHeight: 27,
+    marginBottom: 10,
+  },
+
+  /* ERROR DE CARGA */
+
+  errorBox: {
+    backgroundColor: '#3A1D1D',
+    borderRadius: 10,
+    padding: '3.5%',
+    marginBottom: 14,
+  },
+
+  errorText: {
+    color: '#FF8A80',
+    fontSize: 15,
+    marginBottom: 6,
+  },
+
+  retryText: {
+    color: '#FFC107',
+    fontSize: 15,
+    fontWeight: '700',
   },
 
   /* BOTÓN CERRAR */

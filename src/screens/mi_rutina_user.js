@@ -9,13 +9,15 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import UserBottomNav from '../components/UserBottomNav';
 import { useAuth } from '../context/AuthContext';
-import { getExerciseById } from '../data/exercises';
+import { useExercises } from '../context/ExercisesContext';
 import { getRoutineById } from '../data/routines';
 import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
 
 export default function UserRoutineScreen({ navigation }) {
   const { isLandscape } = useResponsiveLayout();
   const { user } = useAuth();
+  // Ejercicios traídos de la API (ver ExercisesContext)
+  const { getExerciseById, loading } = useExercises();
 
   // Sin sesión (ej: mientras se anima el cierre de sesión) no se dibuja nada
   if (!user) return null;
@@ -144,7 +146,7 @@ export default function UserRoutineScreen({ navigation }) {
 
                         <>
                           <Text style={styles.exerciseName}>
-                            {getExerciseById(item.exerciseId)?.name}
+                            {getExerciseById(item.exerciseId)?.name ?? (loading ? 'Cargando…' : 'Ejercicio no disponible')}
                           </Text>
 
                           <Text style={styles.exerciseDetails}>

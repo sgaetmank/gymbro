@@ -3,6 +3,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { AuthProvider, useAuth } from '../src/context/AuthContext';
+import { ExercisesProvider } from '../src/context/ExercisesContext';
 import SearchUserScreen from '../src/screens/buscar_usuario_trainer';
 import EditRoutineScreen from '../src/screens/editar_rutina_trainer';
 import UserStatisticsScreen from '../src/screens/estadisticas_user';
@@ -60,9 +61,11 @@ export default function App() {
   return (
     <SafeAreaProvider>
       <AuthProvider> {/* guarda quien esta logueado */ }
-        <NavigationContainer> 
-          <AppNavigator /> {/* decide qué pantallas existen según haya o no usuario */ }
-        </NavigationContainer>
+        <ExercisesProvider> {/* trae los ejercicios de la API y los comparte */ }
+          <NavigationContainer>
+            <AppNavigator /> {/* decide qué pantallas existen según haya o no usuario */ }
+          </NavigationContainer>
+        </ExercisesProvider>
       </AuthProvider>
     </SafeAreaProvider>
   );

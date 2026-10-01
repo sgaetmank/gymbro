@@ -13,7 +13,7 @@ export const routines = [
               {
                 id: 1,
                 type: 'exercise',
-                exerciseId: 2,
+                exerciseId: 'abs/45-side-bend',
                 series: '4',
                 repetitions: '10',
                 weight: '0 kg',
@@ -28,7 +28,7 @@ export const routines = [
               {
                 id: 6,
                 type: 'exercise',
-                exerciseId: 1,
+                exerciseId: 'abs/3-4-sit-up',
                 series: '3',
                 repetitions: '15',
                 weight: '0 kg',
@@ -48,7 +48,7 @@ export const routines = [
               {
                 id: 3,
                 type: 'exercise',
-                exerciseId: 9,
+                exerciseId: 'quads/all-fours-squad-stretch',
                 series: '2',
                 repetitions: '20',
                 weight: '0 kg',
@@ -57,7 +57,7 @@ export const routines = [
               {
                 id: 8,
                 type: 'exercise',
-                exerciseId: 22,
+                exerciseId: 'glutes/barbell-glute-bridge',
                 series: '4',
                 repetitions: '12',
                 weight: '20 kg',
@@ -72,7 +72,7 @@ export const routines = [
               {
                 id: 10,
                 type: 'exercise',
-                exerciseId: 24,
+                exerciseId: 'glutes/dumbbell-lunge',
                 series: '3',
                 repetitions: '10',
                 weight: '6 kg',
@@ -92,7 +92,7 @@ export const routines = [
               {
                 id: 4,
                 type: 'exercise',
-                exerciseId: 3,
+                exerciseId: 'abs/air-bike',
                 series: '2',
                 repetitions: '15',
                 weight: '1 kg',
@@ -101,7 +101,7 @@ export const routines = [
               {
                 id: 5,
                 type: 'exercise',
-                exerciseId: 7,
+                exerciseId: 'lats/alternate-lateral-pulldown',
                 series: '4',
                 repetitions: '23',
                 weight: '5 kg',
@@ -121,7 +121,7 @@ export const routines = [
               {
                 id: 12,
                 type: 'exercise',
-                exerciseId: 8,
+                exerciseId: 'delts/dumbbell-lateral-raise',
                 series: '3',
                 repetitions: '12',
                 weight: '3 kg',
@@ -130,7 +130,7 @@ export const routines = [
               {
                 id: 13,
                 type: 'exercise',
-                exerciseId: 19,
+                exerciseId: 'biceps/dumbbell-hammer-curl-v-2',
                 series: '3',
                 repetitions: '12',
                 weight: '5 kg',
@@ -145,7 +145,7 @@ export const routines = [
               {
                 id: 15,
                 type: 'exercise',
-                exerciseId: 20,
+                exerciseId: 'triceps/cable-pushdown',
                 series: '3',
                 repetitions: '15',
                 weight: '10 kg',
@@ -165,7 +165,7 @@ export const routines = [
               {
                 id: 16,
                 type: 'exercise',
-                exerciseId: 5,
+                exerciseId: 'glutes/barbell-full-squat',
                 series: '4',
                 repetitions: '12',
                 weight: '15 kg',
@@ -180,7 +180,7 @@ export const routines = [
               {
                 id: 18,
                 type: 'exercise',
-                exerciseId: 11,
+                exerciseId: 'quads/lever-leg-extension',
                 series: '3',
                 repetitions: '15',
                 weight: '20 kg',
@@ -200,7 +200,7 @@ export const routines = [
               {
                 id: 20,
                 type: 'exercise',
-                exerciseId: 26,
+                exerciseId: 'abs/weighted-front-plank',
                 series: '3',
                 repetitions: '1',
                 weight: '0 kg',
@@ -215,7 +215,7 @@ export const routines = [
               {
                 id: 22,
                 type: 'exercise',
-                exerciseId: 12,
+                exerciseId: 'glutes/seated-piriformis-stretch',
                 series: '2',
                 repetitions: '1',
                 weight: '0 kg',
@@ -241,7 +241,7 @@ export const routines = [
               {
                 id: 31,
                 type: 'exercise',
-                exerciseId: 3,
+                exerciseId: 'abs/air-bike',
                 series: '3',
                 repetitions: '15',
                 weight: '0 kg',
@@ -250,7 +250,7 @@ export const routines = [
               {
                 id: 32,
                 type: 'exercise',
-                exerciseId: 10,
+                exerciseId: 'cardio/jack-jump-male',
                 series: '3',
                 repetitions: '20',
                 weight: '0 kg',
@@ -265,7 +265,7 @@ export const routines = [
               {
                 id: 302,
                 type: 'exercise',
-                exerciseId: 27,
+                exerciseId: 'cardio/burpee',
                 series: '3',
                 repetitions: '10',
                 weight: '0 kg',
@@ -279,7 +279,7 @@ export const routines = [
               {
                 id: 303,
                 type: 'exercise',
-                exerciseId: 7,
+                exerciseId: 'lats/alternate-lateral-pulldown',
                 series: '3',
                 repetitions: '12',
                 weight: '20 kg',
@@ -288,7 +288,7 @@ export const routines = [
               {
                 id: 304,
                 type: 'exercise',
-                exerciseId: 13,
+                exerciseId: 'upper-back/dumbbell-one-arm-bent-over-row',
                 series: '3',
                 repetitions: '12',
                 weight: '8 kg',
@@ -303,7 +303,7 @@ export const routines = [
               {
                 id: 306,
                 type: 'exercise',
-                exerciseId: 17,
+                exerciseId: 'delts/barbell-standing-close-grip-military-press',
                 series: '3',
                 repetitions: '10',
                 weight: '10 kg',
@@ -323,7 +323,7 @@ export const routines = [
               {
                 id: 307,
                 type: 'exercise',
-                exerciseId: 10,
+                exerciseId: 'cardio/jack-jump-male',
                 series: '3',
                 repetitions: '30',
                 weight: '0 kg',
@@ -338,7 +338,7 @@ export const routines = [
               {
                 id: 309,
                 type: 'exercise',
-                exerciseId: 9,
+                exerciseId: 'quads/all-fours-squad-stretch',
                 series: '2',
                 repetitions: '10',
                 weight: '0 kg',
@@ -352,7 +352,7 @@ export const routines = [
               {
                 id: 310,
                 type: 'exercise',
-                exerciseId: 6,
+                exerciseId: 'glutes/sled-45-leg-press',
                 series: '3',
                 repetitions: '15',
                 weight: '40 kg',
@@ -367,7 +367,7 @@ export const routines = [
               {
                 id: 312,
                 type: 'exercise',
-                exerciseId: 22,
+                exerciseId: 'glutes/barbell-glute-bridge',
                 series: '3',
                 repetitions: '15',
                 weight: '15 kg',
@@ -376,7 +376,7 @@ export const routines = [
               {
                 id: 313,
                 type: 'exercise',
-                exerciseId: 25,
+                exerciseId: 'calves/bodyweight-standing-calf-raise',
                 series: '3',
                 repetitions: '20',
                 weight: '0 kg',
@@ -396,7 +396,7 @@ export const routines = [
               {
                 id: 314,
                 type: 'exercise',
-                exerciseId: 26,
+                exerciseId: 'abs/weighted-front-plank',
                 series: '3',
                 repetitions: '1',
                 weight: '0 kg',
@@ -405,7 +405,7 @@ export const routines = [
               {
                 id: 315,
                 type: 'exercise',
-                exerciseId: 1,
+                exerciseId: 'abs/3-4-sit-up',
                 series: '3',
                 repetitions: '15',
                 weight: '0 kg',
@@ -414,7 +414,7 @@ export const routines = [
               {
                 id: 316,
                 type: 'exercise',
-                exerciseId: 2,
+                exerciseId: 'abs/45-side-bend',
                 series: '3',
                 repetitions: '12',
                 weight: '0 kg',
@@ -429,7 +429,7 @@ export const routines = [
               {
                 id: 318,
                 type: 'exercise',
-                exerciseId: 10,
+                exerciseId: 'cardio/jack-jump-male',
                 series: '3',
                 repetitions: '40',
                 weight: '0 kg',
@@ -443,7 +443,7 @@ export const routines = [
               {
                 id: 319,
                 type: 'exercise',
-                exerciseId: 12,
+                exerciseId: 'glutes/seated-piriformis-stretch',
                 series: '2',
                 repetitions: '1',
                 weight: '0 kg',
@@ -452,7 +452,7 @@ export const routines = [
               {
                 id: 320,
                 type: 'exercise',
-                exerciseId: 9,
+                exerciseId: 'quads/all-fours-squad-stretch',
                 series: '2',
                 repetitions: '10',
                 weight: '0 kg',
@@ -478,7 +478,7 @@ export const routines = [
               {
                 id: 41,
                 type: 'exercise',
-                exerciseId: 5,
+                exerciseId: 'glutes/barbell-full-squat',
                 series: '4',
                 repetitions: '12',
                 weight: '10 kg',
@@ -493,7 +493,7 @@ export const routines = [
               {
                 id: 401,
                 type: 'exercise',
-                exerciseId: 23,
+                exerciseId: 'glutes/barbell-romanian-deadlift',
                 series: '4',
                 repetitions: '10',
                 weight: '40 kg',
@@ -508,7 +508,7 @@ export const routines = [
               {
                 id: 403,
                 type: 'exercise',
-                exerciseId: 22,
+                exerciseId: 'glutes/barbell-glute-bridge',
                 series: '4',
                 repetitions: '10',
                 weight: '60 kg',
@@ -522,7 +522,7 @@ export const routines = [
               {
                 id: 404,
                 type: 'exercise',
-                exerciseId: 26,
+                exerciseId: 'abs/weighted-front-plank',
                 series: '3',
                 repetitions: '1',
                 weight: '0 kg',
@@ -531,7 +531,7 @@ export const routines = [
               {
                 id: 405,
                 type: 'exercise',
-                exerciseId: 3,
+                exerciseId: 'abs/air-bike',
                 series: '3',
                 repetitions: '20',
                 weight: '0 kg',
@@ -557,7 +557,7 @@ export const routines = [
               {
                 id: 407,
                 type: 'exercise',
-                exerciseId: 4,
+                exerciseId: 'pectorals/barbell-bench-press',
                 series: '5',
                 repetitions: '5',
                 weight: '70 kg',
@@ -572,7 +572,7 @@ export const routines = [
               {
                 id: 409,
                 type: 'exercise',
-                exerciseId: 15,
+                exerciseId: 'pectorals/dumbbell-incline-bench-press',
                 series: '4',
                 repetitions: '8',
                 weight: '24 kg',
@@ -587,7 +587,7 @@ export const routines = [
               {
                 id: 411,
                 type: 'exercise',
-                exerciseId: 20,
+                exerciseId: 'triceps/cable-pushdown',
                 series: '3',
                 repetitions: '12',
                 weight: '25 kg',
@@ -601,7 +601,7 @@ export const routines = [
               {
                 id: 412,
                 type: 'exercise',
-                exerciseId: 17,
+                exerciseId: 'delts/barbell-standing-close-grip-military-press',
                 series: '4',
                 repetitions: '6',
                 weight: '40 kg',
@@ -616,7 +616,7 @@ export const routines = [
               {
                 id: 414,
                 type: 'exercise',
-                exerciseId: 8,
+                exerciseId: 'delts/dumbbell-lateral-raise',
                 series: '3',
                 repetitions: '12',
                 weight: '8 kg',
@@ -636,7 +636,7 @@ export const routines = [
               {
                 id: 415,
                 type: 'exercise',
-                exerciseId: 14,
+                exerciseId: 'lats/assisted-pull-up',
                 series: '4',
                 repetitions: '6',
                 weight: '0 kg',
@@ -651,7 +651,7 @@ export const routines = [
               {
                 id: 417,
                 type: 'exercise',
-                exerciseId: 13,
+                exerciseId: 'upper-back/dumbbell-one-arm-bent-over-row',
                 series: '4',
                 repetitions: '10',
                 weight: '26 kg',
@@ -666,7 +666,7 @@ export const routines = [
               {
                 id: 419,
                 type: 'exercise',
-                exerciseId: 18,
+                exerciseId: 'biceps/barbell-curl',
                 series: '3',
                 repetitions: '10',
                 weight: '30 kg',
@@ -680,7 +680,7 @@ export const routines = [
               {
                 id: 420,
                 type: 'exercise',
-                exerciseId: 6,
+                exerciseId: 'glutes/sled-45-leg-press',
                 series: '4',
                 repetitions: '12',
                 weight: '120 kg',
@@ -695,7 +695,7 @@ export const routines = [
               {
                 id: 422,
                 type: 'exercise',
-                exerciseId: 25,
+                exerciseId: 'calves/bodyweight-standing-calf-raise',
                 series: '4',
                 repetitions: '15',
                 weight: '40 kg',
@@ -721,7 +721,7 @@ export const routines = [
               {
                 id: 5001,
                 type: 'exercise',
-                exerciseId: 22,
+                exerciseId: 'glutes/barbell-glute-bridge',
                 series: '4',
                 repetitions: '12',
                 weight: '30 kg',
@@ -736,7 +736,7 @@ export const routines = [
               {
                 id: 5003,
                 type: 'exercise',
-                exerciseId: 24,
+                exerciseId: 'glutes/dumbbell-lunge',
                 series: '3',
                 repetitions: '12',
                 weight: '6 kg',
@@ -745,7 +745,7 @@ export const routines = [
               {
                 id: 5004,
                 type: 'exercise',
-                exerciseId: 23,
+                exerciseId: 'glutes/barbell-romanian-deadlift',
                 series: '3',
                 repetitions: '12',
                 weight: '20 kg',
@@ -759,7 +759,7 @@ export const routines = [
               {
                 id: 5005,
                 type: 'exercise',
-                exerciseId: 26,
+                exerciseId: 'abs/weighted-front-plank',
                 series: '3',
                 repetitions: '1',
                 weight: '0 kg',
@@ -774,7 +774,7 @@ export const routines = [
               {
                 id: 5007,
                 type: 'exercise',
-                exerciseId: 3,
+                exerciseId: 'abs/air-bike',
                 series: '3',
                 repetitions: '20',
                 weight: '0 kg',
@@ -794,7 +794,7 @@ export const routines = [
               {
                 id: 5008,
                 type: 'exercise',
-                exerciseId: 7,
+                exerciseId: 'lats/alternate-lateral-pulldown',
                 series: '3',
                 repetitions: '12',
                 weight: '25 kg',
@@ -803,7 +803,7 @@ export const routines = [
               {
                 id: 5009,
                 type: 'exercise',
-                exerciseId: 13,
+                exerciseId: 'upper-back/dumbbell-one-arm-bent-over-row',
                 series: '3',
                 repetitions: '12',
                 weight: '8 kg',
@@ -818,7 +818,7 @@ export const routines = [
               {
                 id: 5011,
                 type: 'exercise',
-                exerciseId: 8,
+                exerciseId: 'delts/dumbbell-lateral-raise',
                 series: '3',
                 repetitions: '15',
                 weight: '3 kg',
@@ -827,7 +827,7 @@ export const routines = [
               {
                 id: 5012,
                 type: 'exercise',
-                exerciseId: 21,
+                exerciseId: 'triceps/bench-dip-knees-bent',
                 series: '3',
                 repetitions: '12',
                 weight: '0 kg',
@@ -841,7 +841,7 @@ export const routines = [
               {
                 id: 5013,
                 type: 'exercise',
-                exerciseId: 10,
+                exerciseId: 'cardio/jack-jump-male',
                 series: '3',
                 repetitions: '40',
                 weight: '0 kg',
@@ -856,7 +856,7 @@ export const routines = [
               {
                 id: 5015,
                 type: 'exercise',
-                exerciseId: 27,
+                exerciseId: 'cardio/burpee',
                 series: '3',
                 repetitions: '10',
                 weight: '0 kg',
@@ -876,7 +876,7 @@ export const routines = [
               {
                 id: 5016,
                 type: 'exercise',
-                exerciseId: 5,
+                exerciseId: 'glutes/barbell-full-squat',
                 series: '4',
                 repetitions: '12',
                 weight: '20 kg',
@@ -891,7 +891,7 @@ export const routines = [
               {
                 id: 5018,
                 type: 'exercise',
-                exerciseId: 6,
+                exerciseId: 'glutes/sled-45-leg-press',
                 series: '3',
                 repetitions: '15',
                 weight: '60 kg',
@@ -900,7 +900,7 @@ export const routines = [
               {
                 id: 5019,
                 type: 'exercise',
-                exerciseId: 25,
+                exerciseId: 'calves/bodyweight-standing-calf-raise',
                 series: '3',
                 repetitions: '20',
                 weight: '10 kg',
@@ -914,7 +914,7 @@ export const routines = [
               {
                 id: 5020,
                 type: 'exercise',
-                exerciseId: 12,
+                exerciseId: 'glutes/seated-piriformis-stretch',
                 series: '2',
                 repetitions: '1',
                 weight: '0 kg',
@@ -923,7 +923,7 @@ export const routines = [
               {
                 id: 5021,
                 type: 'exercise',
-                exerciseId: 9,
+                exerciseId: 'quads/all-fours-squad-stretch',
                 series: '2',
                 repetitions: '10',
                 weight: '0 kg',
@@ -949,7 +949,7 @@ export const routines = [
               {
                 id: 6001,
                 type: 'exercise',
-                exerciseId: 4,
+                exerciseId: 'pectorals/barbell-bench-press',
                 series: '5',
                 repetitions: '5',
                 weight: '60 kg',
@@ -964,7 +964,7 @@ export const routines = [
               {
                 id: 6003,
                 type: 'exercise',
-                exerciseId: 15,
+                exerciseId: 'pectorals/dumbbell-incline-bench-press',
                 series: '4',
                 repetitions: '8',
                 weight: '20 kg',
@@ -984,7 +984,7 @@ export const routines = [
               {
                 id: 6005,
                 type: 'exercise',
-                exerciseId: 14,
+                exerciseId: 'lats/assisted-pull-up',
                 series: '4',
                 repetitions: '8',
                 weight: '0 kg',
@@ -999,7 +999,7 @@ export const routines = [
               {
                 id: 6007,
                 type: 'exercise',
-                exerciseId: 13,
+                exerciseId: 'upper-back/dumbbell-one-arm-bent-over-row',
                 series: '4',
                 repetitions: '10',
                 weight: '24 kg',
@@ -1019,7 +1019,7 @@ export const routines = [
               {
                 id: 6008,
                 type: 'exercise',
-                exerciseId: 5,
+                exerciseId: 'glutes/barbell-full-squat',
                 series: '5',
                 repetitions: '5',
                 weight: '80 kg',
@@ -1034,7 +1034,7 @@ export const routines = [
               {
                 id: 6010,
                 type: 'exercise',
-                exerciseId: 23,
+                exerciseId: 'glutes/barbell-romanian-deadlift',
                 series: '4',
                 repetitions: '8',
                 weight: '60 kg',
@@ -1054,7 +1054,7 @@ export const routines = [
               {
                 id: 6012,
                 type: 'exercise',
-                exerciseId: 11,
+                exerciseId: 'quads/lever-leg-extension',
                 series: '3',
                 repetitions: '12',
                 weight: '35 kg',
@@ -1063,7 +1063,7 @@ export const routines = [
               {
                 id: 6013,
                 type: 'exercise',
-                exerciseId: 25,
+                exerciseId: 'calves/bodyweight-standing-calf-raise',
                 series: '4',
                 repetitions: '15',
                 weight: '60 kg',
@@ -1089,7 +1089,7 @@ export const routines = [
               {
                 id: 6015,
                 type: 'exercise',
-                exerciseId: 17,
+                exerciseId: 'delts/barbell-standing-close-grip-military-press',
                 series: '4',
                 repetitions: '6',
                 weight: '40 kg',
@@ -1104,7 +1104,7 @@ export const routines = [
               {
                 id: 6017,
                 type: 'exercise',
-                exerciseId: 18,
+                exerciseId: 'biceps/barbell-curl',
                 series: '3',
                 repetitions: '10',
                 weight: '30 kg',
@@ -1113,7 +1113,7 @@ export const routines = [
               {
                 id: 6018,
                 type: 'exercise',
-                exerciseId: 20,
+                exerciseId: 'triceps/cable-pushdown',
                 series: '3',
                 repetitions: '12',
                 weight: '25 kg',
@@ -1133,7 +1133,7 @@ export const routines = [
               {
                 id: 6020,
                 type: 'exercise',
-                exerciseId: 26,
+                exerciseId: 'abs/weighted-front-plank',
                 series: '3',
                 repetitions: '1',
                 weight: '0 kg',
@@ -1142,7 +1142,7 @@ export const routines = [
               {
                 id: 6021,
                 type: 'exercise',
-                exerciseId: 2,
+                exerciseId: 'abs/45-side-bend',
                 series: '3',
                 repetitions: '15',
                 weight: '10 kg',
@@ -1168,7 +1168,7 @@ export const routines = [
               {
                 id: 7001,
                 type: 'exercise',
-                exerciseId: 10,
+                exerciseId: 'cardio/jack-jump-male',
                 series: '2',
                 repetitions: '30',
                 weight: '0 kg',
@@ -1183,7 +1183,7 @@ export const routines = [
               {
                 id: 7003,
                 type: 'exercise',
-                exerciseId: 9,
+                exerciseId: 'quads/all-fours-squad-stretch',
                 series: '2',
                 repetitions: '10',
                 weight: '0 kg',
@@ -1197,7 +1197,7 @@ export const routines = [
               {
                 id: 7004,
                 type: 'exercise',
-                exerciseId: 5,
+                exerciseId: 'glutes/barbell-full-squat',
                 series: '3',
                 repetitions: '15',
                 weight: '0 kg',
@@ -1206,7 +1206,7 @@ export const routines = [
               {
                 id: 7005,
                 type: 'exercise',
-                exerciseId: 7,
+                exerciseId: 'lats/alternate-lateral-pulldown',
                 series: '3',
                 repetitions: '15',
                 weight: '20 kg',
@@ -1215,7 +1215,7 @@ export const routines = [
               {
                 id: 7006,
                 type: 'exercise',
-                exerciseId: 3,
+                exerciseId: 'abs/air-bike',
                 series: '3',
                 repetitions: '20',
                 weight: '0 kg',
@@ -1241,7 +1241,7 @@ export const routines = [
               {
                 id: 7008,
                 type: 'exercise',
-                exerciseId: 24,
+                exerciseId: 'glutes/dumbbell-lunge',
                 series: '3',
                 repetitions: '12',
                 weight: '0 kg',
@@ -1250,7 +1250,7 @@ export const routines = [
               {
                 id: 7009,
                 type: 'exercise',
-                exerciseId: 21,
+                exerciseId: 'triceps/bench-dip-knees-bent',
                 series: '3',
                 repetitions: '10',
                 weight: '0 kg',
@@ -1259,7 +1259,7 @@ export const routines = [
               {
                 id: 7010,
                 type: 'exercise',
-                exerciseId: 1,
+                exerciseId: 'abs/3-4-sit-up',
                 series: '3',
                 repetitions: '15',
                 weight: '0 kg',
@@ -1279,7 +1279,7 @@ export const routines = [
               {
                 id: 7012,
                 type: 'exercise',
-                exerciseId: 27,
+                exerciseId: 'cardio/burpee',
                 series: '3',
                 repetitions: '8',
                 weight: '0 kg',
@@ -1294,7 +1294,7 @@ export const routines = [
               {
                 id: 7014,
                 type: 'exercise',
-                exerciseId: 10,
+                exerciseId: 'cardio/jack-jump-male',
                 series: '3',
                 repetitions: '40',
                 weight: '0 kg',
@@ -1314,7 +1314,7 @@ export const routines = [
               {
                 id: 7015,
                 type: 'exercise',
-                exerciseId: 6,
+                exerciseId: 'glutes/sled-45-leg-press',
                 series: '3',
                 repetitions: '15',
                 weight: '50 kg',
@@ -1323,7 +1323,7 @@ export const routines = [
               {
                 id: 7016,
                 type: 'exercise',
-                exerciseId: 22,
+                exerciseId: 'glutes/barbell-glute-bridge',
                 series: '3',
                 repetitions: '15',
                 weight: '20 kg',
@@ -1338,7 +1338,7 @@ export const routines = [
               {
                 id: 7018,
                 type: 'exercise',
-                exerciseId: 25,
+                exerciseId: 'calves/bodyweight-standing-calf-raise',
                 series: '3',
                 repetitions: '20',
                 weight: '0 kg',
@@ -1352,7 +1352,7 @@ export const routines = [
               {
                 id: 7019,
                 type: 'exercise',
-                exerciseId: 26,
+                exerciseId: 'abs/weighted-front-plank',
                 series: '3',
                 repetitions: '1',
                 weight: '0 kg',
@@ -1367,7 +1367,7 @@ export const routines = [
               {
                 id: 7021,
                 type: 'exercise',
-                exerciseId: 2,
+                exerciseId: 'abs/45-side-bend',
                 series: '3',
                 repetitions: '12',
                 weight: '0 kg',
@@ -1393,7 +1393,7 @@ export const routines = [
               {
                 id: 8001,
                 type: 'exercise',
-                exerciseId: 5,
+                exerciseId: 'glutes/barbell-full-squat',
                 series: '4',
                 repetitions: '8',
                 weight: '50 kg',
@@ -1408,7 +1408,7 @@ export const routines = [
               {
                 id: 8003,
                 type: 'exercise',
-                exerciseId: 4,
+                exerciseId: 'pectorals/barbell-bench-press',
                 series: '4',
                 repetitions: '8',
                 weight: '45 kg',
@@ -1423,7 +1423,7 @@ export const routines = [
               {
                 id: 8005,
                 type: 'exercise',
-                exerciseId: 13,
+                exerciseId: 'upper-back/dumbbell-one-arm-bent-over-row',
                 series: '4',
                 repetitions: '10',
                 weight: '16 kg',
@@ -1437,7 +1437,7 @@ export const routines = [
               {
                 id: 8006,
                 type: 'exercise',
-                exerciseId: 8,
+                exerciseId: 'delts/dumbbell-lateral-raise',
                 series: '3',
                 repetitions: '12',
                 weight: '6 kg',
@@ -1446,7 +1446,7 @@ export const routines = [
               {
                 id: 8007,
                 type: 'exercise',
-                exerciseId: 18,
+                exerciseId: 'biceps/barbell-curl',
                 series: '3',
                 repetitions: '10',
                 weight: '20 kg',
@@ -1461,7 +1461,7 @@ export const routines = [
               {
                 id: 8009,
                 type: 'exercise',
-                exerciseId: 26,
+                exerciseId: 'abs/weighted-front-plank',
                 series: '3',
                 repetitions: '1',
                 weight: '0 kg',
@@ -1481,7 +1481,7 @@ export const routines = [
               {
                 id: 8010,
                 type: 'exercise',
-                exerciseId: 23,
+                exerciseId: 'glutes/barbell-romanian-deadlift',
                 series: '4',
                 repetitions: '8',
                 weight: '40 kg',
@@ -1496,7 +1496,7 @@ export const routines = [
               {
                 id: 8012,
                 type: 'exercise',
-                exerciseId: 17,
+                exerciseId: 'delts/barbell-standing-close-grip-military-press',
                 series: '4',
                 repetitions: '8',
                 weight: '25 kg',
@@ -1511,7 +1511,7 @@ export const routines = [
               {
                 id: 8014,
                 type: 'exercise',
-                exerciseId: 14,
+                exerciseId: 'lats/assisted-pull-up',
                 series: '4',
                 repetitions: '6',
                 weight: '0 kg',
@@ -1525,7 +1525,7 @@ export const routines = [
               {
                 id: 8015,
                 type: 'exercise',
-                exerciseId: 24,
+                exerciseId: 'glutes/dumbbell-lunge',
                 series: '3',
                 repetitions: '10',
                 weight: '10 kg',
@@ -1534,7 +1534,7 @@ export const routines = [
               {
                 id: 8016,
                 type: 'exercise',
-                exerciseId: 20,
+                exerciseId: 'triceps/cable-pushdown',
                 series: '3',
                 repetitions: '12',
                 weight: '20 kg',
@@ -1549,7 +1549,7 @@ export const routines = [
               {
                 id: 8018,
                 type: 'exercise',
-                exerciseId: 3,
+                exerciseId: 'abs/air-bike',
                 series: '3',
                 repetitions: '20',
                 weight: '0 kg',
@@ -1575,7 +1575,7 @@ export const routines = [
               {
                 id: 9001,
                 type: 'exercise',
-                exerciseId: 9,
+                exerciseId: 'quads/all-fours-squad-stretch',
                 series: '2',
                 repetitions: '10',
                 weight: '0 kg',
@@ -1584,7 +1584,7 @@ export const routines = [
               {
                 id: 9002,
                 type: 'exercise',
-                exerciseId: 12,
+                exerciseId: 'glutes/seated-piriformis-stretch',
                 series: '2',
                 repetitions: '1',
                 weight: '0 kg',
@@ -1604,7 +1604,7 @@ export const routines = [
               {
                 id: 9004,
                 type: 'exercise',
-                exerciseId: 6,
+                exerciseId: 'glutes/sled-45-leg-press',
                 series: '3',
                 repetitions: '12',
                 weight: '40 kg',
@@ -1613,7 +1613,7 @@ export const routines = [
               {
                 id: 9005,
                 type: 'exercise',
-                exerciseId: 7,
+                exerciseId: 'lats/alternate-lateral-pulldown',
                 series: '3',
                 repetitions: '12',
                 weight: '20 kg',
@@ -1628,7 +1628,7 @@ export const routines = [
               {
                 id: 9007,
                 type: 'exercise',
-                exerciseId: 26,
+                exerciseId: 'abs/weighted-front-plank',
                 series: '3',
                 repetitions: '1',
                 weight: '0 kg',
@@ -1637,7 +1637,7 @@ export const routines = [
               {
                 id: 9008,
                 type: 'exercise',
-                exerciseId: 22,
+                exerciseId: 'glutes/barbell-glute-bridge',
                 series: '3',
                 repetitions: '12',
                 weight: '15 kg',
@@ -1657,7 +1657,7 @@ export const routines = [
               {
                 id: 9009,
                 type: 'exercise',
-                exerciseId: 10,
+                exerciseId: 'cardio/jack-jump-male',
                 series: '3',
                 repetitions: '20',
                 weight: '0 kg',
@@ -1677,7 +1677,7 @@ export const routines = [
               {
                 id: 9011,
                 type: 'exercise',
-                exerciseId: 13,
+                exerciseId: 'upper-back/dumbbell-one-arm-bent-over-row',
                 series: '3',
                 repetitions: '12',
                 weight: '6 kg',
@@ -1686,7 +1686,7 @@ export const routines = [
               {
                 id: 9012,
                 type: 'exercise',
-                exerciseId: 8,
+                exerciseId: 'delts/dumbbell-lateral-raise',
                 series: '3',
                 repetitions: '12',
                 weight: '2 kg',
@@ -1701,7 +1701,7 @@ export const routines = [
               {
                 id: 9014,
                 type: 'exercise',
-                exerciseId: 11,
+                exerciseId: 'quads/lever-leg-extension',
                 series: '3',
                 repetitions: '12',
                 weight: '15 kg',
@@ -1710,7 +1710,7 @@ export const routines = [
               {
                 id: 9015,
                 type: 'exercise',
-                exerciseId: 25,
+                exerciseId: 'calves/bodyweight-standing-calf-raise',
                 series: '3',
                 repetitions: '15',
                 weight: '0 kg',
@@ -1724,7 +1724,7 @@ export const routines = [
               {
                 id: 9016,
                 type: 'exercise',
-                exerciseId: 12,
+                exerciseId: 'glutes/seated-piriformis-stretch',
                 series: '2',
                 repetitions: '1',
                 weight: '0 kg',
@@ -1733,7 +1733,7 @@ export const routines = [
               {
                 id: 9017,
                 type: 'exercise',
-                exerciseId: 9,
+                exerciseId: 'quads/all-fours-squad-stretch',
                 series: '2',
                 repetitions: '10',
                 weight: '0 kg',
@@ -1759,7 +1759,7 @@ export const routines = [
               {
                 id: 10001,
                 type: 'exercise',
-                exerciseId: 10,
+                exerciseId: 'cardio/jack-jump-male',
                 series: '3',
                 repetitions: '30',
                 weight: '0 kg',
@@ -1779,7 +1779,7 @@ export const routines = [
               {
                 id: 10003,
                 type: 'exercise',
-                exerciseId: 4,
+                exerciseId: 'pectorals/barbell-bench-press',
                 series: '3',
                 repetitions: '12',
                 weight: '30 kg',
@@ -1788,7 +1788,7 @@ export const routines = [
               {
                 id: 10004,
                 type: 'exercise',
-                exerciseId: 7,
+                exerciseId: 'lats/alternate-lateral-pulldown',
                 series: '3',
                 repetitions: '12',
                 weight: '30 kg',
@@ -1803,7 +1803,7 @@ export const routines = [
               {
                 id: 10006,
                 type: 'exercise',
-                exerciseId: 19,
+                exerciseId: 'biceps/dumbbell-hammer-curl-v-2',
                 series: '3',
                 repetitions: '12',
                 weight: '8 kg',
@@ -1823,7 +1823,7 @@ export const routines = [
               {
                 id: 10007,
                 type: 'exercise',
-                exerciseId: 6,
+                exerciseId: 'glutes/sled-45-leg-press',
                 series: '3',
                 repetitions: '15',
                 weight: '80 kg',
@@ -1838,7 +1838,7 @@ export const routines = [
               {
                 id: 10009,
                 type: 'exercise',
-                exerciseId: 11,
+                exerciseId: 'quads/lever-leg-extension',
                 series: '3',
                 repetitions: '15',
                 weight: '25 kg',
@@ -1847,7 +1847,7 @@ export const routines = [
               {
                 id: 10010,
                 type: 'exercise',
-                exerciseId: 25,
+                exerciseId: 'calves/bodyweight-standing-calf-raise',
                 series: '3',
                 repetitions: '20',
                 weight: '20 kg',
@@ -1861,7 +1861,7 @@ export const routines = [
               {
                 id: 10011,
                 type: 'exercise',
-                exerciseId: 3,
+                exerciseId: 'abs/air-bike',
                 series: '3',
                 repetitions: '15',
                 weight: '0 kg',
@@ -1876,7 +1876,7 @@ export const routines = [
               {
                 id: 10013,
                 type: 'exercise',
-                exerciseId: 1,
+                exerciseId: 'abs/3-4-sit-up',
                 series: '3',
                 repetitions: '15',
                 weight: '0 kg',
@@ -1896,7 +1896,7 @@ export const routines = [
               {
                 id: 10014,
                 type: 'exercise',
-                exerciseId: 5,
+                exerciseId: 'glutes/barbell-full-squat',
                 series: '3',
                 repetitions: '12',
                 weight: '0 kg',
@@ -1905,7 +1905,7 @@ export const routines = [
               {
                 id: 10015,
                 type: 'exercise',
-                exerciseId: 13,
+                exerciseId: 'upper-back/dumbbell-one-arm-bent-over-row',
                 series: '3',
                 repetitions: '12',
                 weight: '10 kg',
@@ -1914,7 +1914,7 @@ export const routines = [
               {
                 id: 10016,
                 type: 'exercise',
-                exerciseId: 8,
+                exerciseId: 'delts/dumbbell-lateral-raise',
                 series: '3',
                 repetitions: '12',
                 weight: '4 kg',
@@ -1934,7 +1934,7 @@ export const routines = [
               {
                 id: 10018,
                 type: 'exercise',
-                exerciseId: 12,
+                exerciseId: 'glutes/seated-piriformis-stretch',
                 series: '2',
                 repetitions: '1',
                 weight: '0 kg',
@@ -1943,7 +1943,7 @@ export const routines = [
               {
                 id: 10019,
                 type: 'exercise',
-                exerciseId: 9,
+                exerciseId: 'quads/all-fours-squad-stretch',
                 series: '2',
                 repetitions: '10',
                 weight: '0 kg',
@@ -1969,7 +1969,7 @@ export const routines = [
               {
                 id: 11001,
                 type: 'exercise',
-                exerciseId: 22,
+                exerciseId: 'glutes/barbell-glute-bridge',
                 series: '4',
                 repetitions: '10',
                 weight: '40 kg',
@@ -1984,7 +1984,7 @@ export const routines = [
               {
                 id: 11003,
                 type: 'exercise',
-                exerciseId: 23,
+                exerciseId: 'glutes/barbell-romanian-deadlift',
                 series: '4',
                 repetitions: '10',
                 weight: '25 kg',
@@ -1999,7 +1999,7 @@ export const routines = [
               {
                 id: 11005,
                 type: 'exercise',
-                exerciseId: 24,
+                exerciseId: 'glutes/dumbbell-lunge',
                 series: '3',
                 repetitions: '12',
                 weight: '8 kg',
@@ -2013,7 +2013,7 @@ export const routines = [
               {
                 id: 11006,
                 type: 'exercise',
-                exerciseId: 26,
+                exerciseId: 'abs/weighted-front-plank',
                 series: '3',
                 repetitions: '1',
                 weight: '0 kg',
@@ -2022,7 +2022,7 @@ export const routines = [
               {
                 id: 11007,
                 type: 'exercise',
-                exerciseId: 2,
+                exerciseId: 'abs/45-side-bend',
                 series: '3',
                 repetitions: '15',
                 weight: '0 kg',
@@ -2048,7 +2048,7 @@ export const routines = [
               {
                 id: 11009,
                 type: 'exercise',
-                exerciseId: 15,
+                exerciseId: 'pectorals/dumbbell-incline-bench-press',
                 series: '3',
                 repetitions: '12',
                 weight: '8 kg',
@@ -2057,7 +2057,7 @@ export const routines = [
               {
                 id: 11010,
                 type: 'exercise',
-                exerciseId: 16,
+                exerciseId: 'pectorals/dumbbell-fly',
                 series: '3',
                 repetitions: '12',
                 weight: '6 kg',
@@ -2072,7 +2072,7 @@ export const routines = [
               {
                 id: 11012,
                 type: 'exercise',
-                exerciseId: 7,
+                exerciseId: 'lats/alternate-lateral-pulldown',
                 series: '3',
                 repetitions: '12',
                 weight: '25 kg',
@@ -2081,7 +2081,7 @@ export const routines = [
               {
                 id: 11013,
                 type: 'exercise',
-                exerciseId: 8,
+                exerciseId: 'delts/dumbbell-lateral-raise',
                 series: '3',
                 repetitions: '15',
                 weight: '3 kg',
@@ -2095,7 +2095,7 @@ export const routines = [
               {
                 id: 11014,
                 type: 'exercise',
-                exerciseId: 19,
+                exerciseId: 'biceps/dumbbell-hammer-curl-v-2',
                 series: '3',
                 repetitions: '12',
                 weight: '5 kg',
@@ -2104,7 +2104,7 @@ export const routines = [
               {
                 id: 11015,
                 type: 'exercise',
-                exerciseId: 21,
+                exerciseId: 'triceps/bench-dip-knees-bent',
                 series: '3',
                 repetitions: '12',
                 weight: '0 kg',
@@ -2130,7 +2130,7 @@ export const routines = [
               {
                 id: 11017,
                 type: 'exercise',
-                exerciseId: 5,
+                exerciseId: 'glutes/barbell-full-squat',
                 series: '4',
                 repetitions: '12',
                 weight: '25 kg',
@@ -2145,7 +2145,7 @@ export const routines = [
               {
                 id: 11019,
                 type: 'exercise',
-                exerciseId: 11,
+                exerciseId: 'quads/lever-leg-extension',
                 series: '3',
                 repetitions: '15',
                 weight: '20 kg',
@@ -2154,7 +2154,7 @@ export const routines = [
               {
                 id: 11020,
                 type: 'exercise',
-                exerciseId: 25,
+                exerciseId: 'calves/bodyweight-standing-calf-raise',
                 series: '3',
                 repetitions: '20',
                 weight: '20 kg',
@@ -2168,7 +2168,7 @@ export const routines = [
               {
                 id: 11021,
                 type: 'exercise',
-                exerciseId: 27,
+                exerciseId: 'cardio/burpee',
                 series: '3',
                 repetitions: '10',
                 weight: '0 kg',
@@ -2183,7 +2183,7 @@ export const routines = [
               {
                 id: 11023,
                 type: 'exercise',
-                exerciseId: 10,
+                exerciseId: 'cardio/jack-jump-male',
                 series: '2',
                 repetitions: '40',
                 weight: '0 kg',
@@ -2209,7 +2209,7 @@ export const routines = [
               {
                 id: 12001,
                 type: 'exercise',
-                exerciseId: 5,
+                exerciseId: 'glutes/barbell-full-squat',
                 series: '5',
                 repetitions: '5',
                 weight: '90 kg',
@@ -2224,7 +2224,7 @@ export const routines = [
               {
                 id: 12003,
                 type: 'exercise',
-                exerciseId: 23,
+                exerciseId: 'glutes/barbell-romanian-deadlift',
                 series: '4',
                 repetitions: '8',
                 weight: '70 kg',
@@ -2239,7 +2239,7 @@ export const routines = [
               {
                 id: 12005,
                 type: 'exercise',
-                exerciseId: 6,
+                exerciseId: 'glutes/sled-45-leg-press',
                 series: '3',
                 repetitions: '10',
                 weight: '160 kg',
@@ -2253,7 +2253,7 @@ export const routines = [
               {
                 id: 12006,
                 type: 'exercise',
-                exerciseId: 26,
+                exerciseId: 'abs/weighted-front-plank',
                 series: '3',
                 repetitions: '1',
                 weight: '0 kg',
@@ -2262,7 +2262,7 @@ export const routines = [
               {
                 id: 12007,
                 type: 'exercise',
-                exerciseId: 3,
+                exerciseId: 'abs/air-bike',
                 series: '3',
                 repetitions: '20',
                 weight: '0 kg',
@@ -2288,7 +2288,7 @@ export const routines = [
               {
                 id: 12009,
                 type: 'exercise',
-                exerciseId: 15,
+                exerciseId: 'pectorals/dumbbell-incline-bench-press',
                 series: '4',
                 repetitions: '8',
                 weight: '24 kg',
@@ -2303,7 +2303,7 @@ export const routines = [
               {
                 id: 12011,
                 type: 'exercise',
-                exerciseId: 4,
+                exerciseId: 'pectorals/barbell-bench-press',
                 series: '4',
                 repetitions: '6',
                 weight: '60 kg',
@@ -2323,7 +2323,7 @@ export const routines = [
               {
                 id: 12013,
                 type: 'exercise',
-                exerciseId: 20,
+                exerciseId: 'triceps/cable-pushdown',
                 series: '3',
                 repetitions: '12',
                 weight: '25 kg',
@@ -2338,7 +2338,7 @@ export const routines = [
               {
                 id: 12015,
                 type: 'exercise',
-                exerciseId: 21,
+                exerciseId: 'triceps/bench-dip-knees-bent',
                 series: '3',
                 repetitions: '10',
                 weight: '0 kg',
@@ -2358,7 +2358,7 @@ export const routines = [
               {
                 id: 12016,
                 type: 'exercise',
-                exerciseId: 13,
+                exerciseId: 'upper-back/dumbbell-one-arm-bent-over-row',
                 series: '4',
                 repetitions: '8',
                 weight: '30 kg',
@@ -2373,7 +2373,7 @@ export const routines = [
               {
                 id: 12018,
                 type: 'exercise',
-                exerciseId: 7,
+                exerciseId: 'lats/alternate-lateral-pulldown',
                 series: '4',
                 repetitions: '10',
                 weight: '45 kg',
@@ -2393,7 +2393,7 @@ export const routines = [
               {
                 id: 12020,
                 type: 'exercise',
-                exerciseId: 18,
+                exerciseId: 'biceps/barbell-curl',
                 series: '3',
                 repetitions: '10',
                 weight: '30 kg',
@@ -2402,7 +2402,7 @@ export const routines = [
               {
                 id: 12021,
                 type: 'exercise',
-                exerciseId: 8,
+                exerciseId: 'delts/dumbbell-lateral-raise',
                 series: '3',
                 repetitions: '15',
                 weight: '4 kg',
@@ -2434,7 +2434,7 @@ export const routines = [
               {
                 id: 13001,
                 type: 'exercise',
-                exerciseId: 27,
+                exerciseId: 'cardio/burpee',
                 series: '4',
                 repetitions: '10',
                 weight: '0 kg',
@@ -2449,7 +2449,7 @@ export const routines = [
               {
                 id: 13003,
                 type: 'exercise',
-                exerciseId: 10,
+                exerciseId: 'cardio/jack-jump-male',
                 series: '4',
                 repetitions: '30',
                 weight: '0 kg',
@@ -2464,7 +2464,7 @@ export const routines = [
               {
                 id: 13005,
                 type: 'exercise',
-                exerciseId: 3,
+                exerciseId: 'abs/air-bike',
                 series: '4',
                 repetitions: '20',
                 weight: '0 kg',
@@ -2478,7 +2478,7 @@ export const routines = [
               {
                 id: 13006,
                 type: 'exercise',
-                exerciseId: 5,
+                exerciseId: 'glutes/barbell-full-squat',
                 series: '3',
                 repetitions: '12',
                 weight: '20 kg',
@@ -2487,7 +2487,7 @@ export const routines = [
               {
                 id: 13007,
                 type: 'exercise',
-                exerciseId: 7,
+                exerciseId: 'lats/alternate-lateral-pulldown',
                 series: '3',
                 repetitions: '12',
                 weight: '25 kg',
@@ -2502,7 +2502,7 @@ export const routines = [
               {
                 id: 13009,
                 type: 'exercise',
-                exerciseId: 22,
+                exerciseId: 'glutes/barbell-glute-bridge',
                 series: '3',
                 repetitions: '12',
                 weight: '30 kg',
@@ -2522,7 +2522,7 @@ export const routines = [
               {
                 id: 13010,
                 type: 'exercise',
-                exerciseId: 24,
+                exerciseId: 'glutes/dumbbell-lunge',
                 series: '4',
                 repetitions: '12',
                 weight: '0 kg',
@@ -2537,7 +2537,7 @@ export const routines = [
               {
                 id: 13012,
                 type: 'exercise',
-                exerciseId: 27,
+                exerciseId: 'cardio/burpee',
                 series: '4',
                 repetitions: '8',
                 weight: '0 kg',
@@ -2557,7 +2557,7 @@ export const routines = [
               {
                 id: 13014,
                 type: 'exercise',
-                exerciseId: 13,
+                exerciseId: 'upper-back/dumbbell-one-arm-bent-over-row',
                 series: '3',
                 repetitions: '12',
                 weight: '8 kg',
@@ -2566,7 +2566,7 @@ export const routines = [
               {
                 id: 13015,
                 type: 'exercise',
-                exerciseId: 15,
+                exerciseId: 'pectorals/dumbbell-incline-bench-press',
                 series: '3',
                 repetitions: '12',
                 weight: '8 kg',
@@ -2581,7 +2581,7 @@ export const routines = [
               {
                 id: 13017,
                 type: 'exercise',
-                exerciseId: 26,
+                exerciseId: 'abs/weighted-front-plank',
                 series: '3',
                 repetitions: '1',
                 weight: '0 kg',
@@ -2607,7 +2607,7 @@ export const routines = [
               {
                 id: 14001,
                 type: 'exercise',
-                exerciseId: 9,
+                exerciseId: 'quads/all-fours-squad-stretch',
                 series: '2',
                 repetitions: '10',
                 weight: '0 kg',
@@ -2616,7 +2616,7 @@ export const routines = [
               {
                 id: 14002,
                 type: 'exercise',
-                exerciseId: 12,
+                exerciseId: 'glutes/seated-piriformis-stretch',
                 series: '2',
                 repetitions: '1',
                 weight: '0 kg',
@@ -2636,7 +2636,7 @@ export const routines = [
               {
                 id: 14004,
                 type: 'exercise',
-                exerciseId: 7,
+                exerciseId: 'lats/alternate-lateral-pulldown',
                 series: '3',
                 repetitions: '12',
                 weight: '30 kg',
@@ -2645,7 +2645,7 @@ export const routines = [
               {
                 id: 14005,
                 type: 'exercise',
-                exerciseId: 4,
+                exerciseId: 'pectorals/barbell-bench-press',
                 series: '3',
                 repetitions: '10',
                 weight: '30 kg',
@@ -2660,7 +2660,7 @@ export const routines = [
               {
                 id: 14007,
                 type: 'exercise',
-                exerciseId: 11,
+                exerciseId: 'quads/lever-leg-extension',
                 series: '3',
                 repetitions: '12',
                 weight: '15 kg',
@@ -2669,7 +2669,7 @@ export const routines = [
               {
                 id: 14008,
                 type: 'exercise',
-                exerciseId: 25,
+                exerciseId: 'calves/bodyweight-standing-calf-raise',
                 series: '3',
                 repetitions: '15',
                 weight: '0 kg',
@@ -2689,7 +2689,7 @@ export const routines = [
               {
                 id: 14009,
                 type: 'exercise',
-                exerciseId: 13,
+                exerciseId: 'upper-back/dumbbell-one-arm-bent-over-row',
                 series: '3',
                 repetitions: '12',
                 weight: '10 kg',
@@ -2698,7 +2698,7 @@ export const routines = [
               {
                 id: 14010,
                 type: 'exercise',
-                exerciseId: 8,
+                exerciseId: 'delts/dumbbell-lateral-raise',
                 series: '3',
                 repetitions: '12',
                 weight: '3 kg',
@@ -2713,7 +2713,7 @@ export const routines = [
               {
                 id: 14012,
                 type: 'exercise',
-                exerciseId: 19,
+                exerciseId: 'biceps/dumbbell-hammer-curl-v-2',
                 series: '3',
                 repetitions: '12',
                 weight: '6 kg',
@@ -2722,7 +2722,7 @@ export const routines = [
               {
                 id: 14013,
                 type: 'exercise',
-                exerciseId: 22,
+                exerciseId: 'glutes/barbell-glute-bridge',
                 series: '3',
                 repetitions: '12',
                 weight: '20 kg',
@@ -2736,7 +2736,7 @@ export const routines = [
               {
                 id: 14014,
                 type: 'exercise',
-                exerciseId: 26,
+                exerciseId: 'abs/weighted-front-plank',
                 series: '3',
                 repetitions: '1',
                 weight: '0 kg',
@@ -2751,7 +2751,7 @@ export const routines = [
               {
                 id: 14016,
                 type: 'exercise',
-                exerciseId: 2,
+                exerciseId: 'abs/45-side-bend',
                 series: '2',
                 repetitions: '12',
                 weight: '0 kg',
@@ -2777,7 +2777,7 @@ export const routines = [
               {
                 id: 15001,
                 type: 'exercise',
-                exerciseId: 5,
+                exerciseId: 'glutes/barbell-full-squat',
                 series: '3',
                 repetitions: '12',
                 weight: '0 kg',
@@ -2786,7 +2786,7 @@ export const routines = [
               {
                 id: 15002,
                 type: 'exercise',
-                exerciseId: 24,
+                exerciseId: 'glutes/dumbbell-lunge',
                 series: '3',
                 repetitions: '10',
                 weight: '0 kg',
@@ -2801,7 +2801,7 @@ export const routines = [
               {
                 id: 15004,
                 type: 'exercise',
-                exerciseId: 22,
+                exerciseId: 'glutes/barbell-glute-bridge',
                 series: '3',
                 repetitions: '12',
                 weight: '10 kg',
@@ -2815,7 +2815,7 @@ export const routines = [
               {
                 id: 15005,
                 type: 'exercise',
-                exerciseId: 1,
+                exerciseId: 'abs/3-4-sit-up',
                 series: '3',
                 repetitions: '12',
                 weight: '0 kg',
@@ -2824,7 +2824,7 @@ export const routines = [
               {
                 id: 15006,
                 type: 'exercise',
-                exerciseId: 3,
+                exerciseId: 'abs/air-bike',
                 series: '3',
                 repetitions: '16',
                 weight: '0 kg',
@@ -2850,7 +2850,7 @@ export const routines = [
               {
                 id: 15008,
                 type: 'exercise',
-                exerciseId: 7,
+                exerciseId: 'lats/alternate-lateral-pulldown',
                 series: '3',
                 repetitions: '12',
                 weight: '15 kg',
@@ -2859,7 +2859,7 @@ export const routines = [
               {
                 id: 15009,
                 type: 'exercise',
-                exerciseId: 15,
+                exerciseId: 'pectorals/dumbbell-incline-bench-press',
                 series: '3',
                 repetitions: '10',
                 weight: '4 kg',
@@ -2874,7 +2874,7 @@ export const routines = [
               {
                 id: 15011,
                 type: 'exercise',
-                exerciseId: 8,
+                exerciseId: 'delts/dumbbell-lateral-raise',
                 series: '3',
                 repetitions: '12',
                 weight: '2 kg',
@@ -2883,7 +2883,7 @@ export const routines = [
               {
                 id: 15012,
                 type: 'exercise',
-                exerciseId: 21,
+                exerciseId: 'triceps/bench-dip-knees-bent',
                 series: '2',
                 repetitions: '10',
                 weight: '0 kg',
@@ -2897,7 +2897,7 @@ export const routines = [
               {
                 id: 15013,
                 type: 'exercise',
-                exerciseId: 10,
+                exerciseId: 'cardio/jack-jump-male',
                 series: '3',
                 repetitions: '30',
                 weight: '0 kg',
@@ -2923,7 +2923,7 @@ export const routines = [
               {
                 id: 15015,
                 type: 'exercise',
-                exerciseId: 6,
+                exerciseId: 'glutes/sled-45-leg-press',
                 series: '3',
                 repetitions: '12',
                 weight: '40 kg',
@@ -2932,7 +2932,7 @@ export const routines = [
               {
                 id: 15016,
                 type: 'exercise',
-                exerciseId: 13,
+                exerciseId: 'upper-back/dumbbell-one-arm-bent-over-row',
                 series: '3',
                 repetitions: '12',
                 weight: '5 kg',
@@ -2947,7 +2947,7 @@ export const routines = [
               {
                 id: 15018,
                 type: 'exercise',
-                exerciseId: 19,
+                exerciseId: 'biceps/dumbbell-hammer-curl-v-2',
                 series: '3',
                 repetitions: '12',
                 weight: '3 kg',
@@ -2956,7 +2956,7 @@ export const routines = [
               {
                 id: 15019,
                 type: 'exercise',
-                exerciseId: 26,
+                exerciseId: 'abs/weighted-front-plank',
                 series: '3',
                 repetitions: '1',
                 weight: '0 kg',
@@ -2970,7 +2970,7 @@ export const routines = [
               {
                 id: 15020,
                 type: 'exercise',
-                exerciseId: 12,
+                exerciseId: 'glutes/seated-piriformis-stretch',
                 series: '2',
                 repetitions: '1',
                 weight: '0 kg',
@@ -2979,7 +2979,7 @@ export const routines = [
               {
                 id: 15021,
                 type: 'exercise',
-                exerciseId: 9,
+                exerciseId: 'quads/all-fours-squad-stretch',
                 series: '2',
                 repetitions: '10',
                 weight: '0 kg',
@@ -3005,7 +3005,7 @@ export const routines = [
               {
                 id: 16001,
                 type: 'exercise',
-                exerciseId: 27,
+                exerciseId: 'cardio/burpee',
                 series: '4',
                 repetitions: '8',
                 weight: '0 kg',
@@ -3020,7 +3020,7 @@ export const routines = [
               {
                 id: 16003,
                 type: 'exercise',
-                exerciseId: 24,
+                exerciseId: 'glutes/dumbbell-lunge',
                 series: '4',
                 repetitions: '10',
                 weight: '10 kg',
@@ -3035,7 +3035,7 @@ export const routines = [
               {
                 id: 16005,
                 type: 'exercise',
-                exerciseId: 5,
+                exerciseId: 'glutes/barbell-full-squat',
                 series: '4',
                 repetitions: '8',
                 weight: '60 kg',
@@ -3049,7 +3049,7 @@ export const routines = [
               {
                 id: 16006,
                 type: 'exercise',
-                exerciseId: 23,
+                exerciseId: 'glutes/barbell-romanian-deadlift',
                 series: '3',
                 repetitions: '10',
                 weight: '40 kg',
@@ -3058,7 +3058,7 @@ export const routines = [
               {
                 id: 16007,
                 type: 'exercise',
-                exerciseId: 25,
+                exerciseId: 'calves/bodyweight-standing-calf-raise',
                 series: '3',
                 repetitions: '20',
                 weight: '30 kg',
@@ -3073,7 +3073,7 @@ export const routines = [
               {
                 id: 16009,
                 type: 'exercise',
-                exerciseId: 26,
+                exerciseId: 'abs/weighted-front-plank',
                 series: '3',
                 repetitions: '1',
                 weight: '0 kg',
@@ -3093,7 +3093,7 @@ export const routines = [
               {
                 id: 16010,
                 type: 'exercise',
-                exerciseId: 10,
+                exerciseId: 'cardio/jack-jump-male',
                 series: '4',
                 repetitions: '40',
                 weight: '0 kg',
@@ -3108,7 +3108,7 @@ export const routines = [
               {
                 id: 16012,
                 type: 'exercise',
-                exerciseId: 3,
+                exerciseId: 'abs/air-bike',
                 series: '4',
                 repetitions: '20',
                 weight: '0 kg',
@@ -3123,7 +3123,7 @@ export const routines = [
               {
                 id: 16014,
                 type: 'exercise',
-                exerciseId: 27,
+                exerciseId: 'cardio/burpee',
                 series: '4',
                 repetitions: '10',
                 weight: '0 kg',
@@ -3137,7 +3137,7 @@ export const routines = [
               {
                 id: 16015,
                 type: 'exercise',
-                exerciseId: 14,
+                exerciseId: 'lats/assisted-pull-up',
                 series: '3',
                 repetitions: '8',
                 weight: '0 kg',
@@ -3146,7 +3146,7 @@ export const routines = [
               {
                 id: 16016,
                 type: 'exercise',
-                exerciseId: 4,
+                exerciseId: 'pectorals/barbell-bench-press',
                 series: '3',
                 repetitions: '10',
                 weight: '50 kg',
@@ -3161,7 +3161,7 @@ export const routines = [
               {
                 id: 16018,
                 type: 'exercise',
-                exerciseId: 17,
+                exerciseId: 'delts/barbell-standing-close-grip-military-press',
                 series: '3',
                 repetitions: '10',
                 weight: '30 kg',
@@ -3187,7 +3187,7 @@ export const routines = [
               {
                 id: 17001,
                 type: 'exercise',
-                exerciseId: 9,
+                exerciseId: 'quads/all-fours-squad-stretch',
                 series: '2',
                 repetitions: '10',
                 weight: '0 kg',
@@ -3196,7 +3196,7 @@ export const routines = [
               {
                 id: 17002,
                 type: 'exercise',
-                exerciseId: 12,
+                exerciseId: 'glutes/seated-piriformis-stretch',
                 series: '2',
                 repetitions: '1',
                 weight: '0 kg',
@@ -3216,7 +3216,7 @@ export const routines = [
               {
                 id: 17004,
                 type: 'exercise',
-                exerciseId: 6,
+                exerciseId: 'glutes/sled-45-leg-press',
                 series: '3',
                 repetitions: '12',
                 weight: '30 kg',
@@ -3225,7 +3225,7 @@ export const routines = [
               {
                 id: 17005,
                 type: 'exercise',
-                exerciseId: 7,
+                exerciseId: 'lats/alternate-lateral-pulldown',
                 series: '3',
                 repetitions: '12',
                 weight: '15 kg',
@@ -3240,7 +3240,7 @@ export const routines = [
               {
                 id: 17007,
                 type: 'exercise',
-                exerciseId: 25,
+                exerciseId: 'calves/bodyweight-standing-calf-raise',
                 series: '3',
                 repetitions: '12',
                 weight: '0 kg',
@@ -3249,7 +3249,7 @@ export const routines = [
               {
                 id: 17008,
                 type: 'exercise',
-                exerciseId: 19,
+                exerciseId: 'biceps/dumbbell-hammer-curl-v-2',
                 series: '3',
                 repetitions: '12',
                 weight: '2 kg',
@@ -3269,7 +3269,7 @@ export const routines = [
               {
                 id: 17009,
                 type: 'exercise',
-                exerciseId: 11,
+                exerciseId: 'quads/lever-leg-extension',
                 series: '3',
                 repetitions: '12',
                 weight: '10 kg',
@@ -3278,7 +3278,7 @@ export const routines = [
               {
                 id: 17010,
                 type: 'exercise',
-                exerciseId: 13,
+                exerciseId: 'upper-back/dumbbell-one-arm-bent-over-row',
                 series: '3',
                 repetitions: '12',
                 weight: '4 kg',
@@ -3293,7 +3293,7 @@ export const routines = [
               {
                 id: 17012,
                 type: 'exercise',
-                exerciseId: 22,
+                exerciseId: 'glutes/barbell-glute-bridge',
                 series: '3',
                 repetitions: '12',
                 weight: '0 kg',
@@ -3302,7 +3302,7 @@ export const routines = [
               {
                 id: 17013,
                 type: 'exercise',
-                exerciseId: 8,
+                exerciseId: 'delts/dumbbell-lateral-raise',
                 series: '2',
                 repetitions: '12',
                 weight: '1 kg',
@@ -3316,7 +3316,7 @@ export const routines = [
               {
                 id: 17014,
                 type: 'exercise',
-                exerciseId: 26,
+                exerciseId: 'abs/weighted-front-plank',
                 series: '3',
                 repetitions: '1',
                 weight: '0 kg',
@@ -3331,7 +3331,7 @@ export const routines = [
               {
                 id: 17016,
                 type: 'exercise',
-                exerciseId: 2,
+                exerciseId: 'abs/45-side-bend',
                 series: '2',
                 repetitions: '10',
                 weight: '0 kg',
