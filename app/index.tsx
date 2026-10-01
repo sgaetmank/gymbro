@@ -5,6 +5,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { AuthProvider, useAuth } from '../src/context/AuthContext';
 import SearchUserScreen from '../src/screens/buscar_usuario_trainer';
 import EditRoutineScreen from '../src/screens/editar_rutina_trainer';
+import UserStatisticsScreen from '../src/screens/estadisticas_user';
 import UserHomeScreen from '../src/screens/home_user';
 import LooginScreen from '../src/screens/login';
 import TrainerProfileScreen from '../src/screens/mi_cuenta_trainer';
@@ -48,6 +49,7 @@ function AppNavigator() {
           <Stack.Screen name="mi_cuenta_user" component={UserProfileScreen} />
           <Stack.Screen name="ver_dia_x_user" component={UserDayScreen} />
           <Stack.Screen name="reloj" component={StopwatchScreen} />
+          <Stack.Screen name="estadisticas_user" component={UserStatisticsScreen} />
         </>
       )}
     </Stack.Navigator>

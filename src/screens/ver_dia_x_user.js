@@ -51,22 +51,13 @@ export default function UserDayScreen({ navigation, route }) {
 
       {/* HEADER */}
 
-      <View
-        style={[
-          styles.header,
-          isLandscape && styles.headerLandscape,
-        ]}
-      >
+      <View style={[ styles.header, isLandscape && styles.headerLandscape,]}>
 
         <TouchableOpacity onPress={() => navigation.navigate('mi_rutina_user')}>
-          <Text style={styles.backIcon} >
-            ‹
-          </Text>
+          <Text style={styles.backIcon} > ‹ </Text>
         </TouchableOpacity>
 
-        <Text style={styles.headerTitle}>
-          {day.name}
-        </Text>
+        <Text style={styles.headerTitle}> {day.name} </Text>
 
       </View>
 
@@ -75,36 +66,26 @@ export default function UserDayScreen({ navigation, route }) {
 
       <ScrollView
         style={styles.scroll}
-        contentContainerStyle={[
-          styles.content,
-          isLandscape && styles.contentLandscape,
-        ]}
+        contentContainerStyle={[styles.content, isLandscape && styles.contentLandscape,]}
         showsVerticalScrollIndicator={false}
       >
 
         {/* TÍTULO */}
 
-        <Text style={styles.title}>
-          {day.name}
-        </Text>
+        <Text style={styles.title}> {day.name} </Text>
 
 
         {/* BLOQUES */}
 
         {day.blocks.map((block, blockIndex) => (
 
-          <View
-            key={block.id}
-            style={styles.block}
-          >
+          <View key={block.id} style={styles.block} >
 
             {/* ENCABEZADO DEL BLOQUE (no se guarda: se calcula según la posición) */}
 
             <View style={styles.blockHeader}>
 
-              <Text style={styles.blockTitle}>
-                {`Bloque ${blockIndex + 1}`}
-              </Text>
+              <Text style={styles.blockTitle}> {`Bloque ${blockIndex + 1}`} </Text>
 
             </View>
 
@@ -115,10 +96,7 @@ export default function UserDayScreen({ navigation, route }) {
 
               {block.items.map((item) => (
 
-                <View
-                  key={item.id}
-                  style={styles.item}
-                >
+                <View key={item.id} style={styles.item} >
 
                   {item.type === 'exercise' ? (
 
@@ -126,9 +104,7 @@ export default function UserDayScreen({ navigation, route }) {
 
                       {/* NOMBRE DEL EJERCICIO */}
 
-                      <Text style={styles.exerciseName}>
-                        {getExerciseById(item.exerciseId)?.name}
-                      </Text>
+                      <Text style={styles.exerciseName}> {getExerciseById(item.exerciseId)?.name} </Text>
 
 
                       {/* DATOS DEL EJERCICIO */}
@@ -136,35 +112,20 @@ export default function UserDayScreen({ navigation, route }) {
                       <View style={styles.exerciseData}>
 
                         <View style={styles.dataBox}>
-                          <Text style={styles.dataLabel}>
-                            Series
-                          </Text>
-
-                          <Text style={styles.dataValue}>
-                            {item.series}
-                          </Text>
+                          <Text style={styles.dataLabel}> Series </Text>
+                          <Text style={styles.dataValue}> {item.series} </Text>
                         </View>
 
 
                         <View style={styles.dataBox}>
-                          <Text style={styles.dataLabel}>
-                            Reps
-                          </Text>
-
-                          <Text style={styles.dataValue}>
-                            {item.repetitions}
-                          </Text>
+                          <Text style={styles.dataLabel}> Reps </Text>
+                          <Text style={styles.dataValue}>{item.repetitions} </Text>
                         </View>
 
 
                         <View style={styles.dataBox}>
-                          <Text style={styles.dataLabel}>
-                            Peso
-                          </Text>
-
-                          <Text style={styles.dataValue}>
-                            {item.weight}
-                          </Text>
+                          <Text style={styles.dataLabel}> Peso </Text>
+                          <Text style={styles.dataValue}> {item.weight} </Text>
                         </View>
 
                       </View>
@@ -173,9 +134,7 @@ export default function UserDayScreen({ navigation, route }) {
                       {/* COMENTARIOS */}
 
                       {item.comments && (
-                        <Text style={styles.comments}>
-                          {item.comments}
-                        </Text>
+                        <Text style={styles.comments}> {item.comments} </Text>
                       )}
 
 
@@ -184,15 +143,11 @@ export default function UserDayScreen({ navigation, route }) {
                       <View style={styles.buttons}>
 
                         <TouchableOpacity style={styles.button} onPress={() => showVideo(getExerciseById(item.exerciseId))}>
-                            <Text style={styles.buttonText}>
-                                Ver ejercicio
-                            </Text>
+                            <Text style={styles.buttonText}> Ver ejercicio </Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity style={styles.button} onPress={() => showInstructions(getExerciseById(item.exerciseId))}>
-                            <Text style={styles.buttonText}>
-                                Ver instrucciones
-                            </Text>
+                            <Text style={styles.buttonText}> Ver instrucciones </Text>
                         </TouchableOpacity>
 
                       </View>
@@ -205,9 +160,7 @@ export default function UserDayScreen({ navigation, route }) {
 
                     <View style={styles.rest}>
 
-                      <Text style={styles.restText}>
-                        Descanso: {item.time} {item.unit}
-                      </Text>
+                      <Text style={styles.restText}> Descanso: {item.time} {item.unit} </Text>
 
                     </View>
 
@@ -235,42 +188,24 @@ export default function UserDayScreen({ navigation, route }) {
         <View style={styles.modalBackground}>
 
             {/* Tocar fuera del modal lo cierra */}
-            <Pressable
-              style={StyleSheet.absoluteFill}
-              onPress={closeModal}
-            />
+            <Pressable style={StyleSheet.absoluteFill} onPress={closeModal} />
 
-            <View
-              style={[
-                styles.modal,
-                isLandscape && styles.modalLandscape,
-              ]}
-            >
+            <View style={[styles.modal, isLandscape && styles.modalLandscape,]}>
 
 
             {/* CONTENIDO */}
 
             {selectedExercise && modalType === 'video' && (
-                <ExerciseVideo
-                video={selectedExercise.video}
-                />
+                <ExerciseVideo video={selectedExercise.video} />
             )}
 
 
             {selectedExercise && modalType === 'instructions' && (
 
-                <ScrollView
-                style={styles.instructionsScroll}
-                showsVerticalScrollIndicator={false}
-                >
+                <ScrollView style={styles.instructionsScroll} showsVerticalScrollIndicator={false}>
 
-                <Text style={styles.exerciseModalName}>
-                    {selectedExercise.name}
-                </Text>
-
-                <Text style={styles.instructionsText}>
-                    {selectedExercise.description}
-                </Text>
+                <Text style={styles.exerciseModalName}> {selectedExercise.name} </Text>
+                <Text style={styles.instructionsText}> {selectedExercise.description} </Text>
 
                 </ScrollView>
 
@@ -279,14 +214,9 @@ export default function UserDayScreen({ navigation, route }) {
 
             {/* CERRAR */}
 
-            <TouchableOpacity
-                style={styles.closeButton}
-                onPress={closeModal}
-            >
+            <TouchableOpacity style={styles.closeButton} onPress={closeModal}>
 
-                <Text style={styles.closeButtonText}>
-                Cerrar
-                </Text>
+                <Text style={styles.closeButtonText}> Cerrar </Text>
 
             </TouchableOpacity>
 

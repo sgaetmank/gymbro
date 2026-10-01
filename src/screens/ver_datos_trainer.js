@@ -19,20 +19,13 @@ export default function UserDataScreen({ navigation, route }) {
 
       {/* HEADER */}
 
-      <View
-        style={[
-          styles.header,
-          isLandscape && styles.headerLandscape,
-        ]}
-      >
+      <View style={[styles.header, isLandscape && styles.headerLandscape,]}>
 
         <TouchableOpacity onPress={() => navigation.navigate('buscar_usuario_trainer')}>
           <Text style={styles.backIcon}>‹</Text>
         </TouchableOpacity>
 
-        <Text style={styles.headerTitle}>
-          Datos del Usuario
-        </Text>
+        <Text style={styles.headerTitle}>Datos del Usuario</Text>
 
       </View>
 
@@ -53,18 +46,12 @@ export default function UserDataScreen({ navigation, route }) {
         <View style={styles.profile}>
 
           <View style={styles.avatar}>
-            <Text style={styles.avatarText}>
-              {user?.initials || '--'}
-            </Text>
+            <Text style={styles.avatarText}> {user?.initials || '--'} </Text>
           </View>
 
-          <Text style={styles.name}>
-            {user ? `${user.firstName} ${user.lastName}` : 'Sin usuario seleccionado'}
-          </Text>
+          <Text style={styles.name}> {user ? `${user.firstName} ${user.lastName}` : 'Sin usuario seleccionado'} </Text>
 
-          <Text style={styles.email}>
-            {user?.email || '-'}
-          </Text>
+          <Text style={styles.email}> {user?.email || '-'} </Text>
 
         </View>
 
@@ -73,19 +60,17 @@ export default function UserDataScreen({ navigation, route }) {
 
         <View style={styles.card}>
 
-          <Text style={styles.title}>
-            Datos Personales
-          </Text>
+          <Text style={styles.title}> Datos Personales </Text>
 
           <View style={styles.row}>
             <View style={styles.box}>
               <Text style={styles.label}>Nombre</Text>
-              <Text style={styles.value}>{user?.firstName || '-'}</Text>
+              <Text style={styles.value}> {user?.firstName || '-'} </Text>
             </View>
 
             <View style={styles.box}>
               <Text style={styles.label}>Apellido</Text>
-              <Text style={styles.value}>{user?.lastName || '-'}</Text>
+              <Text style={styles.value}> {user?.lastName || '-'} </Text>
             </View>
           </View>
 
@@ -108,9 +93,7 @@ export default function UserDataScreen({ navigation, route }) {
 
         <View style={styles.card}>
 
-          <Text style={styles.title}>
-            Datos Físicos
-          </Text>
+          <Text style={styles.title}> Datos Físicos </Text>
 
           <View style={styles.row}>
 
@@ -138,48 +121,27 @@ export default function UserDataScreen({ navigation, route }) {
 
         <View style={styles.card}>
 
-          <Text style={styles.title}>
-            Contacto y Salud
-          </Text>
+          <Text style={styles.title}> Contacto y Salud </Text>
 
           <View style={styles.box}>
-            <Text style={styles.label}>
-              Teléfono de Contacto
-            </Text>
+            <Text style={styles.label}> Teléfono de Contacto </Text>
 
-            <Text style={styles.value}>
-              {user?.phone || '-'}
-            </Text>
+            <Text style={styles.value}> {user?.phone || '-'} </Text>
           </View>
 
           <View style={styles.box}>
-            <Text style={styles.label}>
-              Teléfono de Emergencia
-            </Text>
-
-            <Text style={styles.value}>
-              {user?.emergencyPhone || '-'}
-            </Text>
+            <Text style={styles.label}> Teléfono de Emergencia </Text>
+            <Text style={styles.value}> {user?.emergencyPhone || '-'} </Text>
           </View>
 
           <View style={styles.box}>
-            <Text style={styles.label}>
-              Obra Social
-            </Text>
-
-            <Text style={styles.value}>
-              {user?.healthInsurance || '-'}
-            </Text>
+            <Text style={styles.label}> Obra Social </Text>
+            <Text style={styles.value}> {user?.healthInsurance || '-'} </Text>
           </View>
 
           <View style={styles.box}>
-            <Text style={styles.label}>
-              Contraindicaciones Médicas
-            </Text>
-
-            <Text style={styles.value}>
-              {user?.contraindications || '-'}
-            </Text>
+            <Text style={styles.label}> Contraindicaciones Médicas </Text>
+            <Text style={styles.value}> {user?.contraindications || '-'} </Text>
           </View>
 
         </View>
@@ -189,18 +151,11 @@ export default function UserDataScreen({ navigation, route }) {
 
         <View style={styles.card}>
 
-          <Text style={styles.title}>
-            Entrenamiento
-          </Text>
-
-          <Text style={styles.label}>
-            Objetivo Principal
-          </Text>
+          <Text style={styles.title}> Entrenamiento </Text>
+          <Text style={styles.label}> Objetivo Principal </Text>
 
           <View style={styles.tag}>
-            <Text style={styles.tagText}>
-              {user?.goal || '-'}
-            </Text>
+            <Text style={styles.tagText}> {user?.goal || '-'} </Text>
           </View>
 
         </View>

@@ -1,10 +1,10 @@
 import { useEffect, useState } from 'react';
 
 import {
-    StyleSheet,
-    Text,
-    TouchableOpacity,
-    View,
+	StyleSheet,
+	Text,
+	TouchableOpacity,
+	View,
 } from 'react-native';
 
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -38,55 +38,32 @@ export default function StopwatchScreen({ navigation }) {
 
 	return (
 		<SafeAreaView style={styles.container}>
-			<View
-				style={[
-					styles.header,
-					isLandscape && styles.headerLandscape,
-				]}
-			>
-				<Text style={styles.headerTitle}>
-					Reloj
-				</Text>
+			<View style={[styles.header, isLandscape && styles.headerLandscape, ]} >
+				<Text style={styles.headerTitle}> Reloj </Text>
 			</View>
 
-			<View
-				style={[
-					styles.content,
-					isLandscape && styles.contentLandscape,
-				]}
-			>
+			<View style={[styles.content, isLandscape && styles.contentLandscape, ]}>
 
 					<View style={[styles.timerCard, width < 360 && styles.timerCardSmall]}>
-						<Text
-							style={[
-								styles.timer,
-								width < 360 && styles.timerSmall,
-								isLandscape && styles.timerLandscape,
-							]}
-						>
+
+						<Text style={[ styles.timer, width < 360 && styles.timerSmall, isLandscape && styles.timerLandscape, ]}>
+							
 							{formatTime(minutes)}:{formatTime(seconds)}
-					</Text>
+
+						</Text>
 
 					<View style={styles.buttons}>
-						<TouchableOpacity
-							style={styles.primaryButton}
-							onPress={() => setIsRunning((running) => !running)}
-						>
-							<Text style={styles.primaryButtonText}>
-								{isRunning ? 'Pausar' : 'Iniciar'}
-							</Text>
+
+						<TouchableOpacity style={styles.primaryButton} onPress={() => setIsRunning((running) => !running)} >
+							
+							<Text style={styles.primaryButtonText}> {isRunning ? 'Pausar' : 'Iniciar'} </Text>
+						
 						</TouchableOpacity>
 
-						<TouchableOpacity
-							style={styles.secondaryButton}
-							onPress={() => {
-								setIsRunning(false);
-								setElapsedTime(0);
-							}}
-						>
-							<Text style={styles.secondaryButtonText}>
-								Reiniciar
-							</Text>
+						<TouchableOpacity style={styles.secondaryButton} onPress={() => { setIsRunning(false); setElapsedTime(0); }} >
+							
+							<Text style={styles.secondaryButtonText}> Reiniciar </Text>
+						
 						</TouchableOpacity>
 					</View>
 				</View>

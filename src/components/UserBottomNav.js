@@ -85,6 +85,29 @@ export default function UserBottomNav({ activeScreen, isLandscape, navigation })
 
       <TouchableOpacity
         style={styles.navItem}
+        onPress={() => navigation.navigate('estadisticas_user')}
+      >
+        <Text
+          style={[
+            styles.navIcon,
+            activeScreen === 'stats' && styles.active,
+          ]}
+        >
+          ▥
+        </Text>
+
+        <Text
+          style={[
+            styles.navText,
+            activeScreen === 'stats' && styles.active,
+          ]}
+        >
+          Estadísticas
+        </Text>
+      </TouchableOpacity>
+
+      <TouchableOpacity
+        style={styles.navItem}
         onPress={() => navigation.navigate('mi_cuenta_user')}
       >
         <Text

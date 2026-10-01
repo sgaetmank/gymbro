@@ -82,6 +82,33 @@ export default function UserHomeScreen({ navigation }) {
 
 
         {/* ====================================================
+            VER MÁS ESTADÍSTICAS
+        ==================================================== */}
+
+        <View style={styles.sectionBox}>
+
+          <View style={styles.moreStatsRow}>
+
+            <View style={styles.moreStatsInfo}>
+
+              <Text style={styles.moreStatsTitle}> Ver más estadísticas </Text>
+
+              <Text style={styles.moreStatsSubtitle}> Clickea para ver tus estadísticas. </Text>
+
+            </View>
+
+            <TouchableOpacity style={styles.smallButton} onPress={() => navigation.navigate('estadisticas_user')} >
+
+              <Text style={styles.smallButtonText}> Ver </Text>
+
+            </TouchableOpacity>
+
+          </View>
+
+        </View>
+
+
+        {/* ====================================================
             PROGRESO DIARIO
         ==================================================== */}
 
@@ -315,6 +342,34 @@ const styles = StyleSheet.create({
     fontSize: 13,
     marginTop: 2,
     textAlign: 'center',
+  },
+
+
+  /* ==========================================================
+     VER MÁS ESTADÍSTICAS
+  ========================================================== */
+
+  moreStatsRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+
+  moreStatsInfo: {
+    flex: 1,
+    paddingRight: 8,
+  },
+
+  moreStatsTitle: {
+    color: '#FFFFFF',
+    fontSize: 15,
+    fontWeight: '700',
+    marginBottom: 4,
+  },
+
+  moreStatsSubtitle: {
+    color: '#777777',
+    fontSize: 13,
+    lineHeight: 14,
   },
 
 
