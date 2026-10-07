@@ -134,7 +134,13 @@ export default function ScanQrUserScreen({ navigation }) {
       exercises,
     });
 
-    navigation.navigate('UserTabs', { screen: 'home_user' });
+    navigation.navigate('UserTabs', {
+      screen: 'mi_rutina_user',
+      params: {
+        screen: 'ver_dia_x_user',
+        params: { day: selectedDay },
+      },
+    });
   };
 
   return (

@@ -1,3 +1,5 @@
+import { useCallback, useState } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
 import {
   ScrollView,
   StyleSheet,
@@ -8,11 +10,22 @@ import {
 
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '../context/AuthContext';
+import { getWorkoutDaysThisYear } from '../data/workoutLogs';
 import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
 
 export default function UserHomeScreen({ navigation }) {
   const { isLandscape } = useResponsiveLayout();
   const { user } = useAuth();
+  const userId = user?.id;
+  const [workoutDaysThisYear, setWorkoutDaysThisYear] = useState(0);
+
+  useFocusEffect(
+    useCallback(() => {
+      setWorkoutDaysThisYear(
+        userId != null ? getWorkoutDaysThisYear(userId) : 0
+      );
+    }, [userId])
+  );
 
   // Sin sesión (ej: mientras se anima el cierre de sesión) no se dibuja nada
   if (!user) return null;
@@ -69,9 +82,9 @@ export default function UserHomeScreen({ navigation }) {
 
               <Text style={styles.statIcon}> 〽 </Text>
 
-              <Text style={styles.statNumber}> 0 </Text>
+              <Text style={styles.statNumber}> {workoutDaysThisYear} </Text>
 
-              <Text style={styles.statLabel}> Días en racha </Text>
+              <Text style={styles.statLabel}> Días entrenados este año </Text>
 
             </View>
 

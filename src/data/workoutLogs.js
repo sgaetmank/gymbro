@@ -2337,3 +2337,12 @@ export function getWorkoutLogsByUser(userId) {
   // Todos los registros de un usuario (equivale a un SELECT ... WHERE id_usuario = ?).
   return workoutLogs.filter((log) => log.userId === userId);
 }
+
+export function getWorkoutDaysThisYear(userId, year = new Date().getFullYear()) {
+  const yearPrefix = `${year}-`;
+  const dates = getWorkoutLogsByUser(userId)
+    .map((log) => log.date)
+    .filter((date) => date.startsWith(yearPrefix));
+
+  return new Set(dates).size;
+}
