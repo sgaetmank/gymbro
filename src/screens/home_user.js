@@ -123,7 +123,10 @@ export default function UserHomeScreen({ navigation }) {
 
             </View>
 
-            <TouchableOpacity style={styles.smallButton}>
+            <TouchableOpacity
+              style={styles.smallButton}
+              onPress={() => navigation.navigate('escanear_qr_user')}
+            >
 
               <Text style={styles.smallButtonText}> Escanear </Text>
 

@@ -7,7 +7,7 @@
 // Cada registro guarda una COPIA de los ejercicios de ese día (con su grupo
 // muscular), así las estadísticas del pasado no cambian si el entrenador
 // edita la rutina o se modifica un ejercicio.
-// Un usuario tiene como máximo un registro por fecha.
+// Un usuario puede tener varios registros en una misma fecha.
 export const workoutLogs = [
   {
     id: 1,
@@ -2320,6 +2320,18 @@ export const workoutLogs = [
     ],
   },
 ];
+
+export function addWorkoutLog({ userId, date, exercises }) {
+  const workoutLog = {
+    id: Math.max(0, ...workoutLogs.map((log) => log.id)) + 1,
+    userId,
+    date,
+    exercises: exercises.map((exercise) => ({ ...exercise })),
+  };
+
+  workoutLogs.push(workoutLog);
+  return workoutLog;
+}
 
 export function getWorkoutLogsByUser(userId) {
   // Todos los registros de un usuario (equivale a un SELECT ... WHERE id_usuario = ?).
