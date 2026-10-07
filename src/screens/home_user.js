@@ -1,6 +1,8 @@
 import { useCallback, useState } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
 import {
+  Alert,
+  Linking,
   ScrollView,
   StyleSheet,
   Text,
@@ -18,6 +20,19 @@ export default function UserHomeScreen({ navigation }) {
   const { user } = useAuth();
   const userId = user?.id;
   const [workoutDaysThisYear, setWorkoutDaysThisYear] = useState(0);
+
+  const handleOpenMap = async () => {
+    const destination = encodeURIComponent(
+      'Pontificia Universidad Católica Argentina, Av. Alicia Moreau de Justo 1300, Buenos Aires'
+    );
+    const url = `https://www.google.com/maps/dir/?api=1&destination=${destination}`;
+
+    try {
+      await Linking.openURL(url);
+    } catch {
+      Alert.alert('No se pudo abrir el mapa', 'Intentá nuevamente más tarde.');
+    }
+  };
 
   useFocusEffect(
     useCallback(() => {
@@ -183,7 +198,6 @@ export default function UserHomeScreen({ navigation }) {
 
         {/* ====================================================
             CÓMO LLEGAR AL GYM
-            (falta implementar la lógica: abrir el mapa)
         ==================================================== */}
 
         <View style={styles.sectionBox}>
@@ -198,7 +212,10 @@ export default function UserHomeScreen({ navigation }) {
 
             </View>
 
-            <TouchableOpacity style={styles.smallButton}>
+            <TouchableOpacity
+              style={styles.smallButton}
+              onPress={handleOpenMap}
+            >
 
               <Text style={styles.smallButtonText}> Ver mapa </Text>
 
