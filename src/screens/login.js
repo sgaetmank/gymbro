@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import {
+  Image,
   ScrollView,
   StyleSheet,
   Text,
@@ -48,7 +49,11 @@ export default function LoginScreen({ navigation }) {
 
         {/* Icono */}
         <View style={styles.iconContainer}>
-          <Text style={styles.icon}>↪</Text>
+          <Image
+            source={require('../../assets/images/splash-icon.png')}
+            style={styles.icon}
+            resizeMode="contain"
+          />
         </View>
 
         {/* Título */}
@@ -162,9 +167,8 @@ const styles = StyleSheet.create({
   },
 
   icon: {
-    color: '#FFC107',
-    fontSize: 25,
-    fontWeight: 'bold',
+    width: 32,
+    height: 32,
   },
 
   title: {
