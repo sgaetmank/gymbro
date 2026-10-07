@@ -7,7 +7,6 @@ import {
 } from 'react-native';
 
 import { SafeAreaView } from 'react-native-safe-area-context';
-import UserBottomNav from '../components/UserBottomNav';
 import { useAuth } from '../context/AuthContext';
 import { useExercises } from '../context/ExercisesContext';
 import { getRoutineById } from '../data/routines';
@@ -34,7 +33,7 @@ export default function UserRoutineScreen({ navigation }) {
   // ============================================================
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
 
       {/* HEADER */}
 
@@ -188,13 +187,6 @@ export default function UserRoutineScreen({ navigation }) {
         ))}
 
       </ScrollView>
-
-
-      <UserBottomNav
-        activeScreen="routine"
-        isLandscape={isLandscape}
-        navigation={navigation}
-      />
 
     </SafeAreaView>
   );

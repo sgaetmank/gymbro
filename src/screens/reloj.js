@@ -8,10 +8,9 @@ import {
 } from 'react-native';
 
 import { SafeAreaView } from 'react-native-safe-area-context';
-import UserBottomNav from '../components/UserBottomNav';
 import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
 
-export default function StopwatchScreen({ navigation }) {
+export default function StopwatchScreen() {
 	const { width, isLandscape } = useResponsiveLayout();
 	const [elapsedTime, setElapsedTime] = useState(0);
 	const [isRunning, setIsRunning] = useState(false);
@@ -37,7 +36,7 @@ export default function StopwatchScreen({ navigation }) {
 	const formatTime = (time) => String(time).padStart(2, '0');
 
 	return (
-		<SafeAreaView style={styles.container}>
+		<SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
 			<View style={[styles.header, isLandscape && styles.headerLandscape, ]} >
 				<Text style={styles.headerTitle}> Reloj </Text>
 			</View>
@@ -68,12 +67,6 @@ export default function StopwatchScreen({ navigation }) {
 					</View>
 				</View>
 			</View>
-
-			<UserBottomNav
-				activeScreen="clock"
-				isLandscape={isLandscape}
-				navigation={navigation}
-			/>
 		</SafeAreaView>
 	);
 }

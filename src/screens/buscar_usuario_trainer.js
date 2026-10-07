@@ -9,7 +9,6 @@ import {
 } from 'react-native';
 
 import { SafeAreaView } from 'react-native-safe-area-context';
-import TrainerBottomNav from '../components/TrainerBottomNav';
 import { users } from '../data/users';
 import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
 
@@ -40,7 +39,7 @@ export default function SearchUserScreen({ navigation }) {
     );
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
 
       {/* HEADER */}
       <View style={[styles.header,isLandscape && styles.headerLandscape,]} >
@@ -155,12 +154,6 @@ export default function SearchUserScreen({ navigation }) {
         </ScrollView>
 
       </View>
-
-      <TrainerBottomNav
-        activeScreen="search"
-        isLandscape={isLandscape}
-        navigation={navigation}
-      />
 
     </SafeAreaView>
   );

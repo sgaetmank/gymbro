@@ -13,7 +13,6 @@ import {
 } from 'react-native';
 
 import { SafeAreaView } from 'react-native-safe-area-context';
-import TrainerBottomNav from '../components/TrainerBottomNav';
 import { useExercises } from '../context/ExercisesContext';
 import { createRoutine, getRoutineById, updateRoutineDays } from '../data/routines';
 import { setUserRoutine } from '../data/users';
@@ -524,62 +523,77 @@ const moveItem = (dayId, blockId, itemId, direction) => {
     setSavedSnapshot(JSON.stringify(days)); // anota "esto es lo último guardado"
   };
 
+  // Pregunta qué hacer con los cambios sin guardar antes de confirmar la salida.
+  const confirmExitWithUnsavedChanges = (leave) => {
+    Alert.alert(
+      'Cambios sin guardar',
+      'Hiciste cambios en la rutina que todavía no se guardaron.',
+      [
+        { text: 'Seguir editando', style: 'cancel' },
+        {
+          text: 'Salir sin guardar',
+          style: 'destructive',
+          onPress: leave,
+        },
+        {
+          text: 'Guardar y salir',
+          onPress: () => {
+            persistRoutine();
+            leave();
+          },
+        },
+      ],
+      // Tocar afuera equivale a "Seguir editando"
+      { cancelable: true }
+    );
+  };
+
   useEffect(() => {
-    const unsubscribe = navigation.addListener('beforeRemove', (e) => {
+    const unsubscribeBeforeRemove = navigation.addListener('beforeRemove', (e) => {
       if (!hasUnsavedChanges || skipExitPrompt.current) { // nada que avisar: dejá pasar
         return;
       }
 
       // congela la salida. El usuario sigue en la pantalla hasta que el entrenador elija
-      e.preventDefault(); 
+      e.preventDefault();
 
-      const leave = () => {
+      confirmExitWithUnsavedChanges(() => {
         skipExitPrompt.current = true;
-        // Retoma la salida original (atrás, cambio de pestaña, etc.)
+        // Retoma la salida original (atrás, etc.)
         navigation.dispatch(e.data.action);
-      };
-
-      // Preguntá qué hacer
-      Alert.alert( 
-        'Cambios sin guardar',
-        'Hiciste cambios en la rutina que todavía no se guardaron.',
-        [
-          { text: 'Seguir editando', style: 'cancel' },
-          {
-            text: 'Salir sin guardar',
-            style: 'destructive',
-            onPress: leave,
-          },
-          {
-            text: 'Guardar y salir',
-            onPress: () => {
-              persistRoutine();
-              leave();
-            },
-          },
-        ],
-        // Tocar afuera equivale a "Seguir editando"
-        { cancelable: true }
-      );
+      });
     });
 
-    return unsubscribe;
-  }, [navigation, hasUnsavedChanges, persistRoutine]);
+    // El Tab.Navigator (TrainerTabs) no desmonta esta pantalla al cambiar de
+    // pestaña, solo le saca el foco: "beforeRemove" no se dispara en ese
+    // caso. Hay que escuchar "tabPress" en el navigator padre aparte para
+    // no perder el aviso de cambios sin guardar al tocar "Mi Cuenta".
+    const parentTabNavigation = navigation.getParent();
+    const unsubscribeTabPress = parentTabNavigation?.addListener('tabPress', (e) => {
+      if (!hasUnsavedChanges || skipExitPrompt.current) {
+        return;
+      }
 
-  //"Buscar Usuario" hace goBack() y "Mi Cuenta" hace replace(...), que reemplaza la pantalla
-  const guardedNavigation = {
-    navigate: (screen) =>
-      screen === 'buscar_usuario_trainer'
-        ? navigation.goBack()
-        : navigation.replace(screen),
-  };
+      e.preventDefault();
+
+      confirmExitWithUnsavedChanges(() => {
+        skipExitPrompt.current = true;
+        parentTabNavigation.navigate('mi_cuenta_trainer');
+      });
+    });
+
+    return () => {
+      unsubscribeBeforeRemove();
+      unsubscribeTabPress?.();
+    };
+  }, [navigation, hasUnsavedChanges, persistRoutine]);
 
   // ============================================================
   // RENDER
   // ============================================================
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
 
       {/* ======================================================
           HEADER
@@ -1353,12 +1367,6 @@ const moveItem = (dayId, blockId, itemId, direction) => {
         </View>
 
       </Modal>
-
-      <TrainerBottomNav
-        activeScreen="search"
-        isLandscape={isLandscape}
-        navigation={guardedNavigation}
-      />
 
     </SafeAreaView>
   );

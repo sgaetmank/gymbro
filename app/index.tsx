@@ -4,18 +4,10 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { AuthProvider, useAuth } from '../src/context/AuthContext';
 import { ExercisesProvider } from '../src/context/ExercisesContext';
-import SearchUserScreen from '../src/screens/buscar_usuario_trainer';
-import EditRoutineScreen from '../src/screens/editar_rutina_trainer';
-import UserStatisticsScreen from '../src/screens/estadisticas_user';
-import UserHomeScreen from '../src/screens/home_user';
 import LooginScreen from '../src/screens/login';
-import TrainerProfileScreen from '../src/screens/mi_cuenta_trainer';
-import UserProfileScreen from '../src/screens/mi_cuenta_user';
-import UserRoutineScreen from '../src/screens/mi_rutina_user';
-import StopwatchScreen from '../src/screens/reloj';
 import SignUpScreen from '../src/screens/signup';
-import UserDataScreen from '../src/screens/ver_datos_trainer';
-import UserDayScreen from '../src/screens/ver_dia_x_user';
+import TrainerTabs from '../src/navigation/TrainerTabs';
+import UserTabs from '../src/navigation/UserTabs';
 
 const Stack = createNativeStackNavigator();
 
@@ -34,24 +26,14 @@ function AppNavigator() {
           <Stack.Screen name="signup" component={SignUpScreen} />
         </>
       ) : user.isTrainer ? (
-        // Entrenador
-        <>
-          <Stack.Screen name="buscar_usuario_trainer" component={SearchUserScreen} />
-          <Stack.Screen name="editar_rutina_trainer" component={EditRoutineScreen} />
-          <Stack.Screen name="mi_cuenta_trainer" component={TrainerProfileScreen} />
-          <Stack.Screen name="ver_datos_trainer" component={UserDataScreen} />
-        </>
+        // Entrenador: una sola screen que monta el Tab.Navigator (ver
+        // src/navigation/TrainerTabs.js).
+        <Stack.Screen name="TrainerTabs" component={TrainerTabs} />
       ) : (
-        // Usuario común. React Navigation muestra la primera screen de este
-        // grupo (home_user) apenas cambia el conjunto de rutas disponibles.
-        <>
-          <Stack.Screen name="home_user" component={UserHomeScreen} />
-          <Stack.Screen name="mi_rutina_user" component={UserRoutineScreen} />
-          <Stack.Screen name="mi_cuenta_user" component={UserProfileScreen} />
-          <Stack.Screen name="ver_dia_x_user" component={UserDayScreen} />
-          <Stack.Screen name="reloj" component={StopwatchScreen} />
-          <Stack.Screen name="estadisticas_user" component={UserStatisticsScreen} />
-        </>
+        // Usuario común: una sola screen que monta el Tab.Navigator (ver
+        // src/navigation/UserTabs.js). Los tabs individuales resuelven sus
+        // propias rutas internamente.
+        <Stack.Screen name="UserTabs" component={UserTabs} />
       )}
     </Stack.Navigator>
   );

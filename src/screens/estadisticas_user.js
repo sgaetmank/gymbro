@@ -8,7 +8,6 @@ import {
 } from 'react-native';
 
 import { SafeAreaView } from 'react-native-safe-area-context';
-import UserBottomNav from '../components/UserBottomNav';
 import { useAuth } from '../context/AuthContext';
 import { getWorkoutLogsByUser } from '../data/workoutLogs';
 import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
@@ -70,7 +69,7 @@ function countByMuscleGroup(monthLogs) {
 }
 
 
-export default function UserStatisticsScreen({ navigation }) {
+export default function UserStatisticsScreen() {
   const { isLandscape } = useResponsiveLayout();
   const { user } = useAuth();
 
@@ -108,7 +107,7 @@ export default function UserStatisticsScreen({ navigation }) {
   // ============================================================
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
 
       {/* HEADER */}
 
@@ -273,13 +272,6 @@ export default function UserStatisticsScreen({ navigation }) {
         )}
 
       </ScrollView>
-
-
-      <UserBottomNav
-        activeScreen="stats"
-        isLandscape={isLandscape}
-        navigation={navigation}
-      />
 
     </SafeAreaView>
   );

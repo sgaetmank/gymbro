@@ -7,7 +7,6 @@ import {
 } from 'react-native';
 
 import { SafeAreaView } from 'react-native-safe-area-context';
-import TrainerBottomNav from '../components/TrainerBottomNav';
 import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
 
 export default function UserDataScreen({ navigation, route }) {
@@ -15,13 +14,13 @@ export default function UserDataScreen({ navigation, route }) {
   const user = route?.params?.user;
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
 
       {/* HEADER */}
 
       <View style={[styles.header, isLandscape && styles.headerLandscape,]}>
 
-        <TouchableOpacity onPress={() => navigation.navigate('buscar_usuario_trainer')}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
           <Text style={styles.backIcon}>‹</Text>
         </TouchableOpacity>
 
@@ -161,12 +160,6 @@ export default function UserDataScreen({ navigation, route }) {
         </View>
 
       </ScrollView>
-
-      <TrainerBottomNav
-        activeScreen="search"
-        isLandscape={isLandscape}
-        navigation={navigation}
-      />
 
     </SafeAreaView>
   );

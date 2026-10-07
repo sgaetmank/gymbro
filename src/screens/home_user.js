@@ -7,7 +7,6 @@ import {
 } from 'react-native';
 
 import { SafeAreaView } from 'react-native-safe-area-context';
-import UserBottomNav from '../components/UserBottomNav';
 import { useAuth } from '../context/AuthContext';
 import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
 
@@ -19,7 +18,7 @@ export default function UserHomeScreen({ navigation }) {
   if (!user) return null;
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
 
       {/* ======================================================
           HEADER
@@ -194,13 +193,6 @@ export default function UserHomeScreen({ navigation }) {
         </View>
 
       </ScrollView>
-
-
-      <UserBottomNav
-        activeScreen="home"
-        isLandscape={isLandscape}
-        navigation={navigation}
-      />
 
     </SafeAreaView>
   );

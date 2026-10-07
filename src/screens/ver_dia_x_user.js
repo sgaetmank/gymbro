@@ -13,7 +13,6 @@ import {
 
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ExerciseGif from '../components/ExerciseGif';
-import UserBottomNav from '../components/UserBottomNav';
 import { useExercises } from '../context/ExercisesContext';
 import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
 
@@ -113,13 +112,13 @@ export default function UserDayScreen({ navigation, route }) {
 
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
 
       {/* HEADER */}
 
       <View style={[ styles.header, isLandscape && styles.headerLandscape,]}>
 
-        <TouchableOpacity onPress={() => navigation.navigate('mi_rutina_user')}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
           <Text style={styles.backIcon} > ‹ </Text>
         </TouchableOpacity>
 
@@ -349,12 +348,6 @@ export default function UserDayScreen({ navigation, route }) {
         </View>
 
     </Modal>
-
-    <UserBottomNav
-      activeScreen="routine"
-      isLandscape={isLandscape}
-      navigation={navigation}
-    />
 
     </SafeAreaView>
   );

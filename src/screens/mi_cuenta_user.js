@@ -9,11 +9,10 @@ import {
 
 import { SafeAreaView } from 'react-native-safe-area-context';
 import ProfileDataCard from '../components/ProfileDataCard';
-import UserBottomNav from '../components/UserBottomNav';
 import { useAuth } from '../context/AuthContext';
 import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
 
-export default function UserProfileScreen({ navigation }) {
+export default function UserProfileScreen() {
   const { isLandscape } = useResponsiveLayout();
   const { user, logout } = useAuth();
 
@@ -36,7 +35,7 @@ export default function UserProfileScreen({ navigation }) {
   };
 
   return (
-    <SafeAreaView style={styles.container}>
+    <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
 
       {/* HEADER */}
 
@@ -121,13 +120,6 @@ export default function UserProfileScreen({ navigation }) {
         </TouchableOpacity>
 
       </ScrollView>
-
-
-      <UserBottomNav
-        activeScreen="account"
-        isLandscape={isLandscape}
-        navigation={navigation}
-      />
 
     </SafeAreaView>
   );
