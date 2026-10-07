@@ -34,7 +34,14 @@
       ],
       "expo-video",
       "expo-image",
-      "expo-web-browser"
+      "expo-web-browser",
+      [
+        "expo-camera",
+        {
+          "cameraPermission": "Gymbro necesita acceso a la cámara para escanear el QR del gimnasio.",
+          "recordAudioAndroid": false
+        }
+      ]
     ],
     "experiments": {
       "reactCompiler": true
