@@ -77,6 +77,12 @@ export default function TrainerTabs() {
         name="buscar_usuario_trainer"
         component={SearchTabStack}
         options={{ title: 'Buscar Usuario', tabBarIcon: makeTabIcon('search') }}
+        listeners={({ navigation }) => ({
+          tabPress: (e) => {
+            e.preventDefault();
+            navigation.navigate('buscar_usuario_trainer', { screen: 'buscar_usuario_trainer_root' });
+          },
+        })}
       />
       <Tab.Screen
         name="mi_cuenta_trainer"
