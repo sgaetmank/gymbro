@@ -50,10 +50,10 @@ function AppNavigator() {
 export default function App() {
   return (
     <SafeAreaProvider>
-      <AuthProvider> {/* guarda quien esta logueado */ }
-        <ExercisesProvider> {/* trae los ejercicios de la API y los comparte */ }
+      <AuthProvider>
+        <ExercisesProvider>
           <NavigationContainer>
-            <AppNavigator /> {/* decide qué pantallas existen según haya o no usuario */ }
+            <AppNavigator />
           </NavigationContainer>
         </ExercisesProvider>
       </AuthProvider>
