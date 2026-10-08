@@ -41,6 +41,12 @@
           "cameraPermission": "Gymbro necesita acceso a la cámara para escanear el QR del gimnasio.",
           "recordAudioAndroid": false
         }
+      ],
+      [
+        "expo-location",
+        {
+          "locationWhenInUsePermission": "Gymbro necesita acceder a tu ubicación para validar que estés en el gimnasio al registrar un entrenamiento."
+        }
       ]
     ],
     "experiments": {
