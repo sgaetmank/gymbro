@@ -143,7 +143,9 @@ export default function UserDayScreen({
 
         {/* TÍTULO */}
 
-        <Text style={styles.title}> {day.name} </Text>
+        <Text style={styles.subtitle}>
+          {`${day.blocks.reduce((total, block) => total + block.items.filter((i) => i.type === 'exercise').length, 0)} ejercicios · ${day.blocks.length} bloques`}
+        </Text>
 
 
         {/* ERROR AL CARGAR LOS EJERCICIOS */}
@@ -188,7 +190,7 @@ export default function UserDayScreen({
                       {/* NOMBRE DEL EJERCICIO */}
 
                       <Text style={styles.exerciseName}>
-                        {' '}{getExerciseById(item.exerciseId)?.name ?? (loading ? 'Cargando…' : 'Ejercicio no disponible')}{' '}
+                        {getExerciseById(item.exerciseId)?.name ?? (loading ? 'Cargando…' : 'Ejercicio no disponible')}
                       </Text>
 
 
@@ -197,20 +199,20 @@ export default function UserDayScreen({
                       <View style={styles.exerciseData}>
 
                         <View style={styles.dataBox}>
-                          <Text style={styles.dataLabel}> Series </Text>
-                          <Text style={styles.dataValue}> {item.series} </Text>
+                          <Text style={styles.dataLabel}>Series</Text>
+                          <Text style={styles.dataValue}>{item.series}</Text>
                         </View>
 
 
                         <View style={styles.dataBox}>
-                          <Text style={styles.dataLabel}> Reps </Text>
-                          <Text style={styles.dataValue}>{item.repetitions} </Text>
+                          <Text style={styles.dataLabel}>Reps</Text>
+                          <Text style={styles.dataValue}>{item.repetitions}</Text>
                         </View>
 
 
                         <View style={styles.dataBox}>
-                          <Text style={styles.dataLabel}> Peso </Text>
-                          <Text style={styles.dataValue}> {item.weight} </Text>
+                          <Text style={styles.dataLabel}>Peso</Text>
+                          <Text style={styles.dataValue}>{item.weight}</Text>
                         </View>
 
                       </View>
@@ -218,8 +220,11 @@ export default function UserDayScreen({
 
                       {/* COMENTARIOS */}
 
-                      {item.comments && (
-                        <Text style={styles.comments}> {item.comments} </Text>
+                      {!!item.comments?.trim() && (
+                        <Text style={styles.comments}>
+                          <Text style={styles.commentsLabel}>Nota: </Text>
+                          {item.comments}
+                        </Text>
                       )}
 
 
@@ -229,25 +234,25 @@ export default function UserDayScreen({
                       <View style={styles.buttons}>
 
                         <TouchableOpacity
-                          style={styles.button}
+                          style={[styles.button, !getExerciseById(item.exerciseId) && styles.buttonDisabled]}
                           disabled={!getExerciseById(item.exerciseId)}
                           onPress={() => {
                             const exercise = getExerciseById(item.exerciseId);
                             if (exercise) showGif(exercise);
                           }}
                         >
-                            <Text style={styles.buttonText}> Ver ejercicio </Text>
+                            <Text style={styles.buttonText}>Ver ejercicio</Text>
                         </TouchableOpacity>
 
                         <TouchableOpacity
-                          style={styles.button}
+                          style={[styles.button, !getExerciseById(item.exerciseId) && styles.buttonDisabled]}
                           disabled={!getExerciseById(item.exerciseId)}
                           onPress={() => {
                             const exercise = getExerciseById(item.exerciseId);
                             if (exercise) showInstructions(exercise);
                           }}
                         >
-                            <Text style={styles.buttonText}> Ver instrucciones </Text>
+                            <Text style={styles.buttonText}>Ver instrucciones</Text>
                         </TouchableOpacity>
 
                       </View>
@@ -260,11 +265,11 @@ export default function UserDayScreen({
 
                     <View style={styles.rest}>
 
-                      <Text style={styles.restText}> Descanso: {item.time} {formatRestUnit(item.time, item.unit)} </Text>
+                      <View style={styles.restInfo}>
 
-                      <View style={styles.restTimerRow}>
+                        <Text style={styles.restText}>Descanso: {item.time} {formatRestUnit(item.time, item.unit)}</Text>
 
-                        <Text style={styles.restTimerText}>
+                        <Text style={[styles.restTimerText, activeRestId === item.id && remainingSeconds === 0 && styles.restTimerDone]}>
                           {activeRestId === item.id
                             ? remainingSeconds === 0
                               ? '¡Descanso terminado!'
@@ -272,26 +277,26 @@ export default function UserDayScreen({
                             : formatRestTime(toSeconds(item.time, item.unit))}
                         </Text>
 
-                        <TouchableOpacity
-                          style={styles.restPlayButton}
-                          onPress={() => {
-                            if (activeRestId !== item.id) {
-                              startRest(item.id, item.time, item.unit);
-                            } else if (isRestRunning) {
-                              pauseRest();
-                            } else if (remainingSeconds === 0) {
-                              startRest(item.id, item.time, item.unit);
-                            } else {
-                              resumeRest();
-                            }
-                          }}
-                        >
-                          <Text style={styles.restPlayButtonText}>
-                            {activeRestId === item.id && isRestRunning ? '⏸' : '▶'}
-                          </Text>
-                        </TouchableOpacity>
-
                       </View>
+
+                      <TouchableOpacity
+                        style={styles.restPlayButton}
+                        onPress={() => {
+                          if (activeRestId !== item.id) {
+                            startRest(item.id, item.time, item.unit);
+                          } else if (isRestRunning) {
+                            pauseRest();
+                          } else if (remainingSeconds === 0) {
+                            startRest(item.id, item.time, item.unit);
+                          } else {
+                            resumeRest();
+                          }
+                        }}
+                      >
+                        <Text style={styles.restPlayButtonText}>
+                          {activeRestId === item.id && isRestRunning ? '⏸' : '▶'}
+                        </Text>
+                      </TouchableOpacity>
 
                     </View>
 
@@ -393,8 +398,8 @@ const styles = StyleSheet.create({
     width: '100%',
     maxWidth: 900,
     alignSelf: 'center',
-    paddingHorizontal: 24,
-    paddingTop: 24,
+    paddingHorizontal: 22,
+    paddingTop: 22,
   },
 
 
@@ -411,30 +416,29 @@ const styles = StyleSheet.create({
 
   backIcon: {
     color: '#FFFFFF',
-    fontSize: 29,
+    fontSize: 26,
     fontWeight: '300',
-    marginRight: 12,
+    marginRight: 11,
   },
 
   headerTitle: {
     color: '#FFFFFF',
-    fontSize: 16,
+    fontSize: 14,
     fontWeight: '500',
   },
 
   headerLandscape: {
-    minHeight: 56,
-    paddingHorizontal: 24,
+    minHeight: 50,
+    paddingHorizontal: 22,
   },
 
 
   /* TÍTULO */
 
-  title: {
-    color: '#FFC107',
-    fontSize: 24,
-    fontWeight: '700',
-    marginBottom: 14,
+  subtitle: {
+    color: '#999999',
+    fontSize: 14,
+    marginBottom: 13,
   },
 
 
@@ -442,10 +446,10 @@ const styles = StyleSheet.create({
 
   block: {
     backgroundColor: '#1D1D1D',
-    borderRadius: 16,
+    borderRadius: 14,
     borderWidth: 1.5,
     borderColor: '#FFE082',
-    marginBottom: 16,
+    marginBottom: 14,
     overflow: 'hidden',
   },
 
@@ -461,7 +465,7 @@ const styles = StyleSheet.create({
 
   blockTitle: {
     color: '#FFFFFF',
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: '700',
   },
 
@@ -472,18 +476,21 @@ const styles = StyleSheet.create({
 
   item: {
     backgroundColor: '#242424',
-    borderRadius: 14,
+    borderRadius: 13,
     borderWidth: 1,
     borderColor: '#3A3A3A',
     padding: '4%',
-    marginBottom: 12,
+    marginBottom: 11,
   },
 
   exerciseName: {
     color: '#FFFFFF',
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: '600',
-    marginBottom: 10,
+    marginBottom: 9,
+    borderLeftWidth: 4,
+    borderLeftColor: '#FFC107',
+    paddingLeft: 9,
   },
 
 
@@ -491,28 +498,32 @@ const styles = StyleSheet.create({
 
   exerciseData: {
     flexDirection: 'row',
-    gap: 8,
-    marginBottom: 10,
+    gap: 7,
+    marginBottom: 9,
   },
 
   dataBox: {
     flex: 1,
     backgroundColor: '#2E2E2E',
-    borderRadius: 10,
-    paddingVertical: '2.5%',
+    borderRadius: 9,
+    borderWidth: 1,
+    borderColor: '#4A3A10',
+    paddingVertical: 9,
     alignItems: 'center',
   },
 
   dataLabel: {
-    color: '#999999',
-    fontSize: 13,
+    color: '#B0B0B0',
+    fontSize: 10,
+    letterSpacing: 1,
+    textTransform: 'uppercase',
     marginBottom: 3,
   },
 
   dataValue: {
-    color: '#FFFFFF',
-    fontSize: 18,
-    fontWeight: '600',
+    color: '#FFC107',
+    fontSize: 22,
+    fontWeight: '700',
   },
 
 
@@ -520,8 +531,12 @@ const styles = StyleSheet.create({
 
   comments: {
     color: '#AAAAAA',
-    fontSize: 15,
-    marginBottom: 10,
+    fontSize: 14,
+    marginBottom: 9,
+  },
+
+  commentsLabel: {
+    color: '#FF6B6B',
   },
 
 
@@ -529,22 +544,37 @@ const styles = StyleSheet.create({
 
   buttons: {
     flexDirection: 'row',
-    gap: 10,
+    gap: 9,
   },
 
   button: {
     flex: 1,
-    backgroundColor: '#3A2B0D',
-    borderRadius: 14,
-    paddingHorizontal: 12,
+    backgroundColor: '#FFC107',
+    borderRadius: 13,
+    paddingHorizontal: 11,
     paddingVertical: 10,
     alignItems: 'center',
+    borderWidth: 2,
+    borderTopColor: '#FFE082',
+    borderLeftColor: '#FFD54F',
+    borderRightColor: '#E0A800',
+    borderBottomColor: '#B88700',
+    borderBottomWidth: 4,
+    shadowColor: '#FFC107',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
+    elevation: 6,
+  },
+
+  buttonDisabled: {
+    opacity: 0.45,
   },
 
   buttonText: {
-    color: '#FFC107',
-    fontSize: 14,
-    fontWeight: '600',
+    color: '#1A1300',
+    fontSize: 13,
+    fontWeight: '700',
   },
 
 
@@ -552,42 +582,60 @@ const styles = StyleSheet.create({
 
   rest: {
     backgroundColor: '#202C35',
-    borderRadius: 10,
+    borderRadius: 9,
+    borderWidth: 1,
+    borderColor: '#2F5A7A',
     paddingVertical: '3%',
     paddingHorizontal: '3.5%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 13,
+  },
+
+  restInfo: {
+    flex: 1,
   },
 
   restText: {
     color: '#66B8FF',
-    fontSize: 17,
+    fontSize: 15,
     fontWeight: '500',
-  },
-
-  restTimerRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    marginTop: 10,
   },
 
   restTimerText: {
     color: '#FFFFFF',
-    fontSize: 22,
+    fontSize: 25,
     fontWeight: '700',
+    marginTop: 5,
+  },
+
+  restTimerDone: {
+    fontSize: 18,
   },
 
   restPlayButton: {
     backgroundColor: '#66B8FF',
-    borderRadius: 20,
-    width: 40,
-    height: 40,
+    borderRadius: 23,
+    width: 47,
+    height: 47,
     alignItems: 'center',
     justifyContent: 'center',
+    borderWidth: 2,
+    borderTopColor: '#B5DEFF',
+    borderLeftColor: '#8CCBFF',
+    borderRightColor: '#4A97D6',
+    borderBottomColor: '#2F78B5',
+    borderBottomWidth: 4,
+    shadowColor: '#66B8FF',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.45,
+    shadowRadius: 6,
+    elevation: 8,
   },
 
   restPlayButtonText: {
     color: '#101010',
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: '700',
   },
 
@@ -603,7 +651,7 @@ const styles = StyleSheet.create({
     width: '100%',
     maxHeight: '85%',
     backgroundColor: '#1D1D1D',
-    borderRadius: 16,
+    borderRadius: 14,
     padding: '6.5%',
   },
 
@@ -614,49 +662,49 @@ const styles = StyleSheet.create({
 
   modalTitle: {
     color: '#FFC107',
-    fontSize: 22,
+    fontSize: 20,
     fontWeight: '700',
-    marginBottom: 16,
+    marginBottom: 14,
   },
 
   exerciseModalName: {
     color: '#FFFFFF',
-    fontSize: 23,
+    fontSize: 21,
     fontWeight: '700',
-    marginBottom: 16,
+    marginBottom: 14,
   },
 
   /* INSTRUCCIONES */
 
   instructionsScroll: {
-    maxHeight: 420,
+    maxHeight: 380,
   },
 
   instructionsText: {
     color: '#CCCCCC',
-    fontSize: 18,
-    lineHeight: 27,
-    marginBottom: 10,
+    fontSize: 16,
+    lineHeight: 24,
+    marginBottom: 9,
   },
 
   /* ERROR DE CARGA */
 
   errorBox: {
     backgroundColor: '#3A1D1D',
-    borderRadius: 10,
+    borderRadius: 9,
     padding: '3.5%',
-    marginBottom: 14,
+    marginBottom: 13,
   },
 
   errorText: {
     color: '#FF8A80',
-    fontSize: 15,
-    marginBottom: 6,
+    fontSize: 14,
+    marginBottom: 5,
   },
 
   retryText: {
     color: '#FFC107',
-    fontSize: 15,
+    fontSize: 14,
     fontWeight: '700',
   },
 
@@ -664,7 +712,7 @@ const styles = StyleSheet.create({
 
   closeButton: {
     backgroundColor: '#FFC107',
-    borderRadius: 10,
+    borderRadius: 9,
     paddingVertical: '3.5%',
     alignItems: 'center',
     marginTop: '6%',
@@ -672,7 +720,7 @@ const styles = StyleSheet.create({
 
   closeButtonText: {
     color: '#111111',
-    fontSize: 17,
+    fontSize: 15,
     fontWeight: '700',
   },
 

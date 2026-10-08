@@ -13,6 +13,7 @@ import {
 } from 'react-native';
 
 import { SafeAreaView } from 'react-native-safe-area-context';
+import MoveArrows from '../components/MoveArrows';
 import { useExercises } from '../context/ExercisesContext';
 import {
   createRoutine,
@@ -697,53 +698,13 @@ const moveItem = (
 
               <View style={styles.dayTitleContainer}>
 
-                <View style={styles.arrowColumn}>
-
-                <TouchableOpacity
-                  style={styles.arrowButton}
-                    disabled={days.findIndex(
-                    (d) => d.id === day.id
-                    ) === 0}
-                    onPress={() =>
-                    moveDay(day.id, 'up')
-                    }
-                >
-                    <Text
-                    style={[
-                        styles.arrow,
-                        days.findIndex(
-                        (d) => d.id === day.id
-                        ) === 0 && styles.disabledArrow,
-                    ]}
-                    >
-                    ⌃
-                    </Text>
-                </TouchableOpacity>
-
-
-                <TouchableOpacity
-                  style={styles.arrowButton}
-                    disabled={days.findIndex(
-                    (d) => d.id === day.id
-                    ) === days.length - 1}
-                    onPress={() =>
-                    moveDay(day.id, 'down')
-                    }
-                >
-                    <Text
-                    style={[
-                        styles.arrow,
-                        days.findIndex(
-                        (d) => d.id === day.id
-                        ) === days.length - 1 &&
-                        styles.disabledArrow,
-                    ]}
-                    >
-                    ⌄
-                    </Text>
-                </TouchableOpacity>
-
-                </View>
+                <MoveArrows
+                  size="day"
+                  canMoveUp={days.findIndex((d) => d.id === day.id) > 0}
+                  canMoveDown={days.findIndex((d) => d.id === day.id) < days.length - 1}
+                  onMoveUp={() => moveDay(day.id, 'up')}
+                  onMoveDown={() => moveDay(day.id, 'down')}
+                />
 
                 <Text style={styles.dayTitle}>
                   {day.name}
@@ -783,65 +744,13 @@ const moveItem = (
 
                     <View style={styles.blockTitleContainer}>
 
-                    <View style={styles.blockArrowColumn}>
-
-                        <TouchableOpacity
-                        style={styles.smallArrowButton}
-                        disabled={
-                            day.blocks.findIndex(
-                            (b) => b.id === block.id
-                            ) === 0
-                        }
-                        onPress={() =>
-                            moveBlock(
-                            day.id,
-                            block.id,
-                            'up'
-                            )
-                        }
-                        >
-                        <Text
-                            style={[
-                            styles.smallArrow,
-                            day.blocks.findIndex(
-                                (b) => b.id === block.id
-                            ) === 0 && styles.disabledSmallArrow,
-                            ]}
-                        >
-                            ⌃
-                        </Text>
-                        </TouchableOpacity>
-
-
-                        <TouchableOpacity
-                        style={styles.smallArrowButton}
-                        disabled={
-                            day.blocks.findIndex(
-                            (b) => b.id === block.id
-                            ) === day.blocks.length - 1
-                        }
-                        onPress={() =>
-                            moveBlock(
-                            day.id,
-                            block.id,
-                            'down'
-                            )
-                        }
-                        >
-                        <Text
-                            style={[
-                            styles.smallArrow,
-                            day.blocks.findIndex(
-                                (b) => b.id === block.id
-                            ) === day.blocks.length - 1 &&
-                                styles.disabledSmallArrow,
-                            ]}
-                        >
-                            ⌄
-                        </Text>
-                        </TouchableOpacity>
-
-                    </View>
+                    <MoveArrows
+                      size="block"
+                      canMoveUp={blockIndex > 0}
+                      canMoveDown={blockIndex < day.blocks.length - 1}
+                      onMoveUp={() => moveBlock(day.id, block.id, 'up')}
+                      onMoveDown={() => moveBlock(day.id, block.id, 'down')}
+                    />
 
                     <Text style={styles.blockTitle}>
                         {`Bloque ${blockIndex + 1}`}
@@ -880,68 +789,13 @@ const moveItem = (
 
                     <View style={styles.itemMain}>
 
-                        <View style={styles.itemArrows}>
-
-                        <TouchableOpacity
-                          style={styles.itemArrowButton}
-                            disabled={
-                            block.items.findIndex(
-                                (i) => i.id === item.id
-                            ) === 0
-                            }
-                            onPress={() =>
-                            moveItem(
-                                day.id,
-                                block.id,
-                                item.id,
-                                'up'
-                            )
-                            }
-                        >
-                            <Text
-                            style={[
-                                styles.itemArrow,
-                                block.items.findIndex(
-                                (i) => i.id === item.id
-                                ) === 0 &&
-                                styles.disabledItemArrow,
-                            ]}
-                            >
-                            ⌃
-                            </Text>
-                        </TouchableOpacity>
-
-
-                        <TouchableOpacity
-                          style={styles.itemArrowButton}
-                            disabled={
-                            block.items.findIndex(
-                                (i) => i.id === item.id
-                            ) === block.items.length - 1
-                            }
-                            onPress={() =>
-                            moveItem(
-                                day.id,
-                                block.id,
-                                item.id,
-                                'down'
-                            )
-                            }
-                        >
-                            <Text
-                            style={[
-                                styles.itemArrow,
-                                block.items.findIndex(
-                                (i) => i.id === item.id
-                                ) === block.items.length - 1 &&
-                                styles.disabledItemArrow,
-                            ]}
-                            >
-                            ⌄
-                            </Text>
-                        </TouchableOpacity>
-
-                        </View>
+                        <MoveArrows
+                          size="item"
+                          canMoveUp={block.items.findIndex((i) => i.id === item.id) > 0}
+                          canMoveDown={block.items.findIndex((i) => i.id === item.id) < block.items.length - 1}
+                          onMoveUp={() => moveItem(day.id, block.id, item.id, 'up')}
+                          onMoveDown={() => moveItem(day.id, block.id, item.id, 'down')}
+                        />
 
                       <View style={styles.itemInfo}>
 
@@ -977,12 +831,6 @@ const moveItem = (
                       {/* ACCIONES */}
 
                       <View style={styles.itemActions}>
-
-                        <TouchableOpacity>
-                          <Text style={styles.editIcon}>
-                            ✎
-                          </Text>
-                        </TouchableOpacity>
 
                         <TouchableOpacity
                           onPress={() =>
@@ -1535,32 +1383,9 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 
-  arrowColumn: {
-    marginRight: 6,
-  },
 
-  arrowButton: {
-    width: 32,
-    height: 28,
-    backgroundColor: '#2A2A2A',
-    borderWidth: 1,
-    borderColor: '#3A3A3A',
-    borderRadius: 6,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 3,
-  },
 
-  arrow: {
-    color: '#AAAAAA',
-    fontSize: 18,
-    lineHeight: 16,
-    textAlign: 'center',
-  },
 
-  disabledArrow: {
-  color: '#444444',
-},
 
   dayTitle: {
     color: '#FFC107',
@@ -1605,24 +1430,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
 
-  smallArrow: {
-    color: '#8A8A8A',
-    fontSize: 20,
-    lineHeight: 18,
-    textAlign: 'center',
-  },
 
-  smallArrowButton: {
-    width: 32,
-    height: 28,
-    backgroundColor: '#303030',
-    borderWidth: 1,
-    borderColor: '#4A4A4A',
-    borderRadius: 6,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 3,
-  },
 
   blockTitle: {
     color: '#FFFFFF',
@@ -1631,13 +1439,7 @@ const styles = StyleSheet.create({
     marginLeft: 4,
   },
 
-  blockArrowColumn: {
-  marginRight: 5,
-},
 
-disabledSmallArrow: {
-  color: '#444444',
-},
 
   /* ==============================================================
      EJERCICIO / DESCANSO
@@ -1665,32 +1467,9 @@ disabledSmallArrow: {
     alignItems: 'center',
   },
 
-  itemArrows: {
-    marginRight: 6,
-  },
 
-  itemArrowButton: {
-    width: 30,
-    height: 26,
-    backgroundColor: '#2A2A2A',
-    borderWidth: 1,
-    borderColor: '#3A3A3A',
-    borderRadius: 6,
-    alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 3,
-  },
 
-  itemArrow: {
-    color: '#AAAAAA',
-    fontSize: 16,
-    lineHeight: 14,
-    textAlign: 'center',
-  },
 
-  disabledItemArrow: {
-  color: '#444444',
-},
 
   itemInfo: {
     flex: 1,
@@ -1723,14 +1502,9 @@ disabledSmallArrow: {
   itemActions: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 10,
     marginLeft: 5,
   },
 
-  editIcon: {
-    color: '#4CA8E8',
-    fontSize: 16,
-  },
 
 
   /* ==============================================================
