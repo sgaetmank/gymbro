@@ -4,9 +4,29 @@
 const API_URL =
   'https://cdn.jsdelivr.net/gh/JahelCuadrado/ExerciseGymGifsDB@v1.1.0/api/es/exercises.json';
 
+export type Exercise = {
+  id: string;
+  name: string;
+  muscleGroup: string;
+  gif: string;
+  instructions: string[];
+};
+
+type ApiExercise = {
+  id: string;
+  name: string;
+  muscle: string;
+  gifUrl: string;
+  instructions: string[];
+};
+
+type ApiResponse = {
+  exercises: ApiExercise[];
+};
+
 // La API devuelve el músculo en inglés; lo llevamos a los grupos que ya usa la app
 // (así las estadísticas siguen agrupando igual).
-const GRUPOS_MUSCULARES = {
+const GRUPOS_MUSCULARES: Record<string, string> = {
   abs: 'Abdomen',
   pectorals: 'Pecho',
   'serratus-anterior': 'Pecho',
@@ -29,7 +49,7 @@ const GRUPOS_MUSCULARES = {
 };
 
 // Convierte un ejercicio de la API al formato que usan las pantallas
-function adaptarEjercicio(ejercicio) {
+function adaptarEjercicio(ejercicio: ApiExercise): Exercise {
   return {
     id: ejercicio.id, // ej: 'pectorals/barbell-bench-press'
     name: ejercicio.name,
@@ -40,13 +60,13 @@ function adaptarEjercicio(ejercicio) {
 }
 
 // Trae todos los ejercicios (≈1300) en español
-export async function fetchExercises() {
+export async function fetchExercises(): Promise<Exercise[]> {
   const response = await fetch(API_URL);
 
   if (!response.ok) {
     throw new Error(`No se pudieron cargar los ejercicios (${response.status})`);
   }
 
-  const data = await response.json();
+  const data = (await response.json()) as ApiResponse;
   return data.exercises.map(adaptarEjercicio);
 }

@@ -1,19 +1,18 @@
-import { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useState, type PropsWithChildren } from 'react';
 
-import { addUser, users } from '../data/users';
+import { addUser, users, type RegistrationData, type User } from '../data/users';
 
 // Guarda al usuario logueado y ofrece login/register/logout a toda la app
-/**
- * @type {import('react').Context<{
- *   user: any,
- *   login: (email: string, password: string) => { ok: boolean, error?: string },
- *   register: (data: object) => { ok: boolean, error?: string },
- *   logout: () => void,
- * }>}
- */
+type AuthResult = { ok: boolean; error?: string };
+type AuthContextValue = {
+  user: User | null;
+  login: (email: string, password: string) => AuthResult;
+  register: (data: RegistrationData) => AuthResult;
+  logout: () => void;
+};
 
 // Crea un contexto para la autenticación, que contiene el usuario actual y funciones de login/register/logout.
-const AuthContext = createContext({
+const AuthContext = createContext<AuthContextValue>({
   user: null,
   login: () => ({ ok: false, error: '' }),
   register: () => ({ ok: false, error: '' }),
@@ -22,13 +21,13 @@ const AuthContext = createContext({
 
 // Proveedor de autenticación que envuelve la aplicación y proporciona el contexto de autenticación a sus hijos.
 
-export function AuthProvider({ children }) {
+export function AuthProvider({ children }: PropsWithChildren) {
   // Usuario de la sesión actual (null = nadie logueado)
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<User | null>(null);
 
-  // Valida email + contraseña contra users.js.
+  // Valida email + contraseña contra users.ts.
   // Con un backend real, solo habría que cambiar el cuerpo de esta función.
-  const login = (email, password) => {
+  const login = (email: string, password: string): AuthResult => {
     const found = users.find(
       (u) =>
         u.email.toLowerCase() === email.trim().toLowerCase() &&
@@ -41,10 +40,10 @@ export function AuthProvider({ children }) {
     return { ok: true };
   };
 
-  // Crea un alumno nuevo en users.js y lo deja logueado.
+  // Crea un alumno nuevo en users.ts y lo deja logueado.
   // Valida que el email y el DNI no estén ya registrados.
   // Con un backend real, solo habría que cambiar el cuerpo de esta función.
-  const register = (data) => {
+  const register = (data: RegistrationData): AuthResult => {
     const email = data.email.trim().toLowerCase();
     const dni = data.dni.trim();
 

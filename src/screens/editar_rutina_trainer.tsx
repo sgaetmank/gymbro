@@ -14,11 +14,29 @@ import {
 
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useExercises } from '../context/ExercisesContext';
-import { createRoutine, getRoutineById, updateRoutineDays } from '../data/routines';
+import {
+  createRoutine,
+  getRoutineById,
+  updateRoutineDays,
+  type ExerciseRoutineItem,
+  type RestRoutineItem,
+  type RoutineDay,
+} from '../data/routines';
 import { setUserRoutine } from '../data/users';
 import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
+import type {
+  TrainerStackParamList,
+  TrainerTabParamList,
+} from '../navigation/types';
 
-export default function EditRoutineScreen({ navigation, route }) {
+type MovementDirection = 'up' | 'down';
+
+export default function EditRoutineScreen({
+  navigation,
+  route,
+}: NativeStackScreenProps<TrainerStackParamList, 'editar_rutina_trainer'>) {
   const { isLandscape } = useResponsiveLayout();
   // Ejercicios traídos de la API (ver ExercisesContext)
   const { exercises, getExerciseById, loading, error, retry } = useExercises();
@@ -30,23 +48,23 @@ export default function EditRoutineScreen({ navigation, route }) {
   const routineId = useRef(routine?.id ?? null);
 
   // Saca tildes/acentos para que la búsqueda no dependa de escribirlos bien
-  const normalizar = (texto) =>
+  const normalizar = (texto: string) =>
     texto
       .normalize('NFD')
       .replace(/[̀-ͯ]/g, '')
       .toLowerCase();
 
   // Series y repeticiones: entero mayor a 0, sin ceros adelante (ej: "4", no "0", "00", "04" ni "4.5")
-  const isValidInteger = (value) => /^[1-9]\d*$/.test(value.trim());
+  const isValidInteger = (value: string) => /^[1-9]\d*$/.test(value.trim());
 
   // Peso y tiempo de descanso: entero o decimal, no vacío (ej: "60" o "1.5")
-  const isValidDecimal = (value) => /^\d+(\.\d+)?$/.test(value.trim());
+  const isValidDecimal = (value: string) => /^\d+(\.\d+)?$/.test(value.trim());
 
   // ============================================================
   // DATOS INICIALES DE EJEMPLO
   // ============================================================
 
-  const [days, setDays] = useState(routine?.days ?? []);
+  const [days, setDays] = useState<RoutineDay[]>(routine?.days ?? []);
 
   // Foto de lo último guardado, para detectar cambios pendientes
   const [savedSnapshot, setSavedSnapshot] = useState(() =>
@@ -64,15 +82,15 @@ export default function EditRoutineScreen({ navigation, route }) {
   const [exerciseModalVisible, setExerciseModalVisible] = useState(false);
   const [restModalVisible, setRestModalVisible] = useState(false);
 
-  const [selectedDayId, setSelectedDayId] = useState(null);
-  const [selectedBlockId, setSelectedBlockId] = useState(null);
+  const [selectedDayId, setSelectedDayId] = useState<number | null>(null);
+  const [selectedBlockId, setSelectedBlockId] = useState<number | null>(null);
 
   // ============================================================
   // CAMPOS PARA AGREGAR EJERCICIO
   // ============================================================
 
   const [exerciseName, setExerciseName] = useState('');
-  const [selectedExerciseId, setSelectedExerciseId] = useState(null);
+  const [selectedExerciseId, setSelectedExerciseId] = useState<string | null>(null);
   const [series, setSeries] = useState('');
   const [repetitions, setRepetitions] = useState('');
   const [weight, setWeight] = useState('');
@@ -84,7 +102,7 @@ export default function EditRoutineScreen({ navigation, route }) {
   // ============================================================
 
   const [restTime, setRestTime] = useState('');
-  const [restUnit, setRestUnit] = useState('minutos');
+  const [restUnit, setRestUnit] = useState<'minutos' | 'segundos'>('minutos');
   const [restFormError, setRestFormError] = useState('');
 
   // ============================================================
@@ -105,7 +123,7 @@ export default function EditRoutineScreen({ navigation, route }) {
   // AGREGAR BLOQUE
   // ============================================================
 
-  const addBlock = (dayId) => {
+  const addBlock = (dayId: number) => {
     setDays(
       days.map((day) => {
         if (day.id !== dayId) {
@@ -130,7 +148,7 @@ export default function EditRoutineScreen({ navigation, route }) {
   // ABRIR MODAL DE EJERCICIO
   // ============================================================
 
-  const openExerciseModal = (dayId, blockId) => {
+  const openExerciseModal = (dayId: number, blockId: number) => {
     setSelectedDayId(dayId);
     setSelectedBlockId(blockId);
 
@@ -156,7 +174,7 @@ export default function EditRoutineScreen({ navigation, route }) {
   // ABRIR MODAL DE DESCANSO
   // ============================================================
 
-  const openRestModal = (dayId, blockId) => {
+  const openRestModal = (dayId: number, blockId: number) => {
     setSelectedDayId(dayId);
     setSelectedBlockId(blockId);
 
@@ -205,7 +223,7 @@ export default function EditRoutineScreen({ navigation, route }) {
 
   setExerciseFormError('');
 
-  const newExercise = {
+  const newExercise: ExerciseRoutineItem = {
     id: Date.now(),
     type: 'exercise',
     exerciseId: selectedExerciseId,
@@ -255,7 +273,7 @@ export default function EditRoutineScreen({ navigation, route }) {
 
     setRestFormError('');
 
-    const newRest = {
+    const newRest: RestRoutineItem = {
       id: Date.now(),
       type: 'rest',
       time: restTime,
@@ -294,7 +312,7 @@ export default function EditRoutineScreen({ navigation, route }) {
 // MOVER DÍA
 // ============================================================
 
-const moveDay = (dayId, direction) => {
+const moveDay = (dayId: number, direction: MovementDirection) => {
 
   const currentIndex = days.findIndex(
     (day) => day.id === dayId
@@ -329,7 +347,11 @@ const moveDay = (dayId, direction) => {
 // MOVER BLOQUE DENTRO DE UN DÍA
 // ============================================================
 
-const moveBlock = (dayId, blockId, direction) => {
+const moveBlock = (
+  dayId: number,
+  blockId: number,
+  direction: MovementDirection
+) => {
 
   setDays(
     days.map((day) => {
@@ -379,7 +401,12 @@ const moveBlock = (dayId, blockId, direction) => {
 // MOVER EJERCICIO / DESCANSO DENTRO DE UN BLOQUE
 // ============================================================
 
-const moveItem = (dayId, blockId, itemId, direction) => {
+const moveItem = (
+  dayId: number,
+  blockId: number,
+  itemId: number,
+  direction: MovementDirection
+) => {
 
   setDays(
     days.map((day) => {
@@ -439,7 +466,7 @@ const moveItem = (dayId, blockId, itemId, direction) => {
   // ELIMINAR EJERCICIO / DESCANSO
   // ============================================================
 
-  const deleteItem = (dayId, blockId, itemId) => {
+  const deleteItem = (dayId: number, blockId: number, itemId: number) => {
 
     setDays(
       days.map((day) => {
@@ -473,7 +500,7 @@ const moveItem = (dayId, blockId, itemId, direction) => {
   // ELIMINAR BLOQUE
   // ============================================================
 
-  const deleteBlock = (dayId, blockId) => {
+  const deleteBlock = (dayId: number, blockId: number) => {
 
     setDays(
       days.map((day) => {
@@ -496,7 +523,7 @@ const moveItem = (dayId, blockId, itemId, direction) => {
   // ELIMINAR DÍA
   // ============================================================
 
-  const deleteDay = (dayId) => {
+  const deleteDay = (dayId: number) => {
 
     setDays(
       days.filter((day) => day.id !== dayId)
@@ -524,7 +551,7 @@ const moveItem = (dayId, blockId, itemId, direction) => {
   };
 
   // Pregunta qué hacer con los cambios sin guardar antes de confirmar la salida.
-  const confirmExitWithUnsavedChanges = (leave) => {
+  const confirmExitWithUnsavedChanges = (leave: () => void) => {
     Alert.alert(
       'Cambios sin guardar',
       'Hiciste cambios en la rutina que todavía no se guardaron.',
@@ -568,7 +595,8 @@ const moveItem = (dayId, blockId, itemId, direction) => {
     // pestaña, solo le saca el foco: "beforeRemove" no se dispara en ese
     // caso. Hay que escuchar "tabPress" en el navigator padre aparte para
     // no perder el aviso de cambios sin guardar al tocar "Mi Cuenta".
-    const parentTabNavigation = navigation.getParent();
+    const parentTabNavigation =
+      navigation.getParent<BottomTabNavigationProp<TrainerTabParamList>>();
     const unsubscribeTabPress = parentTabNavigation?.addListener('tabPress', (e) => {
       if (!hasUnsavedChanges || skipExitPrompt.current) {
         return;

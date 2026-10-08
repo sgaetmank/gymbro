@@ -4,13 +4,14 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { AuthProvider, useAuth } from '../src/context/AuthContext';
 import { ExercisesProvider } from '../src/context/ExercisesContext';
+import type { AppStackParamList } from '../src/navigation/types';
 import LooginScreen from '../src/screens/login';
 import SignUpScreen from '../src/screens/signup';
 import ScanQrUserScreen from '../src/screens/escanear_qr_user';
 import TrainerTabs from '../src/navigation/TrainerTabs';
 import UserTabs from '../src/navigation/UserTabs';
 
-const Stack = createNativeStackNavigator();
+const Stack = createNativeStackNavigator<AppStackParamList>();
 
 // Elige qué pantallas existen según la sesión.
 function AppNavigator() {
@@ -28,11 +29,11 @@ function AppNavigator() {
         </>
       ) : user.isTrainer ? (
         // Entrenador: una sola screen que monta el Tab.Navigator (ver
-        // src/navigation/TrainerTabs.js).
+        // src/navigation/TrainerTabs.tsx).
         <Stack.Screen name="TrainerTabs" component={TrainerTabs} />
       ) : (
         // Usuario común: una sola screen que monta el Tab.Navigator (ver
-        // src/navigation/UserTabs.js). Los tabs individuales resuelven sus
+        // src/navigation/UserTabs.tsx). Los tabs individuales resuelven sus
         // propias rutas internamente.
         <>
           <Stack.Screen name="UserTabs" component={UserTabs} />

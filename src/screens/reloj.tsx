@@ -33,7 +33,7 @@ export default function StopwatchScreen() {
 	const minutes = Math.floor(elapsedTime / 60000);
 	const seconds = Math.floor((elapsedTime % 60000) / 1000);
 
-	const formatTime = (time) => String(time).padStart(2, '0');
+	const formatTime = (time: number) => String(time).padStart(2, '0');
 
 	return (
 		<SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>

@@ -8,7 +8,19 @@
 // muscular), así las estadísticas del pasado no cambian si el entrenador
 // edita la rutina o se modifica un ejercicio.
 // Un usuario puede tener varios registros en una misma fecha.
-export const workoutLogs = [
+export type WorkoutExercise = {
+  exerciseId: string;
+  muscleGroup: string;
+};
+
+export type WorkoutLog = {
+  id: number;
+  userId: number;
+  date: string;
+  exercises: WorkoutExercise[];
+};
+
+export const workoutLogs: WorkoutLog[] = [
   {
     id: 1,
     userId: 2,
@@ -2321,7 +2333,15 @@ export const workoutLogs = [
   },
 ];
 
-export function addWorkoutLog({ userId, date, exercises }) {
+export function addWorkoutLog({
+  userId,
+  date,
+  exercises,
+}: {
+  userId: number;
+  date: string;
+  exercises: WorkoutExercise[];
+}): WorkoutLog {
   const workoutLog = {
     id: Math.max(0, ...workoutLogs.map((log) => log.id)) + 1,
     userId,
@@ -2333,12 +2353,15 @@ export function addWorkoutLog({ userId, date, exercises }) {
   return workoutLog;
 }
 
-export function getWorkoutLogsByUser(userId) {
+export function getWorkoutLogsByUser(userId: number): WorkoutLog[] {
   // Todos los registros de un usuario (equivale a un SELECT ... WHERE id_usuario = ?).
   return workoutLogs.filter((log) => log.userId === userId);
 }
 
-export function getWorkoutDaysThisYear(userId, year = new Date().getFullYear()) {
+export function getWorkoutDaysThisYear(
+  userId: number,
+  year = new Date().getFullYear()
+): number {
   const yearPrefix = `${year}-`;
   const dates = getWorkoutLogsByUser(userId)
     .map((log) => log.date)

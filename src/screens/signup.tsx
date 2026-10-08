@@ -12,6 +12,8 @@ import CustomInput from '../components/CustomInput';
 import PrimaryButton from '../components/PrimaryButton';
 import { useAuth } from '../context/AuthContext';
 import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
+import type { AppStackParamList } from '../navigation/types';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 const GENDERS = ['Femenino', 'Masculino'];
 const GOALS = ['Salud', 'Bajar de peso', 'Fuerza', 'Tonificar', 'Otro'];
@@ -34,9 +36,10 @@ const EMPTY_FORM = {
   contraindications: '',
   goal: '',
 };
+type RegistrationForm = typeof EMPTY_FORM;
 
 // Campos que no se pueden dejar vacíos (Obra Social y Contraindicaciones son opcionales)
-const REQUIRED_FIELDS = [
+const REQUIRED_FIELDS: (keyof RegistrationForm)[] = [
   'firstName',
   'lastName',
   'email',
@@ -53,7 +56,15 @@ const REQUIRED_FIELDS = [
 ];
 
 // Fila de opciones tipo "pastilla": la elegida se resalta en amarillo
-function OptionChips({ options, selected, onSelect }) {
+function OptionChips({
+  options,
+  selected,
+  onSelect,
+}: {
+  options: string[];
+  selected: string;
+  onSelect: (value: string) => void;
+}) {
   return (
     <View style={styles.optionsRow}>
       {options.map((option) => (
@@ -76,7 +87,9 @@ function OptionChips({ options, selected, onSelect }) {
   );
 }
 
-export default function SignUpScreen({ navigation }) {
+export default function SignUpScreen({
+  navigation,
+}: NativeStackScreenProps<AppStackParamList, 'signup'>) {
   const { isLandscape } = useResponsiveLayout();
   const { register } = useAuth();
 
@@ -85,7 +98,7 @@ export default function SignUpScreen({ navigation }) {
   const [error, setError] = useState('');
 
   // Devuelve la función que actualiza un campo y borra el error anterior
-  const setField = (field) => (value) => {
+  const setField = (field: keyof RegistrationForm) => (value: string) => {
     setForm((prev) => ({ ...prev, [field]: value }));
     setError('');
   };

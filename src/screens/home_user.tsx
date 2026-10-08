@@ -14,8 +14,17 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '../context/AuthContext';
 import { getWorkoutDaysThisYear } from '../data/workoutLogs';
 import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
+import type { CompositeScreenProps } from '@react-navigation/native';
+import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { AppStackParamList, UserTabParamList } from '../navigation/types';
 
-export default function UserHomeScreen({ navigation }) {
+type UserHomeScreenProps = CompositeScreenProps<
+  BottomTabScreenProps<UserTabParamList, 'home_user'>,
+  NativeStackScreenProps<AppStackParamList, 'UserTabs'>
+>;
+
+export default function UserHomeScreen({ navigation }: UserHomeScreenProps) {
   const { isLandscape } = useResponsiveLayout();
   const { user } = useAuth();
   const userId = user?.id;
@@ -153,7 +162,7 @@ export default function UserHomeScreen({ navigation }) {
 
             <TouchableOpacity
               style={styles.smallButton}
-              onPress={() => navigation.navigate('escanear_qr_user')}
+              onPress={() => navigation.getParent()?.navigate('escanear_qr_user')}
             >
 
               <Text style={styles.smallButtonText}> Escanear </Text>

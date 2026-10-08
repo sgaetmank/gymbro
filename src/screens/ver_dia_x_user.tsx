@@ -15,27 +15,33 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import ExerciseGif from '../components/ExerciseGif';
 import { useExercises } from '../context/ExercisesContext';
 import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
+import type { Exercise } from '../services/exercisesApi';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { UserRoutineStackParamList } from '../navigation/types';
 
-export default function UserDayScreen({ navigation, route }) {
+export default function UserDayScreen({
+  navigation,
+  route,
+}: NativeStackScreenProps<UserRoutineStackParamList, 'ver_dia_x_user'>) {
 
   const { isLandscape } = useResponsiveLayout();
 
   // Ejercicios traídos de la API (ver ExercisesContext)
   const { getExerciseById, loading, error, retry } = useExercises();
 
-  const day = route?.params?.day;
+  const day = route.params.day;
 
     const [modalVisible, setModalVisible] = useState(false);
-    const [modalType, setModalType] = useState('');
-    const [selectedExercise, setSelectedExercise] = useState(null);
+    const [modalType, setModalType] = useState<'' | 'gif' | 'instructions'>('');
+    const [selectedExercise, setSelectedExercise] = useState<Exercise | null>(null);
 
-    const showGif = (exercise) => {
+    const showGif = (exercise: Exercise) => {
       setSelectedExercise(exercise);
       setModalType('gif');
       setModalVisible(true);
     };
 
-    const showInstructions = (exercise) => {
+    const showInstructions = (exercise: Exercise) => {
       setSelectedExercise(exercise);
       setModalType('instructions');
       setModalVisible(true);
@@ -50,15 +56,15 @@ export default function UserDayScreen({ navigation, route }) {
 
     // TEMPORIZADOR DE DESCANSO (solo uno activo a la vez)
 
-    const [activeRestId, setActiveRestId] = useState(null);
+    const [activeRestId, setActiveRestId] = useState<number | null>(null);
     const [remainingSeconds, setRemainingSeconds] = useState(0);
     const [isRestRunning, setIsRestRunning] = useState(false);
-    const intervalRef = useRef(null);
+    const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
-    const toSeconds = (time, unit) =>
-      unit === 'minutos' ? time * 60 : time;
+    const toSeconds = (time: string, unit: string) =>
+      unit === 'minutos' ? Number(time) * 60 : Number(time);
 
-    const formatRestUnit = (time, unit) =>
+    const formatRestUnit = (time: string, unit: string) =>
       Number(time) === 1 ? unit.slice(0, -1) : unit;
 
     const clearRestInterval = () => {
@@ -70,7 +76,7 @@ export default function UserDayScreen({ navigation, route }) {
 
     useEffect(() => clearRestInterval, []);
 
-    const startRest = (itemId, time, unit) => {
+    const startRest = (itemId: number, time: string, unit: string) => {
       clearRestInterval();
       setActiveRestId(itemId);
       setRemainingSeconds(toSeconds(time, unit));
@@ -104,7 +110,7 @@ export default function UserDayScreen({ navigation, route }) {
       return clearRestInterval;
     }, [isRestRunning]);
 
-    const formatRestTime = (totalSeconds) => {
+    const formatRestTime = (totalSeconds: number) => {
       const minutes = Math.floor(totalSeconds / 60);
       const seconds = totalSeconds % 60;
       return `${minutes}:${String(seconds).padStart(2, '0')}`;
@@ -225,7 +231,10 @@ export default function UserDayScreen({ navigation, route }) {
                         <TouchableOpacity
                           style={styles.button}
                           disabled={!getExerciseById(item.exerciseId)}
-                          onPress={() => showGif(getExerciseById(item.exerciseId))}
+                          onPress={() => {
+                            const exercise = getExerciseById(item.exerciseId);
+                            if (exercise) showGif(exercise);
+                          }}
                         >
                             <Text style={styles.buttonText}> Ver ejercicio </Text>
                         </TouchableOpacity>
@@ -233,7 +242,10 @@ export default function UserDayScreen({ navigation, route }) {
                         <TouchableOpacity
                           style={styles.button}
                           disabled={!getExerciseById(item.exerciseId)}
-                          onPress={() => showInstructions(getExerciseById(item.exerciseId))}
+                          onPress={() => {
+                            const exercise = getExerciseById(item.exerciseId);
+                            if (exercise) showInstructions(exercise);
+                          }}
                         >
                             <Text style={styles.buttonText}> Ver instrucciones </Text>
                         </TouchableOpacity>

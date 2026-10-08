@@ -1,4 +1,33 @@
-export const users = [
+export type User = {
+  id: number;
+  isTrainer: boolean;
+  id_rutina?: number | null;
+  name: string;
+  initials: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  dni: string;
+  password: string;
+  gender: string;
+  age: string;
+  weight: string;
+  height: string;
+  phone: string;
+  emergencyPhone: string;
+  healthInsurance: string;
+  contraindications: string;
+  goal: string;
+};
+
+export type RegistrationData = Omit<
+  User,
+  'id' | 'isTrainer' | 'id_rutina' | 'name' | 'initials'
+> & {
+  confirmPassword?: string;
+};
+
+export const users: User[] = [
   {
     id: 1,
     isTrainer: true,
@@ -419,11 +448,11 @@ export const users = [
   },
 ];
 
-export function getUserById(userId) {
+export function getUserById(userId: number): User | undefined {
   return users.find((user) => user.id === userId);
 }
 
-export function addUser(data) {
+export function addUser(data: RegistrationData): User {
   // Alta de un alumno nuevo (equivale a un INSERT en la base de datos).
   // Nace sin rutina: se la arma el entrenador desde su pantalla de edición.
   const firstName = data.firstName.trim();
@@ -456,7 +485,7 @@ export function addUser(data) {
   return newUser;
 }
 
-export function setUserRoutine(userId, routineId) {
+export function setUserRoutine(userId: number, routineId: number): boolean {
   // Asigna una rutina a un usuario (equivale a un UPDATE en la base de datos).
   const user = getUserById(userId);
   if (!user) return false;
