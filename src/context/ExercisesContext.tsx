@@ -1,18 +1,17 @@
-import { createContext, useContext, useEffect, useMemo, useState } from 'react';
+import { createContext, useContext, useEffect, useMemo, useState, type PropsWithChildren } from 'react';
 
-import { fetchExercises } from '../services/exercisesApi';
+import { fetchExercises, type Exercise } from '../services/exercisesApi';
 
 // Guarda los ejercicios traídos de la API y los comparte con toda la app
-/**
- * @type {import('react').Context<{
- *   exercises: any[],
- *   loading: boolean,
- *   error: string | null,
- *   getExerciseById: (id: string) => any,
- *   retry: () => void,
- * }>}
- */
-const ExercisesContext = createContext({
+type ExercisesContextValue = {
+  exercises: Exercise[];
+  loading: boolean;
+  error: string | null;
+  getExerciseById: (id: string) => Exercise | undefined;
+  retry: () => void;
+};
+
+const ExercisesContext = createContext<ExercisesContextValue>({
   exercises: [],
   loading: true,
   error: null,
@@ -20,8 +19,8 @@ const ExercisesContext = createContext({
   retry: () => {},
 });
 
-export function ExercisesProvider({ children }) {
-  const [exercises, setExercises] = useState([]);
+export function ExercisesProvider({ children }: PropsWithChildren) {
+  const [exercises, setExercises] = useState<Exercise[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   // Cambiar este número vuelve a disparar la carga (botón "Reintentar")
@@ -53,7 +52,7 @@ export function ExercisesProvider({ children }) {
     [exercises]
   );
 
-  const getExerciseById = (exerciseId) => exercisesById.get(exerciseId);
+  const getExerciseById = (exerciseId: string) => exercisesById.get(exerciseId);
 
   // Vuelve a mostrar "cargando" y dispara otra vez el useEffect de arriba
   const retry = () => {

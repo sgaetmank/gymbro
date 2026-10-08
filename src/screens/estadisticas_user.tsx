@@ -9,7 +9,7 @@ import {
 
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '../context/AuthContext';
-import { getWorkoutLogsByUser } from '../data/workoutLogs';
+import { getWorkoutLogsByUser, type WorkoutLog } from '../data/workoutLogs';
 import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
 
 const MONTH_NAMES = [
@@ -26,7 +26,7 @@ const WEEK_CHART_HEIGHT = 120;
 // ============================================================
 
 // Arma la fecha con el mismo formato que los registros: 'YYYY-MM-DD'
-function toDateKey(year, month, day) {
+function toDateKey(year: number, month: number, day: number) {
   const mm = String(month + 1).padStart(2, '0');
   const dd = String(day).padStart(2, '0');
   return `${year}-${mm}-${dd}`;
@@ -34,12 +34,12 @@ function toDateKey(year, month, day) {
 
 // Divide el mes en semanas (de lunes a domingo) y cuenta cuántas veces
 // entrenó en cada una.
-function getWeeksOfMonth(year, month, monthLogs) {
+function getWeeksOfMonth(year: number, month: number, monthLogs: WorkoutLog[]) {
   const daysInMonth = new Date(year, month + 1, 0).getDate();
   const trainedDates = new Set(monthLogs.map((log) => log.date));
 
-  const weeks = [];
-  let week = null;
+  const weeks: { from: number; to: number; trained: number }[] = [];
+  let week: { from: number; to: number; trained: number } | null = null;
 
   for (let day = 1; day <= daysInMonth; day++) {
     // getDay(): 0 = domingo, 1 = lunes. Cada lunes arranca una semana nueva.
@@ -55,8 +55,10 @@ function getWeeksOfMonth(year, month, monthLogs) {
 }
 
 // Cuenta cuántos ejercicios de cada grupo muscular hizo, de mayor a menor
-function countByMuscleGroup(monthLogs) {
-  const counts = {};
+function countByMuscleGroup(
+  monthLogs: WorkoutLog[]
+): { group: string; count: number }[] {
+  const counts: Record<string, number> = {};
   monthLogs.forEach((log) => {
     log.exercises.forEach((exercise) => {
       counts[exercise.muscleGroup] = (counts[exercise.muscleGroup] ?? 0) + 1;
@@ -88,7 +90,7 @@ export default function UserStatisticsScreen() {
   const userLogs = getWorkoutLogsByUser(user.id);
   const monthLogs = userLogs.filter((log) => log.date.startsWith(monthPrefix));
 
-  function changeMonth(delta) {
+  function changeMonth(delta: number) {
     const date = new Date(selected.year, selected.month + delta, 1);
     setSelected({ year: date.getFullYear(), month: date.getMonth() });
   }

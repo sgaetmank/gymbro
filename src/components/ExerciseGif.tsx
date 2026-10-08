@@ -4,7 +4,7 @@ import { StyleSheet } from 'react-native';
 // React Native, reproduce GIFs animados en Android, iOS y web, y los guarda en caché.
 import { Image } from 'expo-image';
 
-export default function ExerciseGif({ gif }) {
+export default function ExerciseGif({ gif }: { gif: string }) {
   return (
     <Image
       source={{ uri: gif }} // URL del GIF que viene de la API

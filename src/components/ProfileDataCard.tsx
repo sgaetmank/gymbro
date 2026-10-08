@@ -2,11 +2,16 @@
    "Contacto y Salud"). Recibe un título y una lista de filas {icon, label, value} y las
    dibuja todas con el mismo estilo, en vez de repetir el mismo bloque JSX fila por fila.
 
-   Se usa en mi_cuenta_user.js y mi_cuenta_trainer.js. */
+   Se usa en mi_cuenta_user.tsx y mi_cuenta_trainer.tsx. */
 
 import { StyleSheet, Text, View } from 'react-native';
 
-export default function ProfileDataCard({ title, rows }) {
+type ProfileDataCardProps = {
+  title: string;
+  rows: { icon: string; label: string; value: string }[];
+};
+
+export default function ProfileDataCard({ title, rows }: ProfileDataCardProps) {
   return (
     <View style={styles.card}>
       <Text style={styles.sectionTitle}>{title}</Text>

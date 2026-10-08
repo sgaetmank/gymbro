@@ -13,8 +13,12 @@ import CustomInput from '../components/CustomInput';
 import PrimaryButton from '../components/PrimaryButton';
 import { useAuth } from '../context/AuthContext';
 import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
+import type { AppStackParamList } from '../navigation/types';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
-export default function LoginScreen({ navigation }) {
+export default function LoginScreen({
+  navigation,
+}: NativeStackScreenProps<AppStackParamList, 'login'>) {
   const { isLandscape } = useResponsiveLayout();
   const { login } = useAuth();
 

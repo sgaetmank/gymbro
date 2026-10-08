@@ -1,4 +1,40 @@
-export const routines = [
+export type ExerciseRoutineItem = {
+  id: number;
+  type: 'exercise';
+  exerciseId: string;
+  series: string;
+  repetitions: string;
+  weight: string;
+  comments: string;
+};
+
+export type RestRoutineItem = {
+  id: number;
+  type: 'rest';
+  time: string;
+  unit: 'minutos' | 'segundos';
+};
+
+export type RoutineItem = ExerciseRoutineItem | RestRoutineItem;
+
+export type RoutineBlock = {
+  id: number;
+  items: RoutineItem[];
+};
+
+export type RoutineDay = {
+  id: number;
+  name: string;
+  blocks: RoutineBlock[];
+};
+
+export type Routine = {
+  id: number;
+  name: string;
+  days: RoutineDay[];
+};
+
+export const routines: Routine[] = [
   {
     id: 1,
     name: 'Mi Rutina',
@@ -3345,12 +3381,12 @@ export const routines = [
   },
 ];
 
-export function getRoutineById(routineId) {
+export function getRoutineById(routineId: number | null | undefined): Routine | undefined {
   // Busca la rutina asociada al usuario mediante su routineId.
   return routines.find((routine) => routine.id === routineId);
 }
 
-export function createRoutine(days) {
+export function createRoutine(days: RoutineDay[]): Routine {
   // Alta de una rutina nueva (equivale a un INSERT en la base de datos).
   const routine = {
     // El id nuevo se calcula tomando el máximo id existente + 1
@@ -3363,7 +3399,7 @@ export function createRoutine(days) {
   return routine;
 }
 
-export function updateRoutineDays(routineId, days) {
+export function updateRoutineDays(routineId: number, days: RoutineDay[]): boolean {
   // Reemplaza los días de la rutina (equivale a un UPDATE en la base de datos).
   const routine = getRoutineById(routineId);
   if (!routine) return false;

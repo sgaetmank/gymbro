@@ -3,8 +3,8 @@ con el estilo oscuro de la app. Si es un campo de contraseña, agrega un ojito p
 
 //Sin este componente habría que repetir en cada pantalla el Text de la etiqueta, el TextInput, los estilos y la lógica del ojito. Se usa en dos pantallas:
 
-// login.js:64: Email y Contraseña.
-// signup.js:48: Nombre, Apellido, Email, DNI, Contraseña, Confirmar contraseña, y otros más abajo
+// login.tsx:64: Email y Contraseña.
+// signup.tsx:48: Nombre, Apellido, Email, DNI, Contraseña, Confirmar contraseña, y otros más abajo
 
 
 import { Ionicons } from '@expo/vector-icons';
@@ -15,7 +15,18 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  type TextInputProps,
 } from 'react-native';
+
+type CustomInputProps = {
+  label: string;
+  placeholder: string;
+  secureTextEntry?: boolean;
+  value: string;
+  onChangeText: (text: string) => void;
+  autoCapitalize?: TextInputProps['autoCapitalize'];
+  keyboardType?: TextInputProps['keyboardType'];
+};
 
 export default function CustomInput({
   label, //Texto de la etiqueta arriba del input.
@@ -25,7 +36,7 @@ export default function CustomInput({
   onChangeText, //Función que se llama cuando el texto cambia. Recibe el nuevo texto como argumento.
   autoCapitalize = 'none', // Por defecto 'none', para que el teclado no ponga mayúscula automática
   keyboardType, //	Tipo de teclado, por ejemplo email-address para que aparezca la arroba
-}) {
+}: CustomInputProps) {
   // Si la contraseña se ve o no (solo aplica cuando secureTextEntry es true)
   const [visible, setVisible] = useState(false);
 

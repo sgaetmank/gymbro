@@ -2,14 +2,15 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Text } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import type { TrainerStackParamList, TrainerTabParamList } from './types';
 
 import SearchUserScreen from '../screens/buscar_usuario_trainer';
 import UserDataScreen from '../screens/ver_datos_trainer';
 import EditRoutineScreen from '../screens/editar_rutina_trainer';
 import TrainerProfileScreen from '../screens/mi_cuenta_trainer';
 
-const Tab = createBottomTabNavigator();
-const SearchStack = createNativeStackNavigator();
+const Tab = createBottomTabNavigator<TrainerTabParamList>();
+const SearchStack = createNativeStackNavigator<TrainerStackParamList>();
 
 // Mismos glifos que usaba TrainerBottomNav, para no cambiar el look del nav.
 const TAB_ICONS = {
@@ -17,8 +18,8 @@ const TAB_ICONS = {
   account: '♙',
 };
 
-function makeTabIcon(key) {
-  return function TabIcon({ color }) {
+function makeTabIcon(key: keyof typeof TAB_ICONS) {
+  return function TabIcon({ color }: { color: string }) {
     return <Text style={{ fontSize: 22, color }}>{TAB_ICONS[key]}</Text>;
   };
 }

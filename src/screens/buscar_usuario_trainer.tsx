@@ -11,19 +11,23 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { users } from '../data/users';
 import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { TrainerStackParamList } from '../navigation/types';
 
-export default function SearchUserScreen({ navigation }) {
+export default function SearchUserScreen({
+  navigation,
+}: NativeStackScreenProps<TrainerStackParamList, 'buscar_usuario_trainer_root'>) {
   const { isLandscape } = useResponsiveLayout();
 
   // Saca tildes/acentos para que la búsqueda no dependa de escribirlos bien
-  const normalizar = (texto) =>
+  const normalizar = (texto: string) =>
     texto
       .normalize('NFD') // descompone los caracteres acentuados en su letra base + el acento como carácter separado
       .replace(/[̀-ͯ]/g, '') // elimina esos símbolos de acento sueltos con una expresión regular
       .toLowerCase(); // uniforma mayúsculas/minúsculas
 
   // Usuario actualmente seleccionado
-  const [selectedUser, setSelectedUser] = useState(null);
+  const [selectedUser, setSelectedUser] = useState<number | null>(null);
 
   // Texto escrito en el buscador
   const [filtro, setFiltro] = useState('');

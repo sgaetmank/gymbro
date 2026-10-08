@@ -11,8 +11,12 @@ import { useAuth } from '../context/AuthContext';
 import { useExercises } from '../context/ExercisesContext';
 import { getRoutineById } from '../data/routines';
 import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { UserRoutineStackParamList } from '../navigation/types';
 
-export default function UserRoutineScreen({ navigation }) {
+export default function UserRoutineScreen({
+  navigation,
+}: NativeStackScreenProps<UserRoutineStackParamList, 'mi_rutina_user_root'>) {
   const { isLandscape } = useResponsiveLayout();
   const { user } = useAuth();
   // Ejercicios traídos de la API (ver ExercisesContext)
@@ -24,7 +28,7 @@ export default function UserRoutineScreen({ navigation }) {
   // Rutina asignada al usuario logueado (puede no tener)
   const routine = getRoutineById(user.id_rutina);
 
-  const formatRestUnit = (time, unit) =>
+  const formatRestUnit = (time: string, unit: string) =>
     Number(time) === 1 ? unit.slice(0, -1) : unit;
 
 

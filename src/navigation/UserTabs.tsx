@@ -2,6 +2,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { Text } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import type { UserRoutineStackParamList, UserTabParamList } from './types';
 
 import UserHomeScreen from '../screens/home_user';
 import UserRoutineScreen from '../screens/mi_rutina_user';
@@ -10,8 +11,8 @@ import StopwatchScreen from '../screens/reloj';
 import UserStatisticsScreen from '../screens/estadisticas_user';
 import UserProfileScreen from '../screens/mi_cuenta_user';
 
-const Tab = createBottomTabNavigator();
-const RoutineStack = createNativeStackNavigator();
+const Tab = createBottomTabNavigator<UserTabParamList>();
+const RoutineStack = createNativeStackNavigator<UserRoutineStackParamList>();
 
 // Mismos glifos que usaba UserBottomNav, para no cambiar el look del nav.
 const TAB_ICONS = {
@@ -22,8 +23,8 @@ const TAB_ICONS = {
   account: '♙',
 };
 
-function makeTabIcon(key) {
-  return function TabIcon({ color }) {
+function makeTabIcon(key: keyof typeof TAB_ICONS) {
+  return function TabIcon({ color }: { color: string }) {
     return <Text style={{ fontSize: 18, color }}>{TAB_ICONS[key]}</Text>;
   };
 }

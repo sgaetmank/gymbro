@@ -16,12 +16,20 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import PrimaryButton from '../components/PrimaryButton';
 import { useAuth } from '../context/AuthContext';
 import { useExercises } from '../context/ExercisesContext';
-import { getRoutineById } from '../data/routines';
-import { addWorkoutLog } from '../data/workoutLogs';
+import { getRoutineById, type RoutineDay } from '../data/routines';
+import { addWorkoutLog, type WorkoutExercise } from '../data/workoutLogs';
+import type { Exercise } from '../services/exercisesApi';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { AppStackParamList } from '../navigation/types';
 
 const QR_GYMBRO = 'GYMBRO_CHECKIN_V1';
 
-function getDayDescription(day, getExerciseById, loading, error) {
+function getDayDescription(
+  day: RoutineDay,
+  getExerciseById: (id: string) => Exercise | undefined,
+  loading: boolean,
+  error: string | null
+) {
   const muscleGroups = [
     ...new Set(
       day.blocks
@@ -40,12 +48,14 @@ function getDayDescription(day, getExerciseById, loading, error) {
   return 'Este día todavía no tiene ejercicios asignados.';
 }
 
-export default function ScanQrUserScreen({ navigation }) {
+export default function ScanQrUserScreen({
+  navigation,
+}: NativeStackScreenProps<AppStackParamList, 'escanear_qr_user'>) {
   const [permission, requestPermission] = useCameraPermissions();
   const [scanned, setScanned] = useState(false);
   const [qrValid, setQrValid] = useState(false);
   const [dayPickerVisible, setDayPickerVisible] = useState(false);
-  const [selectedDayId, setSelectedDayId] = useState(null);
+  const [selectedDayId, setSelectedDayId] = useState<number | null>(null);
   const scanProcessed = useRef(false);
   const { user } = useAuth();
   const { getExerciseById, loading, error } = useExercises();
@@ -63,7 +73,7 @@ export default function ScanQrUserScreen({ navigation }) {
     requestPermission();
   };
 
-  const handleBarcodeScanned = ({ data }) => {
+  const handleBarcodeScanned = ({ data }: { data: string }) => {
     if (scanProcessed.current) return;
 
     scanProcessed.current = true;
@@ -90,7 +100,7 @@ export default function ScanQrUserScreen({ navigation }) {
   };
 
   const handleSubmit = () => {
-    if (!selectedDay) {
+    if (!user || !selectedDay) {
       Alert.alert('Elegí un día', 'Seleccioná el día de la rutina que realizaste.');
       return;
     }
@@ -131,7 +141,9 @@ export default function ScanQrUserScreen({ navigation }) {
     addWorkoutLog({
       userId: user.id,
       date,
-      exercises,
+      exercises: exercises.filter(
+        (exercise): exercise is WorkoutExercise => exercise !== null
+      ),
     });
 
     navigation.replace('UserTabs', {

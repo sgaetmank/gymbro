@@ -8,10 +8,15 @@ import {
 
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import type { TrainerStackParamList } from '../navigation/types';
 
-export default function UserDataScreen({ navigation, route }) {
+export default function UserDataScreen({
+  navigation,
+  route,
+}: NativeStackScreenProps<TrainerStackParamList, 'ver_datos_trainer'>) {
   const { isLandscape } = useResponsiveLayout();
-  const user = route?.params?.user;
+  const user = route.params.user;
 
   return (
     <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
@@ -40,7 +45,7 @@ export default function UserDataScreen({ navigation, route }) {
         showsVerticalScrollIndicator={false}
       >
 
-        {/* PERFIL (sin recuadro amarillo, mismo estilo que mi_cuenta_user.js) */}
+        {/* PERFIL (sin recuadro amarillo, mismo estilo que mi_cuenta_user.tsx) */}
 
         <View style={styles.profile}>
 
@@ -234,7 +239,7 @@ const styles = StyleSheet.create({
   },
 
 
-  /* PERFIL (sin recuadro amarillo, mismo estilo que mi_cuenta_user.js) */
+  /* PERFIL (sin recuadro amarillo, mismo estilo que mi_cuenta_user.tsx) */
 
   profile: {
     alignItems: 'center',
