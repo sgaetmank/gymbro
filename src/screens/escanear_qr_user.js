@@ -134,7 +134,7 @@ export default function ScanQrUserScreen({ navigation }) {
       exercises,
     });
 
-    navigation.navigate('UserTabs', {
+    navigation.replace('UserTabs', {
       screen: 'mi_rutina_user',
       params: {
         screen: 'ver_dia_x_user',
