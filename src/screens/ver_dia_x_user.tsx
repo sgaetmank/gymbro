@@ -509,6 +509,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#4A3A10',
     paddingVertical: 9,
+    paddingHorizontal: 6,
     alignItems: 'center',
   },
 
@@ -518,12 +519,14 @@ const styles = StyleSheet.create({
     letterSpacing: 1,
     textTransform: 'uppercase',
     marginBottom: 3,
+    textAlign: 'center',
   },
 
   dataValue: {
     color: '#FFC107',
     fontSize: 22,
     fontWeight: '700',
+    textAlign: 'center',
   },
 
 
