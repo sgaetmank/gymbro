@@ -1,4 +1,5 @@
 import { CameraView, useCameraPermissions } from 'expo-camera';
+import * as Location from 'expo-location';
 import { useRef, useState } from 'react';
 import {
   Alert,
@@ -20,6 +21,29 @@ import { getRoutineById } from '../data/routines';
 import { addWorkoutLog } from '../data/workoutLogs';
 
 const QR_GYMBRO = 'GYMBRO_CHECKIN_V1';
+const GYM_LOCATION = {
+  latitude: -34.6127955,
+  longitude: -58.3661936,
+};
+const GYM_RADIUS_METERS = 150;
+
+function getDistanceInMeters(first, second) {
+  const earthRadius = 6371000;
+  const toRadians = (degrees) => (degrees * Math.PI) / 180;
+  const latitudeDifference = toRadians(second.latitude - first.latitude);
+  const longitudeDifference = toRadians(second.longitude - first.longitude);
+  const distance =
+    Math.sin(latitudeDifference / 2) ** 2 +
+    Math.cos(toRadians(first.latitude)) *
+      Math.cos(toRadians(second.latitude)) *
+      Math.sin(longitudeDifference / 2) ** 2;
+
+  return (
+    2 *
+    earthRadius *
+    Math.atan2(Math.sqrt(distance), Math.sqrt(1 - distance))
+  );
+}
 
 function getDayDescription(day, getExerciseById, loading, error) {
   const muscleGroups = [
@@ -63,14 +87,72 @@ export default function ScanQrUserScreen({ navigation }) {
     requestPermission();
   };
 
-  const handleBarcodeScanned = ({ data }) => {
+  const resetScan = () => {
+    scanProcessed.current = false;
+    setScanned(false);
+  };
+
+  const handleBarcodeScanned = async ({ data }) => {
     if (scanProcessed.current) return;
 
     scanProcessed.current = true;
     setScanned(true);
 
     if (data === QR_GYMBRO) {
-      setQrValid(true);
+      try {
+        let locationPermission = await Location.getForegroundPermissionsAsync();
+        if (!locationPermission.granted) {
+          locationPermission = await Location.requestForegroundPermissionsAsync();
+        }
+
+        if (!locationPermission.granted) {
+          if (!locationPermission.canAskAgain) {
+            Alert.alert(
+              'Permiso de ubicación requerido',
+              'Habilitá el acceso a la ubicación en la configuración para validar que estés en el gimnasio.',
+              [
+                {
+                  text: 'Abrir configuración',
+                  onPress: () => {
+                    resetScan();
+                    Linking.openSettings();
+                  },
+                },
+                { text: 'Cancelar', onPress: resetScan },
+              ]
+            );
+          } else {
+            Alert.alert(
+              'Permiso de ubicación requerido',
+              'Necesitamos tu ubicación para confirmar que estás en el gimnasio.',
+              [{ text: 'Intentar de nuevo', onPress: resetScan }]
+            );
+          }
+          return;
+        }
+
+        const position = await Location.getCurrentPositionAsync({
+          accuracy: Location.Accuracy.High,
+        });
+        const distance = getDistanceInMeters(position.coords, GYM_LOCATION);
+
+        if (distance > GYM_RADIUS_METERS) {
+          Alert.alert(
+            'Estás lejos del gimnasio',
+            `Acercate al gimnasio para registrar el entrenamiento. Distancia aproximada: ${Math.round(distance)} m.`,
+            [{ text: 'Intentar de nuevo', onPress: resetScan }]
+          );
+          return;
+        }
+
+        setQrValid(true);
+      } catch {
+        Alert.alert(
+          'No se pudo validar la ubicación',
+          'Verificá que la ubicación del dispositivo esté activada e intentá nuevamente.',
+          [{ text: 'Intentar de nuevo', onPress: resetScan }]
+        );
+      }
       return;
     }
 
@@ -80,10 +162,7 @@ export default function ScanQrUserScreen({ navigation }) {
       [
         {
           text: 'Intentar de nuevo',
-          onPress: () => {
-            scanProcessed.current = false;
-            setScanned(false);
-          },
+          onPress: resetScan,
         },
       ]
     );
