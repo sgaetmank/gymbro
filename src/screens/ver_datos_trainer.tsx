@@ -164,6 +164,17 @@ export default function UserDataScreen({
 
         </View>
 
+
+        {/* EDITAR RUTINA */}
+
+        <TouchableOpacity
+          style={styles.editButton}
+          onPress={() => navigation.navigate('editar_rutina_trainer', { user })}
+        >
+          <Text style={styles.editIcon}>✎</Text>
+          <Text style={styles.editButtonText}>Editar rutina</Text>
+        </TouchableOpacity>
+
       </ScrollView>
 
     </SafeAreaView>
@@ -329,6 +340,30 @@ const styles = StyleSheet.create({
     color: '#FFC107',
     fontSize: 17,
     fontWeight: '600',
+  },
+
+
+  /* EDITAR RUTINA */
+
+  editButton: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#FFC107',
+    borderRadius: 7,
+    paddingVertical: '3.5%',
+  },
+
+  editIcon: {
+    color: '#111111',
+    fontSize: 15,
+    marginRight: 7,
+  },
+
+  editButtonText: {
+    color: '#111111',
+    fontSize: 16,
+    fontWeight: '700',
   },
 
 });
