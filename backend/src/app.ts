@@ -4,6 +4,7 @@ import express, { type NextFunction, type Request, type Response } from 'express
 import { requireAuth, requireRole } from './auth';
 import { alumnosRouter } from './routes/alumnos';
 import { authRouter } from './routes/auth';
+import { checkinsRouter } from './routes/checkins';
 import { meRouter } from './routes/me';
 
 export const app = express();
@@ -19,6 +20,7 @@ app.get('/api/health', (_req, res) => {
 app.use('/api/auth', authRouter);
 app.use('/api/me', requireAuth, meRouter);
 app.use('/api/alumnos', requireAuth, requireRole('ENTRENADOR'), alumnosRouter);
+app.use('/api/checkins', requireAuth, requireRole('ALUMNO'), checkinsRouter);
 
 app.use('/api', (_req, res) => {
   res.status(404).json({ error: 'Ruta no encontrada' });
