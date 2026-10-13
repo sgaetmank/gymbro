@@ -92,6 +92,8 @@ export default function UserDayScreen({
       setIsRestRunning(true);
     };
 
+    // Depende también de activeRestId: al pasar de un descanso a otro con uno
+    // corriendo, isRestRunning sigue en true y sin esto el effect no se re-ejecuta.
     useEffect(() => {
       if (!isRestRunning) return;
 
@@ -108,7 +110,7 @@ export default function UserDayScreen({
       }, 1000);
 
       return clearRestInterval;
-    }, [isRestRunning]);
+    }, [isRestRunning, activeRestId]);
 
     const formatRestTime = (totalSeconds: number) => {
       const minutes = Math.floor(totalSeconds / 60);

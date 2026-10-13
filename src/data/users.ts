@@ -448,12 +448,13 @@ export const users: User[] = [
   },
 ];
 
+// (equivale a un SELECT .. WHERE id = ? en la base de datos).
 export function getUserById(userId: number): User | undefined {
   return users.find((user) => user.id === userId);
 }
 
 export function addUser(data: RegistrationData): User {
-  // Alta de un alumno nuevo (equivale a un INSERT en la base de datos).
+  // (equivale a un INSERT en la base de datos).
   // Nace sin rutina: se la arma el entrenador desde su pantalla de edición.
   const firstName = data.firstName.trim();
   const lastName = data.lastName.trim();
@@ -486,7 +487,7 @@ export function addUser(data: RegistrationData): User {
 }
 
 export function setUserRoutine(userId: number, routineId: number): boolean {
-  // Asigna una rutina a un usuario (equivale a un UPDATE en la base de datos).
+  // (equivale a un UPDATE en la base de datos).
   const user = getUserById(userId);
   if (!user) return false;
   user.id_rutina = routineId;

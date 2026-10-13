@@ -7,13 +7,13 @@ import {
   View,
 } from 'react-native';
 
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CustomInput from '../components/CustomInput';
 import PrimaryButton from '../components/PrimaryButton';
 import { useAuth } from '../context/AuthContext';
 import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
 import type { AppStackParamList } from '../navigation/types';
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 
 const GENDERS = ['Femenino', 'Masculino'];
 const GOALS = ['Salud', 'Bajar de peso', 'Fuerza', 'Tonificar', 'Otro'];
@@ -56,11 +56,7 @@ const REQUIRED_FIELDS: (keyof RegistrationForm)[] = [
 ];
 
 // Fila de opciones tipo "pastilla": la elegida se resalta en amarillo
-function OptionChips({
-  options,
-  selected,
-  onSelect,
-}: {
+function OptionChips({options,selected,onSelect,}: {
   options: string[];
   selected: string;
   onSelect: (value: string) => void;
