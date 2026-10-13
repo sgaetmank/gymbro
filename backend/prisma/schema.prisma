@@ -1,0 +1,106 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ALUMNO
+  ENTRENADOR
+}
+
+model User {
+  id                Int          @id @default(autoincrement())
+  role              Role         @default(ALUMNO)
+  email             String       @unique
+  dni               String       @unique
+  passwordHash      String
+  firstName         String
+  lastName          String
+  gender            String
+  age               Int
+  weight            Float
+  height            Float
+  phone             String
+  emergencyPhone    String
+  healthInsurance   String       @default("-")
+  contraindications String       @default("Ninguna")
+  goal              String
+  routineId         Int?
+  routine           Routine?     @relation(fields: [routineId], references: [id], onDelete: SetNull)
+  workoutLogs       WorkoutLog[]
+  createdAt         DateTime     @default(now())
+}
+
+model Routine {
+  id    Int    @id @default(autoincrement())
+  name  String @default("Mi Rutina")
+  days  Day[]
+  users User[]
+}
+
+model Day {
+  id        Int     @id @default(autoincrement())
+  routineId Int
+  name      String
+  position  Int
+  routine   Routine @relation(fields: [routineId], references: [id], onDelete: Cascade)
+  blocks    Block[]
+
+  @@index([routineId])
+}
+
+model Block {
+  id       Int    @id @default(autoincrement())
+  dayId    Int
+  position Int
+  day      Day    @relation(fields: [dayId], references: [id], onDelete: Cascade)
+  items    Item[]
+
+  @@index([dayId])
+}
+
+// Un ítem es un ejercicio o un descanso. type decide qué columnas se usan:
+//   "exercise": exerciseId, series, repetitions, weightKg, comments
+//   "rest":     restTime, restUnit
+model Item {
+  id          Int     @id @default(autoincrement())
+  blockId     Int
+  position    Int
+  type        String
+  exerciseId  String?
+  series      Int?
+  repetitions Int?
+  weightKg    Float?
+  comments    String  @default("")
+  restTime    Float?
+  restUnit    String?
+  block       Block   @relation(fields: [blockId], references: [id], onDelete: Cascade)
+
+  @@index([blockId])
+}
+
+model WorkoutLog {
+  id        Int                  @id @default(autoincrement())
+  userId    Int
+  date      String
+  createdAt DateTime             @default(now())
+  user      User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  exercises WorkoutLogExercise[]
+
+  @@index([userId, date])
+}
+
+// Copia (snapshot) de cada ejercicio hecho ese día, con su grupo muscular.
+model WorkoutLogExercise {
+  id          Int        @id @default(autoincrement())
+  logId       Int
+  exerciseId  String
+  muscleGroup String
+  log         WorkoutLog @relation(fields: [logId], references: [id], onDelete: Cascade)
+
+  @@index([logId])
+}
