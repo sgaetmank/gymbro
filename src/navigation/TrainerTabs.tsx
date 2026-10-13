@@ -5,9 +5,9 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import type { TrainerStackParamList, TrainerTabParamList } from './types';
 
 import SearchUserScreen from '../screens/buscar_usuario_trainer';
-import UserDataScreen from '../screens/ver_datos_trainer';
 import EditRoutineScreen from '../screens/editar_rutina_trainer';
 import TrainerProfileScreen from '../screens/mi_cuenta_trainer';
+import UserDataScreen from '../screens/ver_datos_trainer';
 
 const Tab = createBottomTabNavigator<TrainerTabParamList>();
 const SearchStack = createNativeStackNavigator<TrainerStackParamList>();
@@ -24,13 +24,12 @@ function makeTabIcon(key: keyof typeof TAB_ICONS) {
   };
 }
 
-// El tab "Buscar Usuario" es el único con drill-down (ver datos / editar
-// rutina de un usuario encontrado), por eso tiene su propio
-// Stack.Navigator anidado en vez de ser una screen plana.
-// La pantalla raíz de este stack se nombra distinto al tab que la contiene
-// ("buscar_usuario_trainer_root" vs "buscar_usuario_trainer"): si tuvieran
-// el mismo nombre, React Navigation advierte por rutas duplicadas anidadas
-// una en la otra.
+// El tab "Buscar Usuario" es el único con drill-down (ver datos / editar rutina de un usuario encontrado), 
+// por eso tiene su propio Stack.Navigator anidado en vez de ser una screen plana.
+
+// La pantalla raíz de este stack se nombra distinto al tab que la contiene ("buscar_usuario_trainer_root" vs "buscar_usuario_trainer"): 
+// si tuvieran el mismo nombre, React Navigation advierte por rutas duplicadas anidadas una en la otra.
+
 function SearchTabStack() {
   return (
     <SearchStack.Navigator screenOptions={{ headerShown: false }}>

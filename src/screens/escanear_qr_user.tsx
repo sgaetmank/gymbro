@@ -14,14 +14,14 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import PrimaryButton from '../components/PrimaryButton';
 import { useAuth } from '../context/AuthContext';
 import { useExercises } from '../context/ExercisesContext';
 import { getRoutineById, type RoutineDay } from '../data/routines';
 import { addWorkoutLog, type WorkoutExercise } from '../data/workoutLogs';
-import type { Exercise } from '../services/exercisesApi';
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { AppStackParamList } from '../navigation/types';
+import type { Exercise } from '../services/exercisesApi';
 
 const QR_GYMBRO = 'GYMBRO_CHECKIN_V1';
 const GYM_LOCATION = {
@@ -32,6 +32,7 @@ const GYM_RADIUS_METERS = 150;
 
 type Coordinates = Pick<Location.LocationObjectCoords, 'latitude' | 'longitude'>;
 
+//Calcula la distancia entre dos puntos de latitud/longitud sobre una esfera.
 function getDistanceInMeters(first: Coordinates, second: Coordinates): number {
   const earthRadius = 6371000;
   const toRadians = (degrees: number) => (degrees * Math.PI) / 180;

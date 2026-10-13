@@ -3381,13 +3381,14 @@ export const routines: Routine[] = [
   },
 ];
 
+// (equivale a un SELECT .. WHERE id = ? en la base de datos).
 export function getRoutineById(routineId: number | null | undefined): Routine | undefined {
   // Busca la rutina asociada al usuario mediante su routineId.
   return routines.find((routine) => routine.id === routineId);
 }
 
 export function createRoutine(days: RoutineDay[]): Routine {
-  // Alta de una rutina nueva (equivale a un INSERT en la base de datos).
+  // (equivale a un INSERT en la base de datos).
   const routine = {
     // El id nuevo se calcula tomando el máximo id existente + 1
     id: Math.max(...routines.map((routine) => routine.id)) + 1,
@@ -3400,7 +3401,7 @@ export function createRoutine(days: RoutineDay[]): Routine {
 }
 
 export function updateRoutineDays(routineId: number, days: RoutineDay[]): boolean {
-  // Reemplaza los días de la rutina (equivale a un UPDATE en la base de datos).
+  //  (equivale a un UPDATE en la base de datos).
   const routine = getRoutineById(routineId);
   if (!routine) return false;
   // Copia profunda para no compartir referencias con el estado de la pantalla

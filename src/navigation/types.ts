@@ -3,11 +3,13 @@ import type { NavigatorScreenParams } from '@react-navigation/native';
 import type { RoutineDay } from '../data/routines';
 import type { User } from '../data/users';
 
+// Cada navigator tiene un tipo ParamList: un diccionario nombreDePantalla → parámetros que recibe.
+
 export type AppStackParamList = {
   login: undefined;
   signup: undefined;
   TrainerTabs: undefined;
-  UserTabs: NavigatorScreenParams<UserTabParamList>;
+  UserTabs: NavigatorScreenParams<UserTabParamList>; //"esta pantalla es un navigator anidado y se le pueden pasar params para una pantalla hija".
   escanear_qr_user: undefined;
 };
 

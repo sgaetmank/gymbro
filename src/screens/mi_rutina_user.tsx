@@ -6,12 +6,12 @@ import {
   View,
 } from 'react-native';
 
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '../context/AuthContext';
 import { useExercises } from '../context/ExercisesContext';
 import { getRoutineById } from '../data/routines';
 import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { UserRoutineStackParamList } from '../navigation/types';
 
 export default function UserRoutineScreen({
@@ -41,16 +41,9 @@ export default function UserRoutineScreen({
 
       {/* HEADER */}
 
-      <View
-        style={[
-          styles.header,
-          isLandscape && styles.headerLandscape,
-        ]}
-      >
+      <View style={[styles.header,isLandscape && styles.headerLandscape,]}>
 
-        <Text style={styles.headerTitle}>
-          Rutinas
-        </Text>
+        <Text style={styles.headerTitle}>Rutinas</Text>
 
       </View>
 
@@ -77,26 +70,16 @@ export default function UserRoutineScreen({
 
         {routine?.days.map((day) => (
 
-          <View
-            key={day.id}
-            style={styles.dayContainer}
-          >
+          <View key={day.id} style={styles.dayContainer}>
 
             {/* TÍTULO DEL DÍA */}
 
             <View style={styles.dayHeader}>
 
-              <Text style={styles.dayTitle}>
-                {day.name}
-              </Text>
+              <Text style={styles.dayTitle}>{day.name}</Text>
 
-              <TouchableOpacity
-                style={styles.dayButton}
-                onPress={() => navigation.navigate('ver_dia_x_user', { day })}
-              >
-                <Text style={styles.dayButtonText}>
-                  Ver día
-                </Text>
+              <TouchableOpacity style={styles.dayButton} onPress={() => navigation.navigate('ver_dia_x_user', { day })}>
+                <Text style={styles.dayButtonText}>Ver día</Text>
               </TouchableOpacity>
 
             </View>
@@ -108,16 +91,11 @@ export default function UserRoutineScreen({
 
             {day.blocks.map((block, blockIndex) => (
 
-              <View
-                key={block.id}
-                style={styles.block}
-              >
+              <View key={block.id} style={styles.block}>
 
                 {/* NOMBRE DEL BLOQUE (no se guarda: se calcula según la posición) */}
 
-                <Text style={styles.blockTitle}>
-                  {`Bloque ${blockIndex + 1}`}
-                </Text>
+                <Text style={styles.blockTitle}>{`Bloque ${blockIndex + 1}`}</Text>
 
 
                 {/* =================================================
@@ -126,19 +104,14 @@ export default function UserRoutineScreen({
 
                 {block.items.map((item) => (
 
-                  <View
-                    key={item.id}
-                    style={styles.item}
-                  >
+                  <View key={item.id} style={styles.item}>
 
                     {/* ÍCONO */}
 
                     <View style={styles.itemIcon}>
 
                       <Text style={styles.itemIconText}>
-                        {item.type === 'exercise'
-                          ? '⌁'
-                          : '◷'}
+                        {item.type === 'exercise' ? '⌁' : '◷'}
                       </Text>
 
                     </View>
