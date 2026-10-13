@@ -1,7 +1,8 @@
 import cors from 'cors';
 import express, { type NextFunction, type Request, type Response } from 'express';
 
-import { requireAuth } from './auth';
+import { requireAuth, requireRole } from './auth';
+import { alumnosRouter } from './routes/alumnos';
 import { authRouter } from './routes/auth';
 import { meRouter } from './routes/me';
 
@@ -17,6 +18,7 @@ app.get('/api/health', (_req, res) => {
 
 app.use('/api/auth', authRouter);
 app.use('/api/me', requireAuth, meRouter);
+app.use('/api/alumnos', requireAuth, requireRole('ENTRENADOR'), alumnosRouter);
 
 app.use('/api', (_req, res) => {
   res.status(404).json({ error: 'Ruta no encontrada' });
