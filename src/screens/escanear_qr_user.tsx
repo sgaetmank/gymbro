@@ -27,7 +27,7 @@ const GYM_LOCATION = {
   latitude: -34.6127955,
   longitude: -58.3661936,
 };
-const GYM_RADIUS_METERS = 1000; // TEMPORAL para pruebas: volver a 150
+const GYM_RADIUS_METERS = 150;
 
 type Coordinates = Pick<Location.LocationObjectCoords, 'latitude' | 'longitude'>;
 

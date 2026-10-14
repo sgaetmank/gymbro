@@ -14,6 +14,6 @@ export const GYM = {
   qr: 'GYMBRO_CHECKIN_V1',
   latitude: -34.6127955,
   longitude: -58.3661936,
-  radiusMeters: 1000, // TEMPORAL para pruebas: volver a 150
+  radiusMeters: 150,
   timeZone: 'America/Argentina/Buenos_Aires',
 };
