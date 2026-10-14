@@ -13,7 +13,7 @@ import { buildApiUrl } from './apiUrl';
 
 // Se detecta sola (la PC desde la que Expo Go cargó la app) o se fuerza con EXPO_PUBLIC_API_URL.
 const API_URL = buildApiUrl(process.env.EXPO_PUBLIC_API_URL, Constants.expoConfig?.hostUri);
-const REQUEST_TIMEOUT_MS = 15000;
+const REQUEST_TIMEOUT_MS = 6000;
 
 export class ApiError extends Error {
   status: number; // 0 = no hubo respuesta (sin conexión o timeout)

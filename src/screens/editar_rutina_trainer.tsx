@@ -15,15 +15,6 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import MoveArrows from '../components/MoveArrows';
 import { useExercises } from '../context/ExercisesContext';
-import {
-  createRoutine,
-  getRoutineById,
-  updateRoutineDays,
-  type ExerciseRoutineItem,
-  type RestRoutineItem,
-  type RoutineDay,
-} from '../data/routines';
-import { setUserRoutine } from '../data/users';
 import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
@@ -31,22 +22,79 @@ import type {
   TrainerStackParamList,
   TrainerTabParamList,
 } from '../navigation/types';
+import { ApiError, getAlumnoRoutine, saveAlumnoRoutine } from '../services/api';
+import type { ExerciseRoutineItem, RestRoutineItem, RoutineDay, User } from '../types';
 
 type MovementDirection = 'up' | 'down';
 
-export default function EditRoutineScreen({
+type EditRoutineScreenProps = NativeStackScreenProps<TrainerStackParamList, 'editar_rutina_trainer'>;
+
+// Pide la rutina actual del alumno al servidor y recién entonces dibuja el editor
+export default function EditRoutineScreen({ navigation, route }: EditRoutineScreenProps) {
+  const editedUser = route.params.user;
+  // null = todavía no llegó. Un alumno sin rutina carga una lista vacía (se crea al guardar)
+  const [initialDays, setInitialDays] = useState<RoutineDay[] | null>(null);
+  const [loadError, setLoadError] = useState('');
+  // Subir este número vuelve a pedir la rutina ("Tocá para reintentar")
+  const [attempt, setAttempt] = useState(0);
+
+  useEffect(() => {
+    let cancelled = false;
+    getAlumnoRoutine(editedUser.id)
+      .then((routine) => {
+        if (!cancelled) setInitialDays(routine?.days ?? []);
+      })
+      .catch((e) => {
+        if (!cancelled) {
+          setLoadError(e instanceof ApiError ? e.message : 'No se pudo cargar la rutina.');
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [editedUser.id, attempt]);
+
+  if (initialDays === null) {
+    return (
+      <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
+        <View style={styles.header}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <Text style={styles.backIcon}>‹</Text>
+          </TouchableOpacity>
+          <Text style={styles.headerTitle}>Editar</Text>
+        </View>
+        <View style={styles.content}>
+          <Text style={styles.stateText}>{loadError || 'Cargando rutina…'}</Text>
+          {loadError !== '' && (
+            <TouchableOpacity
+              onPress={() => {
+                setLoadError('');
+                setAttempt((n) => n + 1);
+              }}
+            >
+              <Text style={styles.retryText}>Tocá para reintentar</Text>
+            </TouchableOpacity>
+          )}
+        </View>
+      </SafeAreaView>
+    );
+  }
+
+  return <EditRoutineForm navigation={navigation} user={editedUser} initialDays={initialDays} />;
+}
+
+function EditRoutineForm({
   navigation,
-  route,
-}: NativeStackScreenProps<TrainerStackParamList, 'editar_rutina_trainer'>) {
+  user: editedUser,
+  initialDays,
+}: {
+  navigation: EditRoutineScreenProps['navigation'];
+  user: User;
+  initialDays: RoutineDay[];
+}) {
   const { isLandscape } = useResponsiveLayout();
   // Ejercicios traídos de la API (ver ExercisesContext)
   const { exercises, getExerciseById, loading, error, retry } = useExercises();
-  // Usuario al que se le está editando la rutina (viene de la pantalla de búsqueda)
-  const editedUser = route?.params?.user;
-  // Un alumno recién registrado todavía no tiene rutina: se crea al guardar por primera vez
-  const routine = getRoutineById(editedUser?.id_rutina);
-  // Id de la rutina del alumno (null hasta que se cree), para no crearla dos veces
-  const routineId = useRef(routine?.id ?? null);
 
   // Saca tildes/acentos para que la búsqueda no dependa de escribirlos bien
   const normalizar = (texto: string) =>
@@ -65,12 +113,10 @@ export default function EditRoutineScreen({
   // DATOS INICIALES DE EJEMPLO
   // ============================================================
 
-  const [days, setDays] = useState<RoutineDay[]>(routine?.days ?? []);
+  const [days, setDays] = useState<RoutineDay[]>(initialDays);
 
   // Foto de lo último guardado, para detectar cambios pendientes
-  const [savedSnapshot, setSavedSnapshot] = useState(() =>
-    JSON.stringify(routine?.days ?? [])
-  );
+  const [savedSnapshot, setSavedSnapshot] = useState(() => JSON.stringify(initialDays));
   const hasUnsavedChanges = JSON.stringify(days) !== savedSnapshot;
 
   // Se activa justo antes de salir para que el aviso no se repita
@@ -535,20 +581,27 @@ const moveItem = (
   // GUARDAR Y AVISO AL SALIR
   // ============================================================
 
-  // Pasa el borrador a datos guardados. Si el alumno no tenía rutina, la crea y se la asigna.
-  const persistRoutine = () => {
-    if (routineId.current === null) {
-      const created = createRoutine(days);
-      setUserRoutine(editedUser.id, created.id);
-      routineId.current = created.id;
-    } else {
-      updateRoutineDays(routineId.current, days);
+  const [saving, setSaving] = useState(false);
+
+  // Manda el borrador al servidor (crea la rutina si el alumno no tenía). Devuelve si se guardó.
+  const persistRoutine = async (): Promise<boolean> => {
+    setSaving(true);
+    try {
+      const saved = await saveAlumnoRoutine(editedUser.id, days);
+      // El servidor genera ids nuevos: el borrador pasa a ser lo que él devolvió
+      setDays(saved.days);
+      setSavedSnapshot(JSON.stringify(saved.days)); // anota "esto es lo último guardado"
+      return true;
+    } catch (e) {
+      Alert.alert('No se pudo guardar', e instanceof ApiError ? e.message : 'Intentá nuevamente.');
+      return false;
+    } finally {
+      setSaving(false);
     }
   };
 
   const saveChanges = () => {
     persistRoutine();
-    setSavedSnapshot(JSON.stringify(days)); // anota "esto es lo último guardado"
   };
 
   // Pregunta qué hacer con los cambios sin guardar antes de confirmar la salida.
@@ -565,9 +618,9 @@ const moveItem = (
         },
         {
           text: 'Guardar y salir',
-          onPress: () => {
-            persistRoutine();
-            leave();
+          onPress: async () => {
+            // Solo sale si el servidor confirmó el guardado
+            if (await persistRoutine()) leave();
           },
         },
       ],
@@ -648,11 +701,11 @@ const moveItem = (
             styles.saveButton,
             !hasUnsavedChanges && styles.saveButtonDisabled,
           ]}
-          disabled={!hasUnsavedChanges}
+          disabled={!hasUnsavedChanges || saving}
           onPress={saveChanges}
         >
           <Text style={styles.saveText}>
-            {hasUnsavedChanges ? 'Guardar' : 'Guardado ✓'}
+            {saving ? 'Guardando…' : hasUnsavedChanges ? 'Guardar' : 'Guardado ✓'}
           </Text>
         </TouchableOpacity>
 
@@ -1272,6 +1325,19 @@ const styles = StyleSheet.create({
     paddingHorizontal: '2.5%',
     paddingTop: '2.5%',
     paddingBottom: '6%',
+  },
+
+  stateText: {
+    color: '#858585',
+    fontSize: 15,
+    marginBottom: 12,
+  },
+
+  retryText: {
+    color: '#FFC107',
+    fontSize: 15,
+    fontWeight: '600',
+    marginBottom: 12,
   },
 
   contentLandscape: {
