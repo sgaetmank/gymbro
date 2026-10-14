@@ -1,7 +1,6 @@
 import type { NavigatorScreenParams } from '@react-navigation/native';
 
-import type { RoutineDay } from '../data/routines';
-import type { User } from '../data/users';
+import type { RoutineDay, User } from '../types';
 
 // Cada navigator tiene un tipo ParamList: un diccionario nombreDePantalla → parámetros que recibe.
 
