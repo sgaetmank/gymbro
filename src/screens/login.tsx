@@ -26,16 +26,19 @@ export default function LoginScreen({
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
+  const [submitting, setSubmitting] = useState(false); // true mientras se espera al servidor
 
-  // Valida que no haya campos vacíos y luego las credenciales.
+  // Valida que no haya campos vacíos y luego pide al servidor validar las credenciales.
   // Si son correctas, el navegador cambia de pantalla solo.
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (!email.trim() || !password) {
       setError('Completa email y contraseña');
       return;
     }
 
-    const result = login(email, password);
+    setSubmitting(true);
+    const result = await login(email, password);
+    setSubmitting(false);
     if (!result.ok) setError(result.error ?? '');
   };
 
@@ -106,7 +109,11 @@ export default function LoginScreen({
         {error !== '' && <Text style={styles.error}>{error}</Text>}
 
         {/* Botón */}
-        <PrimaryButton title="Iniciar Sesión" onPress={handleLogin} />
+        <PrimaryButton
+          title={submitting ? 'Ingresando…' : 'Iniciar Sesión'}
+          onPress={handleLogin}
+          disabled={submitting}
+        />
 
         {/* Registro */}
         <View style={styles.registerContainer}>

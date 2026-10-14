@@ -2,15 +2,21 @@ import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 
 // title: el texto que se muestra dentro del botón (string). Ej: "Iniciar Sesión", "Registrarme".
 // onPress: la función que se ejecuta cuando el usuario toca el botón
+// disabled: bloquea el toque y atenúa el botón (ej: mientras se espera la respuesta del servidor)
 
 type PrimaryButtonProps = {
   title: string;
   onPress: () => void;
+  disabled?: boolean;
 };
 
-export default function PrimaryButton({ title, onPress }: PrimaryButtonProps) {
+export default function PrimaryButton({ title, onPress, disabled = false }: PrimaryButtonProps) {
   return (
-    <TouchableOpacity style={styles.button} onPress={onPress}>
+    <TouchableOpacity
+      style={[styles.button, disabled && styles.buttonDisabled]}
+      onPress={onPress}
+      disabled={disabled}
+    >
       <Text style={styles.text}>{title}</Text>
     </TouchableOpacity>
   );
@@ -25,6 +31,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: 10,
+  },
+
+  buttonDisabled: {
+    opacity: 0.6,
   },
 
   text: {

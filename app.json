@@ -44,7 +44,8 @@
         {
           "locationWhenInUsePermission": "Gymbro necesita acceder a tu ubicación para validar que estés en el gimnasio al registrar un entrenamiento."
         }
-      ]
+      ],
+      "expo-secure-store"
     ],
     "experiments": {
       "reactCompiler": true

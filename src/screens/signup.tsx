@@ -92,6 +92,7 @@ export default function SignUpScreen({
   // Lo que el usuario escribe y el mensaje de error a mostrar
   const [form, setForm] = useState(EMPTY_FORM);
   const [error, setError] = useState('');
+  const [submitting, setSubmitting] = useState(false); // true mientras se espera al servidor
 
   // Devuelve la función que actualiza un campo y borra el error anterior
   const setField = (field: keyof RegistrationForm) => (value: string) => {
@@ -101,7 +102,7 @@ export default function SignUpScreen({
 
   // Valida el formulario y luego crea el usuario.
   // Si se crea bien, queda logueado y el navegador cambia de pantalla solo.
-  const handleRegister = () => {
+  const handleRegister = async () => {
     if (REQUIRED_FIELDS.some((field) => !form[field].trim())) {
       setError('Completa todos los campos obligatorios');
       return;
@@ -137,13 +138,16 @@ export default function SignUpScreen({
       return;
     }
 
-    // register es la función del AuthContext que hace las validaciones de email/DNI duplicado y llama addUser + setUser.
-    const result = register({
+    // register es la función del AuthContext: le pide al servidor crear la cuenta (el servidor
+    // valida email/DNI duplicado) y, si sale bien, deja la sesión abierta.
+    setSubmitting(true);
+    const result = await register({
       ...form,
       age: String(age),
       weight: String(weight),
       height: String(height),
     });
+    setSubmitting(false);
     if (!result.ok) setError(result.error ?? '');
   };
 
@@ -339,7 +343,11 @@ export default function SignUpScreen({
           {error !== '' && <Text style={styles.error}>{error}</Text>}
 
           {/* Botón */}
-          <PrimaryButton title="Registrarme" onPress={handleRegister} />
+          <PrimaryButton
+            title={submitting ? 'Registrando…' : 'Registrarme'}
+            onPress={handleRegister}
+            disabled={submitting}
+          />
 
         </View>
 
