@@ -49,3 +49,8 @@ CLAUDE.md
 # Planes de implementación (documentos de proceso, no se entregan)
 docs/superpowers/plans/2026-10-01-bottom-tabs-navegacion.md
 docs/superpowers/plans/2026-10-12-integracion-backend.md
+
+# Backend: secretos y base local
+backend/.env
+backend/**/*.db
+backend/**/*.db-journal
