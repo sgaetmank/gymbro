@@ -1,12 +1,12 @@
-// Carga en la base los datos de prueba que antes estaban escritos en la app (src/data).
+// Carga en la base los datos de prueba (backend/prisma/seed-data).
 // Es seguro volver a correrlo: vacía las tablas y las vuelve a llenar.
 import bcrypt from 'bcryptjs';
 
 import '../src/env';
 import { prisma } from '../src/db';
-import { routines } from '../../src/data/routines';
-import { users } from '../../src/data/users';
-import { workoutLogs } from '../../src/data/workoutLogs';
+import { routines } from './seed-data/routines';
+import { users } from './seed-data/users';
+import { workoutLogs } from './seed-data/workoutLogs';
 
 async function main() {
   // Se vacía de los hijos hacia los padres.
