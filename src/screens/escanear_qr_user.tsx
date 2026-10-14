@@ -1,6 +1,6 @@
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import * as Location from 'expo-location';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   Alert,
   Linking,
@@ -16,19 +16,18 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import PrimaryButton from '../components/PrimaryButton';
-import { useAuth } from '../context/AuthContext';
 import { useExercises } from '../context/ExercisesContext';
-import { getRoutineById, type RoutineDay } from '../data/routines';
-import { addWorkoutLog, type WorkoutExercise } from '../data/workoutLogs';
 import type { AppStackParamList } from '../navigation/types';
+import { ApiError, createCheckin, getMyRoutine } from '../services/api';
 import type { Exercise } from '../services/exercisesApi';
+import type { Routine, RoutineDay } from '../types';
 
 const QR_GYMBRO = 'GYMBRO_CHECKIN_V1';
 const GYM_LOCATION = {
   latitude: -34.6127955,
   longitude: -58.3661936,
 };
-const GYM_RADIUS_METERS = 150;
+const GYM_RADIUS_METERS = 1000; // TEMPORAL para pruebas: volver a 150
 
 type Coordinates = Pick<Location.LocationObjectCoords, 'latitude' | 'longitude'>;
 
@@ -84,10 +83,34 @@ export default function ScanQrUserScreen({
   const [dayPickerVisible, setDayPickerVisible] = useState(false);
   const [selectedDayId, setSelectedDayId] = useState<number | null>(null);
   const scanProcessed = useRef(false);
-  const { user } = useAuth();
   const { getExerciseById, loading, error } = useExercises();
-  const routine = user ? getRoutineById(user.id_rutina) : null;
+  // Posición validada al escanear: se manda al servidor, que la vuelve a validar.
+  const [coords, setCoords] = useState<Coordinates | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+  // Rutina del alumno, pedida al servidor al abrir la pantalla
+  const [routine, setRoutine] = useState<Routine | null>(null);
+  const [routineLoading, setRoutineLoading] = useState(true);
+  const [routineError, setRoutineError] = useState('');
   const selectedDay = routine?.days.find((day) => day.id === selectedDayId);
+
+  useEffect(() => {
+    let cancelled = false;
+    getMyRoutine()
+      .then((result) => {
+        if (!cancelled) setRoutine(result);
+      })
+      .catch((e) => {
+        if (!cancelled) {
+          setRoutineError(e instanceof ApiError ? e.message : 'No se pudo cargar tu rutina.');
+        }
+      })
+      .finally(() => {
+        if (!cancelled) setRoutineLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const pedirPermiso = () => {
     if (!permission) return;
@@ -158,6 +181,7 @@ export default function ScanQrUserScreen({
           return;
         }
 
+        setCoords({ latitude: position.coords.latitude, longitude: position.coords.longitude });
         setQrValid(true);
       } catch {
         Alert.alert(
@@ -181,52 +205,30 @@ export default function ScanQrUserScreen({
     );
   };
 
-  const handleSubmit = () => {
-    if (!user || !selectedDay) {
+  // Registra el entrenamiento en el servidor. Se manda solo QUÉ día se hizo y DÓNDE está el alumno:
+  // el servidor valida el QR y la distancia, y decide los ejercicios, los grupos musculares y la fecha.
+  const handleSubmit = async () => {
+    if (!selectedDay || !coords) {
       Alert.alert('Elegí un día', 'Seleccioná el día de la rutina que realizaste.');
       return;
     }
 
-    if (loading || error) {
-      Alert.alert(
-        'Ejercicios no disponibles',
-        'No se pudieron cargar los ejercicios para guardar el entrenamiento.'
-      );
-      return;
-    }
-
-    const exercises = selectedDay.blocks
-      .flatMap((block) => block.items)
-      .filter((item) => item.type === 'exercise')
-      .map((item) => {
-        const exercise = getExerciseById(item.exerciseId);
-        return exercise
-          ? { exerciseId: item.exerciseId, muscleGroup: exercise.muscleGroup }
-          : null;
+    setSubmitting(true);
+    try {
+      await createCheckin({
+        dayId: selectedDay.id,
+        qr: QR_GYMBRO,
+        latitude: coords.latitude,
+        longitude: coords.longitude,
       });
-
-    if (exercises.some((exercise) => !exercise)) {
+    } catch (e) {
+      setSubmitting(false);
       Alert.alert(
-        'Ejercicios no disponibles',
-        'No se pudieron encontrar todos los ejercicios de este día.'
+        'No se pudo registrar',
+        e instanceof ApiError ? e.message : 'Intentá nuevamente.'
       );
       return;
     }
-
-    const today = new Date();
-    const date = [
-      today.getFullYear(),
-      String(today.getMonth() + 1).padStart(2, '0'),
-      String(today.getDate()).padStart(2, '0'),
-    ].join('-');
-
-    addWorkoutLog({
-      userId: user.id,
-      date,
-      exercises: exercises.filter(
-        (exercise): exercise is WorkoutExercise => exercise !== null
-      ),
-    });
 
     navigation.replace('UserTabs', {
       screen: 'mi_rutina_user',
@@ -287,7 +289,11 @@ export default function ScanQrUserScreen({
                   </Text>
                 )}
 
-                <PrimaryButton title="Confirmar día" onPress={handleSubmit} />
+                <PrimaryButton
+                  title={submitting ? 'Registrando…' : 'Confirmar día'}
+                  onPress={handleSubmit}
+                  disabled={submitting}
+                />
 
                 <Modal
                   visible={dayPickerVisible}
@@ -331,7 +337,9 @@ export default function ScanQrUserScreen({
               </>
             ) : (
               <Text style={styles.messageText}>
-                No tenés una rutina asignada para elegir un día.
+                {routineLoading
+                  ? 'Cargando tu rutina…'
+                  : routineError || 'No tenés una rutina asignada para elegir un día.'}
               </Text>
             )}
           </ScrollView>
