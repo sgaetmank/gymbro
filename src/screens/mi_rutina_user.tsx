@@ -1,3 +1,5 @@
+import { useFocusEffect } from '@react-navigation/native';
+import { useCallback, useState } from 'react';
 import {
   ScrollView,
   StyleSheet,
@@ -10,9 +12,10 @@ import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '../context/AuthContext';
 import { useExercises } from '../context/ExercisesContext';
-import { getRoutineById } from '../data/routines';
 import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
 import type { UserRoutineStackParamList } from '../navigation/types';
+import { ApiError, getMyRoutine } from '../services/api';
+import type { Routine } from '../types';
 
 export default function UserRoutineScreen({
   navigation,
@@ -22,11 +25,31 @@ export default function UserRoutineScreen({
   // Ejercicios traídos de la API (ver ExercisesContext)
   const { getExerciseById, loading } = useExercises();
 
+  // Rutina asignada al usuario logueado, pedida al servidor (puede no tener)
+  const [routine, setRoutine] = useState<Routine | null>(null);
+  const [loadingRoutine, setLoadingRoutine] = useState(true);
+  const [routineError, setRoutineError] = useState('');
+
+  const loadRoutine = useCallback(async () => {
+    setRoutineError('');
+    try {
+      setRoutine(await getMyRoutine());
+    } catch (e) {
+      setRoutineError(e instanceof ApiError ? e.message : 'No se pudo cargar tu rutina.');
+    } finally {
+      setLoadingRoutine(false);
+    }
+  }, []);
+
+  // Se vuelve a pedir cada vez que la pantalla recupera el foco (el entrenador pudo cambiarla)
+  useFocusEffect(
+    useCallback(() => {
+      loadRoutine();
+    }, [loadRoutine])
+  );
+
   // Sin sesión (ej: mientras se anima el cierre de sesión) no se dibuja nada
   if (!user) return null;
-
-  // Rutina asignada al usuario logueado (puede no tener)
-  const routine = getRoutineById(user.id_rutina);
 
   const formatRestUnit = (time: string, unit: string) =>
     Number(time) === 1 ? unit.slice(0, -1) : unit;
@@ -60,8 +83,18 @@ export default function UserRoutineScreen({
       >
 
         <Text style={styles.screenTitle}>
-          {routine ? routine.name : 'Todavía no tenés una rutina asignada'}
+          {routine
+            ? routine.name
+            : loadingRoutine
+              ? 'Cargando tu rutina…'
+              : routineError || 'Todavía no tenés una rutina asignada'}
         </Text>
+
+        {routineError !== '' && (
+          <TouchableOpacity onPress={loadRoutine}>
+            <Text style={styles.retryText}>Tocá para reintentar</Text>
+          </TouchableOpacity>
+        )}
 
 
         {/* ======================================================
@@ -224,6 +257,13 @@ const styles = StyleSheet.create({
 
 
   /* TÍTULO */
+
+  retryText: {
+    color: '#FFC107',
+    fontSize: 15,
+    fontWeight: '600',
+    marginBottom: 12,
+  },
 
   screenTitle: {
     color: '#FFFFFF',
