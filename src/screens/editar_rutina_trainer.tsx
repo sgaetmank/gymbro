@@ -12,8 +12,11 @@ import {
   View,
 } from 'react-native';
 
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import Animated, { useAnimatedRef } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import MoveArrows from '../components/MoveArrows';
+import Sortable from 'react-native-sortables';
+import DragHandle from '../components/DragHandle';
 import { useExercises } from '../context/ExercisesContext';
 import {
   createRoutine,
@@ -25,26 +28,23 @@ import {
 } from '../data/routines';
 import { setUserRoutine } from '../data/users';
 import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
-import type { BottomTabNavigationProp } from '@react-navigation/bottom-tabs';
-import type {
-  TrainerStackParamList,
-  TrainerTabParamList,
-} from '../navigation/types';
-
-type MovementDirection = 'up' | 'down';
+import type { TrainerStackParamList } from '../navigation/types';
 
 export default function EditRoutineScreen({
   navigation,
   route,
 }: NativeStackScreenProps<TrainerStackParamList, 'editar_rutina_trainer'>) {
   const { isLandscape } = useResponsiveLayout();
+  
   // Ejercicios traídos de la API (ver ExercisesContext)
   const { exercises, getExerciseById, loading, error, retry } = useExercises();
+  
   // Usuario al que se le está editando la rutina (viene de la pantalla de búsqueda)
   const editedUser = route?.params?.user;
+  
   // Un alumno recién registrado todavía no tiene rutina: se crea al guardar por primera vez
   const routine = getRoutineById(editedUser?.id_rutina);
+  
   // Id de la rutina del alumno (null hasta que se cree), para no crearla dos veces
   const routineId = useRef(routine?.id ?? null);
 
@@ -75,6 +75,16 @@ export default function EditRoutineScreen({
 
   // Se activa justo antes de salir para que el aviso no se repita
   const skipExitPrompt = useRef(false);
+
+  // Ancho disponible para las tarjetas. Sortable.Flex mide a sus hijos por su
+  // tamaño natural, así que "100%" no sirve: hay que darles anchos en píxeles.
+  const [contentWidth, setContentWidth] = useState(0);
+  
+  // Cada nivel anidado es ~27px más angosto (borde + padding de la tarjeta)
+  const cardWidth = (level: number) => contentWidth - level * 27;
+
+  // Ref del scroll principal: permite el auto-scroll al arrastrar cerca del borde
+  const scrollRef = useAnimatedRef<Animated.ScrollView>();
 
   // ============================================================
   // ESTADOS DE LOS MODALES
@@ -310,158 +320,41 @@ export default function EditRoutineScreen({
   };
 
   // ============================================================
-// MOVER DÍA
-// ============================================================
+  // REORDENAR (arrastrando con la barrita)
+  // ============================================================
+  // "order" es la función que entrega react-native-sortables en onDragEnd:
+  // recibe el arreglo original y lo devuelve en el nuevo orden.
 
-const moveDay = (dayId: number, direction: MovementDirection) => {
+  type OrderFn = <T>(data: T[]) => T[];
 
-  const currentIndex = days.findIndex(
-    (day) => day.id === dayId
-  );
+  const reorderDays = (order: OrderFn) => {
+    setDays(order(days));
+  };
 
-  const newIndex =
-    direction === 'up'
-      ? currentIndex - 1
-      : currentIndex + 1;
+  const reorderBlocks = (dayId: number, order: OrderFn) => {
+    setDays(
+      days.map((day) =>
+        day.id !== dayId ? day : { ...day, blocks: order(day.blocks) }
+      )
+    );
+  };
 
-  // Si está en el límite, no hacemos nada
-  if (
-    currentIndex === -1 ||
-    newIndex < 0 ||
-    newIndex >= days.length
-  ) {
-    return;
-  }
-
-  const newDays = [...days];
-
-  // Intercambiamos las posiciones
-  const temp = newDays[currentIndex];
-
-  newDays[currentIndex] = newDays[newIndex];
-  newDays[newIndex] = temp;
-
-  setDays(newDays);
-};
-
-// ============================================================
-// MOVER BLOQUE DENTRO DE UN DÍA
-// ============================================================
-
-const moveBlock = (
-  dayId: number,
-  blockId: number,
-  direction: MovementDirection
-) => {
-
-  setDays(
-    days.map((day) => {
-
-      // Si no es el día correspondiente,
-      // no modificamos nada
-      if (day.id !== dayId) {
-        return day;
-      }
-
-      const currentIndex = day.blocks.findIndex(
-        (block) => block.id === blockId
-      );
-
-      const newIndex =
-        direction === 'up'
-          ? currentIndex - 1
-          : currentIndex + 1;
-
-      // Si está en un límite, no hacemos nada
-      if (
-        currentIndex === -1 ||
-        newIndex < 0 ||
-        newIndex >= day.blocks.length
-      ) {
-        return day;
-      }
-
-      const newBlocks = [...day.blocks];
-
-      // Intercambiamos los bloques
-      const temp = newBlocks[currentIndex];
-
-      newBlocks[currentIndex] = newBlocks[newIndex];
-      newBlocks[newIndex] = temp;
-
-      return {
-        ...day,
-        blocks: newBlocks,
-      };
-    })
-  );
-};
-
-
-// ============================================================
-// MOVER EJERCICIO / DESCANSO DENTRO DE UN BLOQUE
-// ============================================================
-
-const moveItem = (
-  dayId: number,
-  blockId: number,
-  itemId: number,
-  direction: MovementDirection
-) => {
-
-  setDays(
-    days.map((day) => {
-
-      // Buscar el día correcto
-      if (day.id !== dayId) {
-        return day;
-      }
-
-      return {
-        ...day,
-
-        blocks: day.blocks.map((block) => {
-
-          // Buscar el bloque correcto
-          if (block.id !== blockId) {
-            return block;
-          }
-
-          const currentIndex = block.items.findIndex(
-            (item) => item.id === itemId
-          );
-
-          const newIndex =
-            direction === 'up'
-              ? currentIndex - 1
-              : currentIndex + 1;
-
-          // Si está en un límite, no hacemos nada
-          if (
-            currentIndex === -1 ||
-            newIndex < 0 ||
-            newIndex >= block.items.length
-          ) {
-            return block;
-          }
-
-          const newItems = [...block.items];
-
-          // Intercambiamos los elementos
-          const temp = newItems[currentIndex];
-
-          newItems[currentIndex] = newItems[newIndex];
-          newItems[newIndex] = temp;
-
-          return {
-            ...block,
-            items: newItems,
-          };
-        }),
-      };
-    })
-  );
-};
+  const reorderBlockItems = (dayId: number, blockId: number, order: OrderFn) => {
+    setDays(
+      days.map((day) =>
+        day.id !== dayId
+          ? day
+          : {
+              ...day,
+              blocks: day.blocks.map((block) =>
+                block.id !== blockId
+                  ? block
+                  : { ...block, items: order(block.items) }
+              ),
+            }
+      )
+    );
+  };
 
   // ============================================================
   // ELIMINAR EJERCICIO / DESCANSO
@@ -576,6 +469,13 @@ const moveItem = (
     );
   };
 
+  // La pantalla sigue montada si se cambia de pestaña: al volver a tener foco
+  // se reactiva el aviso.
+  useEffect(
+    () => navigation.addListener('focus', () => { skipExitPrompt.current = false; }),
+    [navigation]
+  );
+
   useEffect(() => {
     const unsubscribeBeforeRemove = navigation.addListener('beforeRemove', (e) => {
       if (!hasUnsavedChanges || skipExitPrompt.current) { // nada que avisar: dejá pasar
@@ -592,28 +492,23 @@ const moveItem = (
       });
     });
 
-    // El Tab.Navigator (TrainerTabs) no desmonta esta pantalla al cambiar de
-    // pestaña, solo le saca el foco: "beforeRemove" no se dispara en ese
-    // caso. Hay que escuchar "tabPress" en el navigator padre aparte para
-    // no perder el aviso de cambios sin guardar al tocar "Mi Cuenta".
-    const parentTabNavigation =
-      navigation.getParent<BottomTabNavigationProp<TrainerTabParamList>>();
-    const unsubscribeTabPress = parentTabNavigation?.addListener('tabPress', (e) => {
+    // Cambiar de pestaña no cierra esta pantalla, así que "beforeRemove" no se
+    // dispara. TrainerTabs consulta este guard al tocar una pestaña.
+    unsavedChangesGuard = (leave) => {
       if (!hasUnsavedChanges || skipExitPrompt.current) {
-        return;
+        return false;
       }
-
-      e.preventDefault();
 
       confirmExitWithUnsavedChanges(() => {
         skipExitPrompt.current = true;
-        parentTabNavigation.navigate('mi_cuenta_trainer');
+        leave();
       });
-    });
+      return true;
+    };
 
     return () => {
       unsubscribeBeforeRemove();
-      unsubscribeTabPress?.();
+      unsavedChangesGuard = null;
     };
   }, [navigation, hasUnsavedChanges, persistRoutine]);
 
@@ -663,7 +558,8 @@ const moveItem = (
           CONTENIDO
       ====================================================== */}
 
-      <ScrollView
+      <Animated.ScrollView
+        ref={scrollRef}
         style={styles.scroll}
         contentContainerStyle={[
           styles.content,
@@ -672,7 +568,10 @@ const moveItem = (
         showsVerticalScrollIndicator={false}
       >
 
-        <View style={styles.titleRow}>
+        <View
+          style={styles.titleRow}
+          onLayout={(e) => setContentWidth(e.nativeEvent.layout.width)}
+        >
 
           <Text style={styles.routineTitle}>
             Rutina de <Text style={styles.routineTitleName}>{editedUser?.firstName}</Text>
@@ -685,12 +584,20 @@ const moveItem = (
             DÍAS
         ==================================================== */}
 
+        {contentWidth > 0 && (
+        <Sortable.Flex
+          customHandle
+          flexDirection="column"
+          flexWrap="nowrap"
+          width={cardWidth(0)}
+          gap={12}
+          paddingBottom={12}
+          scrollableRef={scrollRef}
+          onDragEnd={({ order }) => reorderDays(order)}
+        >
         {days.map((day) => (
 
-          <View
-            key={day.id}
-            style={styles.dayContainer}
-          >
+          <View key={day.id} style={[styles.dayContainer, { width: cardWidth(0) }]}>
 
             {/* HEADER DEL DÍA */}
 
@@ -698,13 +605,7 @@ const moveItem = (
 
               <View style={styles.dayTitleContainer}>
 
-                <MoveArrows
-                  size="day"
-                  canMoveUp={days.findIndex((d) => d.id === day.id) > 0}
-                  canMoveDown={days.findIndex((d) => d.id === day.id) < days.length - 1}
-                  onMoveUp={() => moveDay(day.id, 'up')}
-                  onMoveDown={() => moveDay(day.id, 'down')}
-                />
+                <DragHandle />
 
                 <Text style={styles.dayTitle}>
                   {day.name}
@@ -731,12 +632,19 @@ const moveItem = (
                 BLOQUES DEL DÍA
             ================================================= */}
 
+            <Sortable.Flex
+              customHandle
+              flexDirection="column"
+              flexWrap="nowrap"
+              width={cardWidth(1)}
+              gap={8}
+              paddingBottom={8}
+              scrollableRef={scrollRef}
+              onDragEnd={({ order }) => reorderBlocks(day.id, order)}
+            >
             {day.blocks.map((block, blockIndex) => (
 
-              <View
-                key={block.id}
-                style={styles.blockContainer}
-              >
+              <View key={block.id} style={[styles.blockContainer, { width: cardWidth(1) }]}>
 
                 {/* HEADER DEL BLOQUE */}
 
@@ -744,13 +652,7 @@ const moveItem = (
 
                     <View style={styles.blockTitleContainer}>
 
-                    <MoveArrows
-                      size="block"
-                      canMoveUp={blockIndex > 0}
-                      canMoveDown={blockIndex < day.blocks.length - 1}
-                      onMoveUp={() => moveBlock(day.id, block.id, 'up')}
-                      onMoveDown={() => moveBlock(day.id, block.id, 'down')}
-                    />
+                    <DragHandle />
 
                     <Text style={styles.blockTitle}>
                         {`Bloque ${blockIndex + 1}`}
@@ -775,12 +677,25 @@ const moveItem = (
                     EJERCICIOS / DESCANSOS
                 ================================================= */}
 
+                <Sortable.Flex
+                  customHandle
+                  flexDirection="column"
+                  flexWrap="nowrap"
+                  width={cardWidth(2)}
+                  gap={6}
+                  paddingBottom={6}
+                  scrollableRef={scrollRef}
+                  onDragEnd={({ order }) =>
+                    reorderBlockItems(day.id, block.id, order)
+                  }
+                >
                 {block.items.map((item) => (
 
                   <View
                     key={item.id}
                     style={[
                       styles.itemCard,
+                      { width: cardWidth(2) },
                       item.type === 'rest'
                         ? styles.restCard
                         : styles.exerciseCard,
@@ -789,13 +704,7 @@ const moveItem = (
 
                     <View style={styles.itemMain}>
 
-                        <MoveArrows
-                          size="item"
-                          canMoveUp={block.items.findIndex((i) => i.id === item.id) > 0}
-                          canMoveDown={block.items.findIndex((i) => i.id === item.id) < block.items.length - 1}
-                          onMoveUp={() => moveItem(day.id, block.id, item.id, 'up')}
-                          onMoveDown={() => moveItem(day.id, block.id, item.id, 'down')}
-                        />
+                        <DragHandle />
 
                       <View style={styles.itemInfo}>
 
@@ -853,6 +762,7 @@ const moveItem = (
                   </View>
 
                 ))}
+                </Sortable.Flex>
 
 
                 {/* =================================================
@@ -894,6 +804,7 @@ const moveItem = (
               </View>
 
             ))}
+            </Sortable.Flex>
 
 
             {/* =================================================
@@ -912,6 +823,8 @@ const moveItem = (
           </View>
 
         ))}
+        </Sortable.Flex>
+        )}
 
 
         {/* ======================================================
@@ -927,7 +840,7 @@ const moveItem = (
           </Text>
         </TouchableOpacity>
 
-      </ScrollView>
+      </Animated.ScrollView>
 
 
       {/* ========================================================
@@ -1249,6 +1162,15 @@ const moveItem = (
 }
 
 
+// Guard de "cambios sin guardar" para TrainerTabs (cambio de pestaña).
+// Si hay algo pendiente muestra el aviso y devuelve true: quien llama frena su
+// navegación y la retoma con "leave" solo si el usuario confirma.
+let unsavedChangesGuard: ((leave: () => void) => boolean) | null = null;
+
+export function guardUnsavedChanges(leave: () => void): boolean {
+  return unsavedChangesGuard ? unsavedChangesGuard(leave) : false;
+}
+
 // =================================================================
 // ESTILOS
 // =================================================================
@@ -1364,8 +1286,7 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     borderWidth: 1.5,
     borderColor: '#FFE082',
-    padding: '2.8%',
-    marginBottom: '3%',
+    padding: 12,
   },
 
   dayHeader: {
@@ -1414,8 +1335,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     borderWidth: 1,
     borderColor: '#3A3A3A',
-    padding: '2.3%',
-    marginBottom: '2.3%',
+    padding: 10,
   },
 
   blockHeader: {
@@ -1448,8 +1368,7 @@ const styles = StyleSheet.create({
   itemCard: {
     borderRadius: 8,
     borderWidth: 1,
-    padding: '2.3%',
-    marginBottom: '1.5%',
+    padding: 10,
   },
 
   exerciseCard: {

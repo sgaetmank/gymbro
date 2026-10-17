@@ -1,19 +1,21 @@
 # Bloque 8b-1: `editar_rutina_trainer`, estado y operaciones de edición
 
-Archivo: `src/screens/editar_rutina_trainer.tsx` (1.744 líneas). Esta primera parte cubre hasta la línea 532: datos, estado y las operaciones de agregar, mover y borrar. El JSX y los modales se estudian en 8b-2, y el guardado y los avisos de salida en 8b-3.
+Archivo: `src/screens/editar_rutina_trainer.tsx` (1.663 líneas). Esta primera parte cubre hasta la línea 425: datos, estado y las operaciones de agregar, reordenar y borrar. El JSX y los modales se estudian en 8b-2, el guardado y los avisos de salida en 8b-3, y el reordenamiento con gestos (la barrita de arrastre) en 8c (documento 16).
 
 ## 1. Mapa del archivo
 
 | Líneas | Contenido |
 |---|---|
-| 37-62 | Entrada, `routineId`, helpers de validación |
-| 68-107 | Todo el estado |
-| 113-187 | Agregar día/bloque y abrir los modales |
-| 193-310 | Agregar ejercicio y descanso (con validación) |
-| 316-464 | Mover día, bloque, ítem |
-| 470-532 | Borrar ítem, bloque, día |
-| 538-618 | Guardado y avisos de salida (8b-3) |
-| 624-... | Render, modales y estilos (8b-2) |
+| 33-62 | Entrada, `routineId`, helpers de validación |
+| 64-117 | Todo el estado (rutina, ancho de las tarjetas, scroll, modales, formularios) |
+| 119-197 | Agregar día/bloque y abrir los modales |
+| 199-320 | Agregar ejercicio y descanso (con validación) |
+| 322-357 | Reordenar día, bloque, ítem |
+| 359-425 | Borrar ítem, bloque, día |
+| 427-513 | Guardado y avisos de salida (8b-3) |
+| 515-1162 | Render y modales (8b-2) |
+| 1164-1171 | Guard de cambios sin guardar (8b-3) |
+| 1174-1663 | Estilos |
 
 ## 2. La idea central: un borrador editable de un árbol
 
@@ -31,7 +33,7 @@ Nada se escribe en el modelo de datos hasta guardar (`persistRoutine`, 8b-3). Lo
 
 ## 3. El patrón de actualización inmutable (el más importante)
 
-Para cambiar algo dentro del árbol no se modifica nada: se **reconstruye el camino** desde la raíz hasta el elemento, copiando con spread (`...`) cada nivel por el que se pasa. Ejemplo (`addExercise`, `addRest`, `deleteItem` y `moveItem` siguen la misma forma):
+Para cambiar algo dentro del árbol no se modifica nada: se **reconstruye el camino** desde la raíz hasta el elemento, copiando con spread (`...`) cada nivel por el que se pasa. Ejemplo (`addExercise`, `addRest`, `deleteItem` y `reorderBlockItems` siguen la misma forma):
 
 ```tsx
 setDays(
@@ -57,17 +59,16 @@ setDays(
 
 ### Agregar
 - `addDay`: crea `{ id: Date.now(), name: 'Día N', blocks: [] }` y lo agrega al final.
-- `addBlock`: agrega `{ id: Date.now(), items: [] }` al día elegido. "Bloque N" **no se guarda**: se calcula por posición (así lo dibujan `mi_rutina_user` y `ver_dia_x_user`).
+- `addBlock`: agrega `{ id: Date.now(), items: [] }` al día elegido. "Bloque N" **no se guarda**: se calcula por posición (así lo dibujan `mi_rutina_user` y `entrenar_dia_user`).
 - `addExercise` / `addRest`: validan (sección 5), arman el ítem y lo agregan al bloque destino, identificado con `selectedDayId` y `selectedBlockId` (el "destino" del alta, común a ambos modales). Luego cierran el modal.
 
-### Mover (arriba / abajo)
-`moveDay`, `moveBlock` y `moveItem` siguen el mismo esquema:
-1. `findIndex` para ubicar el elemento por id.
-2. `newIndex = currentIndex ± 1`.
-3. **Guardas:** si no se encontró (`-1`) o el nuevo índice se sale del rango, no hace nada.
-4. **Copia del array** (`[...items]`) e **intercambio** con una variable temporal.
+### Reordenar (arrastrando)
+`reorderDays`, `reorderBlocks` y `reorderBlockItems` reciben una función `order` (la entrega `react-native-sortables` al soltar el elemento) y la aplican al arreglo que corresponde:
+- `reorderDays`: `setDays(order(days))`.
+- `reorderBlocks`: reconstruye el camino hasta el día y reemplaza `blocks` por `order(day.blocks)`.
+- `reorderBlockItems`: reconstruye el camino hasta el bloque y reemplaza `items` por `order(block.items)`.
 
-La diferencia entre las tres es cuántos niveles hay que reconstruir.
+Siguen el patrón inmutable de la sección 3: `order` devuelve un arreglo **nuevo** con el orden final, así que no hay que copiar ni intercambiar nada a mano. La diferencia entre las tres es cuántos niveles hay que reconstruir. Cómo se llega hasta acá (el gesto, `onDragEnd` y qué hace `order`) está en el documento 16.
 
 ### Borrar
 `filter` por id (`item.id !== itemId`), con el mismo anidado. Estas funciones no piden confirmación; si el JSX lo hace, se verá en 8b-2.
@@ -110,6 +111,7 @@ Hay unos 12 `useState` sueltos:
 - **Ejercicio:** `exerciseName` (texto de búsqueda), `selectedExerciseId` (el elegido), `series`, `repetitions`, `weight`, `comments`, `exerciseFormError`.
 - **Descanso:** `restTime`, `restUnit`, `restFormError`.
 - **Control:** `exerciseModalVisible`, `restModalVisible`, `selectedDayId`, `selectedBlockId`.
+- **Layout (no son del formulario):** `contentWidth` (ancho medido para las tarjetas) y `scrollRef` (referencia al scroll principal para el auto-scroll al arrastrar); ver documento 16.
 
 `openExerciseModal` y `openRestModal` **reinician a mano** todos los campos antes de abrir. `signup`, en cambio, agrupa todo en un único objeto `form`.
 
@@ -148,8 +150,8 @@ Para el momento de guardar existe una segunda protección: `updateRoutineDays`/`
 
 Con una BD, el id definitivo lo genera la propia BD (autoincremental o UUID). El cliente puede seguir usando un id temporal para lo nuevo (por ejemplo un UUID generado en el cliente, o un número negativo) hasta recibir el definitivo en la respuesta.
 
-### 5. ¿Por qué las funciones de mover copian el array antes de intercambiar?
-Intercambiar elementos con `items[i] = items[j]` **modifica el array en el lugar**. Si ese array es el del estado, se estaría mutando el estado: React no detectaría el cambio (misma referencia) y, como `days` arranca compartiendo referencias con `routine.days`, se alteraría la rutina guardada sin guardar. `const newItems = [...block.items]` hace una copia superficial; el intercambio se hace sobre la copia, y esa copia (referencia nueva) se pone en el estado.
+### 5. ¿Por qué `reorderBlockItems` no modifica el arreglo `items` y qué devuelve `order`?
+Reordenar con `items[i] = items[j]` **modificaría el arreglo en el lugar**. Si ese arreglo es el del estado, se estaría mutando el estado: React no detectaría el cambio (misma referencia) y, como `days` arranca compartiendo referencias con `routine.days`, se alteraría la rutina guardada sin guardar. Por eso nada se intercambia a mano: `order(block.items)` recibe el arreglo original sin tocarlo y devuelve un **arreglo nuevo** con los elementos en el orden final, y ese arreglo (referencia nueva) se pone en el estado dentro del bloque copiado con spread. Si el elemento se suelta en su lugar original, `order` devuelve el mismo arreglo, sin cambios.
 
 ### 6. ¿Qué pasa con el nombre de los días al borrar uno del medio y agregar otro? ¿Y con los bloques?
 - **Días:** el nombre se guarda como texto (`Día N`, con N = cantidad de días + 1 en el momento de crearlo). Con "Día 1", "Día 2", "Día 3", si se borra el "Día 2" quedan "Día 1" y "Día 3"; al agregar uno nuevo se llama "Día 3" (`días.length + 1 = 3`), duplicando el nombre. Tampoco se renumeran al reordenar.

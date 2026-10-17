@@ -117,6 +117,21 @@ export default function SignUpScreen({
       return;
     }
 
+    if (!/^\d{10}$/.test(form.phone.trim())) {
+      setError('El teléfono debe tener 10 números, sin 0 ni 15 (ej: 3794112233)');
+      return;
+    }
+
+    if (!/^\d{10}$/.test(form.emergencyPhone.trim())) {
+      setError('El teléfono de emergencia debe tener 10 números, sin 0 ni 15');
+      return;
+    }
+
+    if (form.phone.trim() === form.emergencyPhone.trim()) {
+      setError('El teléfono de emergencia debe ser distinto al de contacto');
+      return;
+    }
+
     if (form.password.length < 6) {
       setError('La contraseña debe tener al menos 6 caracteres');
       return;

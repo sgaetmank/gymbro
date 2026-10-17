@@ -1,15 +1,18 @@
 # Bloque 8b-3: `editar_rutina_trainer`, guardado y avisos de salida
 
-Archivo: `src/screens/editar_rutina_trainer.tsx`, líneas 534 a 618.
+Archivos: `src/screens/editar_rutina_trainer.tsx` (líneas 427 a 513: guardado, aviso de salida y registro del guard; y el guard exportado, líneas 1164 a 1171) y `src/navigation/TrainerTabs.tsx` (los `listeners` de las pestañas).
 
-## 0. Corrección respecto del documento 03
+## 0. Tres caminos para salir del editor
 
-Para estudiar esta parte se revisó el código fuente de React Navigation (`node_modules/@react-navigation`). El comentario del editor dice que escucha `tabPress` en el navigator padre para avisar al tocar "Mi Cuenta". **Eso no funciona así:**
-- El tab bar emite `tabPress` con `target: route.key` de la pestaña tocada (`bottom-tabs/src/views/BottomTabBar.tsx`).
-- Cada pantalla tiene su propio registro de listeners, indexado por su `route.key` (`core/src/useEventEmitter.tsx` y `core/src/useNavigationCache.tsx`). Un evento con `target` solo llega a los listeners de esa ruta.
-- `navigation.getParent()` desde el editor devuelve la navegación de la pestaña **"Buscar Usuario"**, la que contiene al stack.
+Con cambios sin guardar, se puede abandonar la edición de tres maneras, y cada una se intercepta distinto:
 
-Por lo tanto el listener se dispara **solo al tocar "Buscar Usuario"**, no al tocar "Mi Cuenta". El documento 03 decía que "no mira qué pestaña se tocó": era una interpretación equivocada y ya fue corregida allí. Verificado en el código fuente, **no probado en el emulador**.
+| Camino | Quién lo detecta |
+|---|---|
+| Botón atrás del celu, `‹` de arriba o gesto atrás | `beforeRemove` en el editor (sección 2) |
+| Tocar la pestaña **"Buscar Usuario"** | `listeners` de `TrainerTabs`, que consultan el guard del editor (sección 3) |
+| Tocar la pestaña **"Mi Cuenta"** | `listeners` de `TrainerTabs`, que consultan el guard del editor (sección 3) |
+
+Tocar una pestaña no elimina nada del stack del editor, solo mueve el foco: `beforeRemove` no se entera. Por eso hay un segundo mecanismo. Probado en el celu: en los tres caminos sale el aviso y la pantalla no cambia hasta que el entrenador confirma.
 
 ## 1. Guardar
 
@@ -72,39 +75,108 @@ const unsubscribeBeforeRemove = navigation.addListener('beforeRemove', (e) => {
 
 `{ cancelable: true }`: en Android, tocar afuera equivale a "Seguir editando".
 
-## 3. El listener `tabPress`, con lo que realmente hace
+## 3. El guard para el cambio de pestaña
+
+### Por qué la decisión se toma en `TrainerTabs`
+Se revisó el código fuente de React Navigation (`node_modules/@react-navigation`):
+- El tab bar emite `tabPress` con `target: route.key` de la pestaña tocada (`bottom-tabs/src/views/BottomTabBar.tsx`).
+- Cada pantalla tiene su propio registro de listeners, indexado por su `route.key` (`core/src/useEventEmitter.tsx` y `core/src/useNavigationCache.tsx`). Un evento con `target` solo llega a los listeners de esa ruta.
+- Desde el editor, `navigation.getParent()` devuelve la navegación de la ruta de la pestaña **"Buscar Usuario"**, la que contiene al stack. Un `addListener('tabPress')` registrado ahí solo recibiría los toques de esa pestaña, nunca los de "Mi Cuenta".
+
+Además, el listener de "Buscar Usuario" en `TrainerTabs` navega a la raíz de su stack con `navigate(..., { screen: 'buscar_usuario_trainer_root' })`. Esa navegación no se detiene con `beforeRemove` (se observó en el celu: el aviso aparecía, pero la pantalla ya había cambiado de fondo).
+
+Conclusión: el único lugar que ve los toques de **todas** las pestañas y decide si navegar es `TrainerTabs`. Pero `TrainerTabs` no puede leer el estado de otra pantalla, y `hasUnsavedChanges` vive en el editor. De ahí el guard.
+
+### El guard
 
 ```tsx
-const parentTabNavigation = navigation.getParent<BottomTabNavigationProp<TrainerTabParamList>>();
-const unsubscribeTabPress = parentTabNavigation?.addListener('tabPress', (e) => {
-  ... e.preventDefault(); confirmExitWithUnsavedChanges(() => { skipExitPrompt.current = true; parentTabNavigation.navigate('mi_cuenta_trainer'); });
-});
+// Registro: dentro del useEffect principal del editor
+unsavedChangesGuard = (leave) => {
+  if (!hasUnsavedChanges || skipExitPrompt.current) return false;   // nada que avisar
+  confirmExitWithUnsavedChanges(() => {
+    skipExitPrompt.current = true;
+    leave();                                                          // retoma la navegación
+  });
+  return true;                                                        // "tomé el control"
+};
+return () => {
+  unsubscribeBeforeRemove();
+  unsavedChangesGuard = null;                                         // el editor se fue
+};
+
+// Al final del archivo
+let unsavedChangesGuard: ((leave: () => void) => boolean) | null = null;
+
+export function guardUnsavedChanges(leave: () => void): boolean {
+  return unsavedChangesGuard ? unsavedChangesGuard(leave) : false;
+}
 ```
-Teniendo en cuenta la sección 0, lo que ocurre es esto (deducido del código, **a verificar en el emulador**):
+- **Contrato:** `guardUnsavedChanges(leave)` devuelve `true` si mostró el aviso. Quien la llama debe **frenar** su navegación; `leave` se ejecuta solo si el entrenador elige salir. Devuelve `false` si no hay nada que avisar: la navegación sigue normal.
+- **Variable de módulo:** `unsavedChangesGuard` vive fuera de React. El editor la llena en su efecto y la limpia al desmontarse; `TrainerTabs` la consulta desde un listener. Si el editor no está montado vale `null` y `guardUnsavedChanges` devuelve `false`.
+- **Mismo aviso:** reutiliza `confirmExitWithUnsavedChanges`, el diálogo de tres opciones de la sección 2 (con "Guardar y salir", `persistRoutine()` y luego `leave()`).
 
-| Acción del entrenador con cambios sin guardar | Qué pasa |
+### Los listeners en `TrainerTabs`
+
+```tsx
+// Pestaña "Buscar Usuario"
+tabPress: (e) => {
+  e.preventDefault();
+  const goToRoot = () =>
+    navigation.navigate('buscar_usuario_trainer', { screen: 'buscar_usuario_trainer_root' });
+  if (!guardUnsavedChanges(goToRoot)) {
+    goToRoot();
+  }
+},
+
+// Pestaña "Mi Cuenta"
+tabPress: (e) => {
+  if (navigation.isFocused()) return;                    // ya está en Mi Cuenta
+  if (guardUnsavedChanges(() => navigation.navigate('mi_cuenta_trainer'))) {
+    e.preventDefault();                                  // frena el cambio hasta confirmar
+  }
+},
+```
+- **Buscar Usuario:** siempre hace `e.preventDefault()` (la pestaña siempre vuelve a la raíz del stack, ver documento 03), así que lo que se decide es **cuándo** se ejecuta `goToRoot`: de inmediato, o recién después de confirmar.
+- **Mi Cuenta:** el cambio de pestaña es el comportamiento por defecto; para frenarlo hay que llamar a `e.preventDefault()`, y solo se hace si el guard tomó el control. Si el entrenador confirma, `leave` navega a Mi Cuenta.
+
+### `skipExitPrompt` y el efecto de `focus`
+Al confirmar la salida, el guard pone `skipExitPrompt.current = true` (igual que `beforeRemove`). Si el destino fue "Mi Cuenta", el editor **no se desmonta**: queda sin foco, con su borrador. Sin otra cosa, el flag quedaría en `true` y el aviso apagado para siempre. Lo evita un efecto aparte:
+
+```tsx
+useEffect(
+  () => navigation.addListener('focus', () => { skipExitPrompt.current = false; }),
+  [navigation]
+);
+```
+Cada vez que el editor recupera el foco, el aviso se reactiva. Y mientras el flag está en `true` (el entrenador ya eligió descartar), tocar "Buscar Usuario" desde "Mi Cuenta" no vuelve a preguntar: el guard devuelve `false` y la pestaña vuelve a la raíz de su stack, lo que desmonta el editor y descarta el borrador.
+
+### Qué pasa en cada caso (con cambios sin guardar)
+
+| Acción del entrenador | Qué pasa |
 |---|---|
-| Toca el botón atrás / `‹` | Aviso correcto (`beforeRemove`) |
-| Toca **"Mi Cuenta"** | **No hay aviso.** No se elimina nada del stack y el listener no recibe ese evento. Pasa a Mi Cuenta con el borrador vivo en segundo plano |
-| Después toca **"Buscar Usuario"** | El listener del tab (`TrainerTabs`) reinicia el stack a la raíz, lo que elimina el editor y dispara `beforeRemove` (aviso). Además dispara el listener `tabPress` del editor, así que podrían aparecer **dos avisos** |
-| En ese aviso elige "Guardar y salir" por el camino de `tabPress` | Guarda y navega a `mi_cuenta_trainer`, aunque el entrenador había tocado "Buscar Usuario" |
-| Cierra sesión (desde Mi Cuenta) | El borrador se pierde al desmontarse todo `TrainerTabs`; no se sabe si React Navigation avisa en ese caso |
-
-El `skipExitPrompt` que queda en `true` tras salir por `tabPress` no causa problemas: la pantalla no se puede retomar, porque tocar "Buscar Usuario" siempre vuelve a la raíz del stack.
+| Botón atrás, `‹` o gesto atrás | Aviso (`beforeRemove`); sigue en el editor hasta confirmar |
+| Toca **"Buscar Usuario"** | Aviso (guard); la pantalla no cambia hasta confirmar; al confirmar vuelve a la raíz del stack |
+| Toca **"Mi Cuenta"** | Aviso (guard); el cambio de pestaña queda frenado; al confirmar navega a Mi Cuenta |
+| "Seguir editando" | Se queda en el editor |
+| "Guardar y salir" | `persistRoutine()` y luego `leave()` |
+| "Salir sin guardar" por "Mi Cuenta" y vuelve al editor | El `focus` reactiva el aviso |
+| Sin cambios pendientes | Todos los caminos navegan sin avisar |
+| Cierra sesión (desde Mi Cuenta) | Para llegar a Mi Cuenta ya se confirmó la salida; el borrador se pierde al desmontarse `TrainerTabs`, sin aviso adicional |
 
 ## 4. Las dependencias del `useEffect`
 
 ```tsx
 }, [navigation, hasUnsavedChanges, persistRoutine]);
 ```
-- Los listeners "recuerdan" (*closure*) los valores del render en que se crearon. Por eso el effect se re-ejecuta cuando cambia `hasUnsavedChanges`, para que el listener vea siempre el valor actual; el cleanup (`unsubscribe...`) quita los viejos.
-- `persistRoutine` es una función definida en el cuerpo del componente, o sea **nueva en cada render**. Incluirla en las dependencias hace que el effect se re-ejecute (y re-suscriba los listeners) en cada render, y garantiza que "Guardar y salir" use el `days` más reciente. Con el React Compiler (activo) la función probablemente se memoiza con `days` y `editedUser`, y el efecto se re-ejecuta solo cuando cambian.
-- Un listener desactualizado sería peligroso: "Guardar y salir" guardaría un borrador viejo.
+- El listener de `beforeRemove` y el guard "recuerdan" (*closure*) los valores del render en que se crearon. Por eso el effect se re-ejecuta cuando cambia `hasUnsavedChanges`, para que vean siempre el valor actual. El cleanup quita el listener viejo y deja el guard en `null`; el nuevo registro lo vuelve a asignar.
+- `persistRoutine` es una función definida en el cuerpo del componente, o sea **nueva en cada render**. Incluirla en las dependencias hace que el effect se re-ejecute en cada render, y garantiza que "Guardar y salir" use el `days` más reciente. Con el React Compiler (activo) la función probablemente se memoiza con `days` y `editedUser`, y el efecto se re-ejecuta solo cuando cambian.
+- Un listener o un guard desactualizado sería peligroso: "Guardar y salir" guardaría un borrador viejo, o el aviso no aparecería cuando corresponde.
+- El efecto de `focus` (sección 3) es aparte y depende solo de `navigation`: solo toca `skipExitPrompt`, que es un ref y no necesita estar en las dependencias.
 
 ## 5. Lista para el bloque 9 (continúa la del documento 12)
 63. Guardado asíncrono: `persistRoutine` pasa a ser una llamada de red con carga y error. "Guardar y salir" debe esperar la confirmación del servidor antes de dejar salir y mostrar el error si falla.
 64. Crear y asignar la rutina deben ser una sola operación atómica (transacción o un único endpoint), y evitar que un doble toque cree dos rutinas (idempotencia).
-65. Aviso de cambios sin guardar: corregir el alcance del listener `tabPress` (cubrir "Mi Cuenta" y el cierre de sesión) y evitar el doble aviso. Probar los casos de la tabla de la sección 3.
+65. Aviso de cambios sin guardar: el guard es una variable de módulo, así que sirve mientras haya una sola pantalla de edición montada. Si algún día pudiera haber dos instancias a la vez, habría que compartirlo mediante un contexto.
 66. Nombre de la rutina: hoy es fijo (`'Mi Rutina'`); decidir si es editable o si se elimina de la BD.
 67. Concurrencia: si el entrenador B edita la misma rutina mientras A tiene el borrador abierto, el último en guardar pisa al otro. Usar un campo de versión y detectar el conflicto.
 
@@ -126,26 +198,22 @@ Tampoco se apoya en `routine` (derivada de `editedUser.id_rutina`): eso solo se 
 - Es un ref porque se escribe y se lee **en el mismo instante** (asignar y despachar seguidos). Un `setState` no estaría aplicado cuando `beforeRemove` vuelva a consultar, y el aviso reaparecería.
 
 ### 3. ¿Por qué el `useEffect` tiene `persistRoutine` y `hasUnsavedChanges` en sus dependencias?
-Los listeners que se registran dentro del effect "congelan" los valores de ese render (*closure*). Si el effect no se re-ejecutara cuando cambian:
+Los listeners y el guard que se registran dentro del effect "congelan" los valores de ese render (*closure*). Si el effect no se re-ejecutara cuando cambian:
 - `hasUnsavedChanges` quedaría con el valor viejo: el listener creyera que no hay cambios y deje salir sin avisar (o avise cuando ya se guardó).
 - `persistRoutine` guardaría el `days` de un render anterior: "Guardar y salir" persistiría un borrador desactualizado.
 
 Con las dependencias, el effect limpia los listeners viejos y registra nuevos con los valores actuales. Como `persistRoutine` se recrea en cada render, el efecto se re-ejecuta en cada render (con el React Compiler activo, probablemente solo cuando cambia `days`).
 
-### 4. ¿A qué pestaña responde realmente el listener `tabPress` del editor y cómo lo sabemos?
-A **"Buscar Usuario"**, la pestaña que contiene al editor. Se verificó en el código fuente de React Navigation:
-1. `BottomTabBar.tsx` emite `tabPress` con `target: route.key`, la pestaña tocada.
-2. `useEventEmitter.tsx` guarda los listeners por `target` y, al emitir con `target`, llama solo a los de esa ruta.
-3. `navigation.getParent()` (desde `useNavigationCache.tsx`) devuelve la navegación de la ruta padre, o sea la ruta `buscar_usuario_trainer` del Tab.Navigator, y su `addListener` registra bajo esa ruta.
+### 4. ¿Por qué el aviso al cambiar de pestaña no puede resolverse con un listener dentro del editor, y cómo se resuelve?
+`beforeRemove` solo se dispara cuando una ruta se **elimina** del stack; cambiar de pestaña solo mueve el foco, así que no se entera. La alternativa natural, escuchar `tabPress` desde el editor con `navigation.getParent()`, tampoco sirve: los eventos `tabPress` se emiten con `target: route.key` de la pestaña tocada y cada pantalla tiene su propio registro de listeners, así que un evento solo llega a los listeners de esa ruta. `getParent()` devuelve la navegación de la ruta "Buscar Usuario" (la que contiene al editor): ese listener vería los toques de "Buscar Usuario" y **nunca** los de "Mi Cuenta". Además, "Buscar Usuario" ya tiene un listener en `TrainerTabs` que navega a la raíz de su stack, y esa navegación no pasa por `beforeRemove`.
 
-Los eventos de "Mi Cuenta" no llegan a ese listener. El comentario del código, que decía lo contrario, es incorrecto.
+Se resuelve decidiendo en el único lugar que ve los toques de todas las pestañas: `TrainerTabs`. Como allí no se conoce `hasUnsavedChanges`, el editor expone un **guard** (`guardUnsavedChanges(leave)`). Cada listener lo consulta: si devuelve `true` (mostró el aviso), frena su navegación y la retoma con `leave` solo si el entrenador confirma.
 
-### 5. ¿Qué pasa hoy si el entrenador, con cambios sin guardar, toca "Mi Cuenta"? ¿Y si luego toca "Buscar Usuario"?
-Deducido del código (a verificar en el emulador):
-- **Toca "Mi Cuenta":** no hay aviso. No se elimina ninguna ruta (no hay `beforeRemove`) y el listener `tabPress` del editor no recibe ese evento. El editor sigue montado, sin foco, con su borrador.
-- **Luego toca "Buscar Usuario":** el listener de `TrainerTabs` cancela el comportamiento por defecto y navega a la raíz del stack, lo que elimina el editor y dispara `beforeRemove` (primer aviso). También se dispara el listener `tabPress` del editor, que abre su propio aviso: podría haber dos. Si en ese aviso se elige "Guardar y salir", el camino de `tabPress` navega a Mi Cuenta.
+### 5. ¿Qué pasa si el entrenador, con cambios sin guardar, toca "Mi Cuenta" o "Buscar Usuario"?
+- **"Mi Cuenta":** el listener de esa pestaña llama al guard. Como hay cambios, se muestra el aviso y se hace `e.preventDefault()`: el cambio de pestaña queda frenado y el editor sigue en pantalla. Con "Seguir editando" se queda; con "Salir sin guardar" o "Guardar y salir" se navega a Mi Cuenta con `leave`. El editor queda montado sin foco; `skipExitPrompt` queda en `true` y el efecto de `focus` lo reactiva cuando vuelve.
+- **"Buscar Usuario":** el listener siempre cancela el comportamiento por defecto y la pestaña siempre vuelve a la raíz de su stack. Lo que cambia es **cuándo** se ejecuta esa navegación: se pasa por el guard y recién se hace al confirmar. Mientras tanto la pantalla no cambia.
 
-El aviso aparece, pero tarde y puede duplicarse; el comportamiento deseado es avisar en el momento en que se abandona el editor.
+Con cualquiera de las dos, si no hay cambios pendientes (o ya se eligió descartar), el guard devuelve `false` y se navega sin aviso.
 
 ### 6. ¿Qué cambia en `persistRoutine` cuando haya una BD real?
 - **Es asíncrona:** pasa de una función directa a una llamada de red (`await`), con estados de "Guardando…", manejo de errores (sin conexión, 4xx/5xx) y un botón deshabilitado mientras espera.

@@ -27,6 +27,7 @@ export type TrainerTabParamList = {
 export type UserRoutineStackParamList = {
   mi_rutina_user_root: undefined;
   ver_dia_x_user: { day: RoutineDay };
+  entrenar_dia_user: { day: RoutineDay };
 };
 
 export type UserTabParamList = {

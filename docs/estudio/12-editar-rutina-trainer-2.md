@@ -1,24 +1,27 @@
 # Bloque 8b-2: `editar_rutina_trainer`, render y modales
 
-Archivo: `src/screens/editar_rutina_trainer.tsx`. Esta parte cubre las líneas 624 a 1249 (JSX y modales). Las ~490 líneas restantes son `StyleSheet`.
+Archivo: `src/screens/editar_rutina_trainer.tsx`. Esta parte cubre las líneas 515 a 1162 (render y modales). Las ~490 líneas restantes son `StyleSheet`. La mecánica del arrastre (`Sortable.Flex`, `DragHandle`, `cardWidth`) está en el documento 16; acá se ve el árbol como pantalla.
 
 ## 1. Estructura del render
 
 ```
 SafeAreaView
 ├─ Header:  ‹ (goBack)  ·  "Editar"  ·  [Guardar | Guardado ✓]
-├─ ScrollView
-│    "Rutina de <nombre>"
-│    días.map  →  header del día (flechas, nombre, 🗑)
-│       bloques.map  →  header del bloque (flechas, "Bloque N", 🗑)
-│          ítems.map  →  tarjeta (flechas, info, 🗑)
-│          [＋ Ejercicio] [＋ Descanso]
-│       [＋ Agregar Bloque]
+├─ Animated.ScrollView
+│    "Rutina de <nombre>"     (su onLayout mide el ancho disponible)
+│    Sortable.Flex de días
+│       día  →  header (≡, nombre, 🗑)
+│          Sortable.Flex de bloques
+│             bloque  →  header (≡, "Bloque N", 🗑)
+│                Sortable.Flex de ítems
+│                   ítem  →  tarjeta (≡, info, 🗑)
+│                [＋ Ejercicio] [＋ Descanso]
+│          [＋ Agregar Bloque]
 │    [＋ Añadir Día]
 ├─ Modal: agregar ejercicio
 └─ Modal: agregar descanso
 ```
-Es el mismo árbol de `mi_rutina_user` (días → bloques → ítems), con controles de edición. Las `key` son los ids de los datos.
+Es el mismo árbol de `mi_rutina_user` (días → bloques → ítems), con controles de edición. Las `key` son los ids de los datos (`Sortable.Flex` también las usa para saber qué elemento se movió).
 
 ## 2. El botón Guardar
 
@@ -35,19 +38,19 @@ style={[styles.saveButton, !hasUnsavedChanges && styles.saveButtonDisabled]}
 ## 3. El árbol editable
 
 ### Controles por nivel
-Cada nivel (día, bloque, ítem) tiene `MoveArrows` (documento 04) y un botón 🗑 que llama a `deleteDay`, `deleteBlock` o `deleteItem`.
+Cada nivel (día, bloque, ítem) tiene una barrita de arrastre `DragHandle` (documentos 04 y 16) y un botón 🗑 que llama a `deleteDay`, `deleteBlock` o `deleteItem`.
 
-- **`canMoveUp` / `canMoveDown`:** en bloques usan `blockIndex > 0` y `blockIndex < day.blocks.length - 1` (índice del `.map`); en días e ítems usan `findIndex(...)`. Es el mismo cálculo hecho de dos maneras; el índice del `.map` es más simple y evita buscar en cada render.
+- **El nombre de los bloques depende del orden:** `Bloque ${blockIndex + 1}` usa el índice del `.map`, así que al arrastrar un bloque los nombres se renumeran solos. Los días, en cambio, conservan el nombre guardado.
 - **Los borrados no piden confirmación.** Un toque en 🗑 elimina un día entero con todos sus bloques. La red de seguridad es el modelo de borrador: nada se guarda hasta tocar Guardar, y "Salir sin guardar" descarta todo. Pero dentro de la sesión no hay "deshacer".
 
 ### Las tarjetas de ítem
 - `item.type === 'rest' ? styles.restCard : styles.exerciseCard`: estilo distinto según el tipo (unión discriminada).
-- El nombre del ejercicio repite `getExerciseById(...)?.name ?? (loading ? 'Cargando…' : 'Ejercicio no disponible')`: es la **tercera copia** de ese patrón (con `mi_rutina_user` y `ver_dia_x_user`).
+- El nombre del ejercicio repite `getExerciseById(...)?.name ?? (loading ? 'Cargando…' : 'Ejercicio no disponible')`: es la **cuarta copia** de ese patrón (con `mi_rutina_user` y dos veces en `entrenar_dia_user`: la tarjeta del paso y el modal "Ver rutina").
 - Comentarios: `{item.comments ? (<Text/>) : null}`. Es un **tercer estilo** de renderizado condicional en la app (`!== ''`, `!!x?.trim()`, ternario con `null`). Los tres funcionan; solo difiere la convención.
-- El descanso se muestra como `⏳ Descanso: {item.time} {item.unit}` **sin singular/plural** ("1 minutos"), a diferencia de `mi_rutina_user` y `ver_dia_x_user`, que usan `formatRestUnit`.
+- El descanso se muestra como `⏳ Descanso: {item.time} {item.unit}` **sin singular/plural** ("1 minutos"), a diferencia de `mi_rutina_user` y `entrenar_dia_user`, que usan `formatRestUnit`.
 
 ### Lo que NO se puede hacer
-- **No hay edición de un ítem ya agregado.** Cada tarjeta ofrece mover y borrar. Para corregir las series de un ejercicio hay que borrarlo y volver a agregarlo.
+- **No hay edición de un ítem ya agregado.** Cada tarjeta ofrece reordenar (arrastrando) y borrar. Para corregir las series de un ejercicio hay que borrarlo y volver a agregarlo.
 - **No se pueden renombrar días ni bloques.** Esto cierra la duda del documento 11: el nombre duplicado "Día 3" no se puede corregir, salvo borrando el día.
 - **No hay validación de estructura al guardar:** se puede guardar un día sin bloques o un bloque vacío (el alumno vería un "Bloque 1" sin ejercicios).
 
@@ -63,7 +66,7 @@ Cada nivel (día, bloque, ítem) tiene `MoveArrows` (documento 04) y un botón �
 - **`Modal`** con `transparent` y `slide`; `onRequestClose` cierra con el botón atrás de Android.
 - **`KeyboardAvoidingView`** y **`keyboardShouldPersistTaps="handled"`** (ver pregunta 2).
 - **El modal de descanso no usa `KeyboardAvoidingView`.** Tiene un único campo, pero en horizontal el teclado podría tapar el botón (a verificar).
-- A diferencia de los modales del QR y de `ver_dia_x_user`, **no hay un `Pressable` de fondo**: solo se cierra con la `×` o el botón atrás.
+- A diferencia de los modales del QR y de `entrenar_dia_user`, **no hay un `Pressable` de fondo**: solo se cierra con la `×` o el botón atrás.
 
 ### El patrón de autocompletado
 ```tsx
@@ -115,7 +118,8 @@ Series, repeticiones y peso son `TextInput` con `keyboardType="numeric"`; coment
 | Renderizado condicional en cadena | mensajes de sugerencias |
 | Estilos condicionales con arrays | unidad, Guardar, tarjetas |
 | Listas con `key` por id | días, bloques, ítems, sugerencias |
-| Callbacks hacia el padre | `MoveArrows` |
+| Callback con función de orden | `onDragEnd` de `Sortable.Flex` (documento 16) |
+| Medir el layout con `onLayout` | ancho de las tarjetas (documento 16) |
 
 ## 7. Lista para el bloque 9 (continúa la del documento 11)
 57. Alcance funcional: hoy no se pueden editar ítems ya cargados ni renombrar días/bloques. Decidir si queda así o se agrega edición (cambio de interfaz, no pantallas nuevas).
@@ -163,7 +167,7 @@ Las condiciones son mutuamente excluyentes porque cada mensaje de búsqueda exig
 Ventaja de comparar contenido en vez de usar una bandera "modificado = true": si el entrenador cambia algo y lo revierte (agrega un bloque y lo borra), el borrador vuelve a ser idéntico y la pantalla ya no avisa de cambios pendientes. Costo: serializar todo el árbol en cada render. Limitación: depende de que las propiedades se serialicen en el mismo orden.
 
 ### 5. ¿Qué no puede hacer el entrenador con un ejercicio ya agregado, y qué implica para los nombres de día?
-No puede **editarlo**: la tarjeta solo ofrece mover y borrar. Para cambiar series, repeticiones, peso o comentarios hay que borrarlo y volver a agregarlo (perdiendo su posición, salvo que lo reubique con las flechas).
+No puede **editarlo**: la tarjeta solo ofrece reordenar y borrar. Para cambiar series, repeticiones, peso o comentarios hay que borrarlo y volver a agregarlo (perdiendo su posición, salvo que lo reubique arrastrándolo con la barrita).
 
 Tampoco hay forma de **renombrar** días ni bloques. Los bloques no lo necesitan (se numeran por posición), pero los días sí guardan su nombre: una vez creado "Día 3" duplicado, o un día que quedó fuera de orden tras reordenar, no se puede corregir desde la pantalla. Solo se puede borrar el día y crearlo de nuevo.
 

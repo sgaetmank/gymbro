@@ -32,7 +32,7 @@ Stack raíz (app/index.tsx)
                  │           ├─ home_user
                  │           ├─ mi_rutina_user ──► Stack anidado (RoutineStack)
                  │           │                      ├─ mi_rutina_user_root
-                 │           │                      └─ ver_dia_x_user
+                 │           │                      └─ entrenar_dia_user
                  │           ├─ reloj
                  │           ├─ estadisticas_user
                  │           └─ mi_cuenta_user
@@ -40,7 +40,7 @@ Stack raíz (app/index.tsx)
 ```
 
 - **Un Tab por rol.** El stack raíz solo registra el grupo del rol logueado, así que un usuario no puede ver las pestañas del trainer.
-- **Stack anidado solo donde hay drill-down** (entrar a un detalle y volver): "Rutinas" (lista → día) y "Buscar Usuario" (búsqueda → datos / editar). Las demás pestañas son pantallas planas.
+- **Stack anidado solo donde hay drill-down** (entrar a un detalle y volver): "Rutinas" (lista → entrenamiento) y "Buscar Usuario" (búsqueda → datos / editar). Las demás pestañas son pantallas planas.
 - **`escanear_qr_user` vive en el stack raíz**, no dentro de las tabs. Por eso, al abrirse, tapa la barra de pestañas.
 
 ## 3. El nombre `_root`
@@ -54,7 +54,7 @@ Cada navigator tiene un tipo `ParamList`: `nombreDePantalla → parámetros que 
 ```ts
 export type UserRoutineStackParamList = {
   mi_rutina_user_root: undefined;          // no recibe nada
-  ver_dia_x_user: { day: RoutineDay };     // exige "day"
+  entrenar_dia_user: { day: RoutineDay };  // exige "day"
 };
 ```
 - `undefined` = sin parámetros.
@@ -76,7 +76,7 @@ export type UserRoutineStackParamList = {
 | Llamada | Dónde | Qué hace |
 |---|---|---|
 | `navigation.navigate('signup')` | `login` | Va al registro (apila en el stack raíz) |
-| `navigation.navigate('ver_dia_x_user', { day })` | `mi_rutina_user` | Entra al detalle dentro del stack anidado, con el objeto `day` |
+| `navigation.navigate('entrenar_dia_user', { day })` | `mi_rutina_user` | Entra al entrenamiento guiado dentro del stack anidado, con el objeto `day` |
 | `navigation.goBack()` | detalles | Desapila una pantalla |
 | `navigation.navigate('estadisticas_user')` | `home_user` | Cambia a una **pestaña hermana** |
 | `navigation.getParent()?.navigate('escanear_qr_user')` | `home_user` | Sube al navigator padre (stack raíz) y navega a una pantalla que no es de las tabs |
@@ -87,14 +87,17 @@ export type UserRoutineStackParamList = {
 navigation.replace('UserTabs', {
   screen: 'mi_rutina_user',           // elige la pestaña
   params: {
-    screen: 'ver_dia_x_user',         // y la pantalla del stack
+    screen: 'entrenar_dia_user',      // y la pantalla del stack
     params: { day: selectedDay },     // y sus parámetros
+    initial: false,                   // conserva la raíz del stack debajo
   },
 });
 ```
 Es una "dirección completa": raíz → pestaña → pantalla del stack → parámetros.
 
-**Recibir parámetros:** `route.params.day` (`ver_dia_x_user`), `route.params.user` (`ver_datos_trainer`).
+**Por qué `initial: false`.** Cuando se navega a una pantalla anidada de un navigator que todavía no existe, React Navigation por defecto arma ese stack **solo con la pantalla pedida**. Entonces `entrenar_dia_user` quedaría sola, sin `mi_rutina_user_root` debajo, y tanto el botón atrás como "Volver a mi rutina" (que usa `popToTop()`) no tendrían a dónde volver. Con `initial: false` la raíz queda en la pila y el stack es `[mi_rutina_user_root, entrenar_dia_user]`.
+
+**Recibir parámetros:** `route.params.day` (`entrenar_dia_user`), `route.params.user` (`ver_datos_trainer`).
 
 ## 7. `useFocusEffect`
 
@@ -109,20 +112,19 @@ Las pestañas **siguen montadas** al cambiar de una a otra, así que un `useEffe
 2. Un `Alert` pide confirmación.
 3. Si confirma, `skipExitPrompt.current = true` (un `useRef`, para no volver a preguntar) y `navigation.dispatch(e.data.action)` **retoma la acción original** que se había frenado.
 
-**b) `tabPress` en el navigator padre** (`navigation.getParent()`). Cambiar de pestaña no desmonta la pantalla, solo le saca el foco, así que `beforeRemove` no se dispara. El código intenta cubrir ese caso escuchando `tabPress` y aplicando la misma lógica.
+**b) Cambio de pestaña: el guard.** Cambiar de pestaña no desmonta la pantalla, solo le saca el foco, así que `beforeRemove` no se dispara. Un listener `tabPress` registrado desde el editor tampoco alcanza: cada evento `tabPress` llega solo a los listeners de la pestaña tocada, y desde el editor solo se puede escuchar la pestaña que lo contiene ("Buscar Usuario"), no "Mi Cuenta" (documento 13, sección 3). Por eso la decisión se toma en `TrainerTabs`, que sí ve los toques de ambas pestañas. El editor registra un **guard** (la función exportada `guardUnsavedChanges`) y los `listeners` de las dos pestañas lo consultan antes de navegar. Con cambios pendientes, el guard muestra el mismo aviso de tres opciones y devuelve `true`; la navegación solo se retoma si el entrenador confirma.
 
-> **Corrección (verificada en el código fuente de React Navigation, ver documento 13):** `navigation.getParent()` devuelve la navegación de la pestaña "Buscar Usuario", la que contiene al editor, y los eventos `tabPress` se emiten con `target` igual a la pestaña tocada. Por lo tanto, ese listener solo se dispara al tocar **"Buscar Usuario"**, no al tocar "Mi Cuenta". El comentario del código (que dice que cubre "Mi Cuenta") es incorrecto.
-
-**c) `listeners` del tab "Buscar Usuario"** (`TrainerTabs.tsx`). Al tocar esa pestaña: `e.preventDefault()` y `navigate(..., { screen: 'buscar_usuario_trainer_root' })`. Tocar esa pestaña **siempre devuelve a la búsqueda**, incluso desde "editar rutina": la pestaña reinicia su stack.
+**c) `listeners` de las pestañas** (`TrainerTabs.tsx`):
+- **"Buscar Usuario":** `e.preventDefault()` y, tras consultar el guard, `navigate(..., { screen: 'buscar_usuario_trainer_root' })`. Tocar esa pestaña **siempre devuelve a la búsqueda**, incluso desde "editar rutina": la pestaña reinicia su stack. El guard decide si eso ocurre de inmediato o después de confirmar.
+- **"Mi Cuenta":** si el editor tiene cambios pendientes, el guard muestra el aviso y se frena el cambio con `e.preventDefault()` hasta que el entrenador confirme.
 
 ## 9. Puntos a verificar (no probados en ejecución)
 1. **`replace('UserTabs', ...)` en el QR.** `replace` sustituye la ruta actual por una nueva; como `UserTabs` ya existe debajo del QR, podría quedar una segunda instancia de `UserTabs` en la pila. Probar el botón atrás tras escanear. Alternativa: `navigate('UserTabs', {...})`.
-2. **`tabPress` de `editar_rutina_trainer`** (corregido tras revisar el código fuente de React Navigation): solo se dispara al tocar la pestaña "Buscar Usuario" (la suya), **no** al tocar "Mi Cuenta". Consecuencias probables: (a) pasar a "Mi Cuenta" con cambios sin guardar **no avisa**; (b) tocar "Buscar Usuario" sí dispara el aviso, pero al confirmar el código navega a `mi_cuenta_trainer`, y como el listener del tab también actúa, podrían aparecer dos confirmaciones. Detalle en el documento 13. Falta probarlo en el emulador.
-3. **Params con objetos completos** (`{ user }`, `{ day }`) en lugar de ids. Hoy es una referencia al mismo objeto en memoria; con BD será una copia que se desactualiza. Lo recomendado es pasar el id y cargar los datos en la pantalla destino. Los params también deben ser serializables para deep linking y restauración de estado.
+2. **Params con objetos completos** (`{ user }`, `{ day }`) en lugar de ids. Hoy es una referencia al mismo objeto en memoria; con BD será una copia que se desactualiza. Lo recomendado es pasar el id y cargar los datos en la pantalla destino. Los params también deben ser serializables para deep linking y restauración de estado.
 
 ## 10. Lista para el bloque 9 (continúa la del documento 02)
 13. Cambiar los params `{ user }` y `{ day }` por ids (`userId`, `dayId`); la pantalla destino carga los datos (con estados de carga/error).
-14. Revisar `replace` del QR y el `tabPress` del editor (puntos 1 y 2 de la sección 9).
+14. Revisar `replace` del QR (punto 1 de la sección 9).
 15. Con sesión persistente (token), el stack raíz necesitará un estado "cargando sesión" antes de decidir entre login y tabs.
 
 ## 11. Preguntas de verificación, con respuestas
@@ -139,7 +141,7 @@ La prop es `backBehavior`. Sus valores: `firstRoute` (el default: atrás lleva a
 ### 2. ¿Por qué `beforeRemove` no alcanza para avisar de cambios sin guardar al tocar otra pestaña?
 `beforeRemove` se dispara cuando una ruta **se elimina del estado** del navigator (pop, `goBack`, `reset`). Cambiar de pestaña no elimina nada del stack anidado: solo mueve el foco del Tab.Navigator, y la pantalla de edición sigue montada en segundo plano. Para el stack, nunca hubo una remoción.
 
-Por eso el código intenta escuchar `tabPress`, que sí se emite al tocar la barra de pestañas. Dos limitaciones: `tabPress` solo se emite por toques en la barra (un `navigate('mi_cuenta_trainer')` hecho por código no lo dispararía), y **cada evento `tabPress` llega solo a los listeners de la pestaña tocada** (`target`). El listener del editor está registrado en la pestaña "Buscar Usuario", así que no se entera de los toques en "Mi Cuenta" (corrección verificada en el documento 13).
+Por eso el cambio de pestaña se intercepta con `tabPress`, que sí se emite al tocar la barra de pestañas. Dos detalles: `tabPress` solo se emite por toques en la barra (un `navigate('mi_cuenta_trainer')` hecho por código no lo dispararía), y **cada evento `tabPress` llega solo a los listeners de la pestaña tocada** (`target`). Un listener dentro del editor solo vería los toques de "Buscar Usuario" (la pestaña que lo contiene). Por eso los `listeners` están en `TrainerTabs`, en cada pestaña, y consultan un guard que expone el editor (documento 13, sección 3).
 
 ### 3. ¿Por qué `home_user` usa `useFocusEffect` y no `useEffect`?
 `useEffect` corre al montar y cuando cambian sus dependencias. Las pestañas no se desmontan al cambiar de una a otra, así que al volver a Inicio no corre de nuevo: el contador quedaría desactualizado tras registrar un entrenamiento.

@@ -201,7 +201,7 @@ Render: "Cargando…" / mensaje de error + "Tocá para reintentar" / datos / est
 3. **Express:** `requireAuth` + `requireRole('ALUMNO')` + Zod. Luego **revalida todo**: QR correcto, distancia ≤ 150 m (fórmula de Haversine), que el día sea de la rutina de ese alumno.
 4. **El servidor decide el resto:** saca los ejercicios del día (en orden, sin descansos), consulta el catálogo externo para obtener el **grupo muscular** de cada uno (se descarga una vez y queda en caché) y calcula **la fecha de hoy** en la zona horaria de Buenos Aires.
 5. **Base:** crea `WorkoutLog` + `WorkoutLogExercise` en una sola escritura.
-6. **Vuelta:** el registro creado. La app navega al día. Al volver a Estadísticas e Inicio, `useFocusEffect` refresca y aparece el entrenamiento.
+6. **Vuelta:** el registro creado. La app abre el entrenamiento guiado de ese día. Al volver a Estadísticas e Inicio, `useFocusEffect` refresca y aparece el entrenamiento.
 
 **Por qué el cliente manda tan poco:** el cliente no es de fiar. Si mandara los ejercicios, la fecha o el grupo muscular, alguien podría inventar entrenamientos. Al mandar solo "qué día" y "dónde estoy", el servidor puede comprobar todo.
 

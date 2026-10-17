@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
   ScrollView,
   StyleSheet,
@@ -11,7 +12,9 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '../context/AuthContext';
 import { useExercises } from '../context/ExercisesContext';
 import { getRoutineById } from '../data/routines';
+import type { RoutineDay } from '../data/routines';
 import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
+import { buildSteps } from '../utils/buildSteps';
 import type { UserRoutineStackParamList } from '../navigation/types';
 
 export default function UserRoutineScreen({
@@ -22,6 +25,14 @@ export default function UserRoutineScreen({
   // Ejercicios traídos de la API (ver ExercisesContext)
   const { getExerciseById, loading } = useExercises();
 
+  // Días desplegados (puede haber varios abiertos a la vez)
+  const [openDayIds, setOpenDayIds] = useState<number[]>([]);
+
+  const toggleDay = (dayId: number) =>
+    setOpenDayIds((ids) =>
+      ids.includes(dayId) ? ids.filter((id) => id !== dayId) : [...ids, dayId]
+    );
+
   // Sin sesión (ej: mientras se anima el cierre de sesión) no se dibuja nada
   if (!user) return null;
 
@@ -30,6 +41,13 @@ export default function UserRoutineScreen({
 
   const formatRestUnit = (time: string, unit: string) =>
     Number(time) === 1 ? unit.slice(0, -1) : unit;
+
+  // Cantidad de ejercicios del día (los descansos no cuentan)
+  const countExercises = (day: RoutineDay) =>
+    day.blocks.reduce(
+      (total, block) => total + block.items.filter((i) => i.type === 'exercise').length,
+      0
+    );
 
 
   // ============================================================
@@ -78,18 +96,44 @@ export default function UserRoutineScreen({
 
               <Text style={styles.dayTitle}>{day.name}</Text>
 
-              <TouchableOpacity style={styles.dayButton} onPress={() => navigation.navigate('ver_dia_x_user', { day })}>
-                <Text style={styles.dayButtonText}>Ver día</Text>
-              </TouchableOpacity>
-
             </View>
+
+
+            {/* RESUMEN */}
+
+            <Text style={styles.daySummary}>
+              {`${countExercises(day)} ejercicios · ${day.blocks.length} bloques`}
+            </Text>
+
+
+            {/* COMENZAR ENTRENAMIENTO (paso a paso) */}
+
+            <TouchableOpacity
+              style={[styles.startButton, buildSteps(day).length === 0 && styles.startButtonDisabled]}
+              disabled={buildSteps(day).length === 0}
+              onPress={() => navigation.navigate('entrenar_dia_user', { day })}
+            >
+              <Text style={styles.startButtonText}>Comenzar entrenamiento</Text>
+            </TouchableOpacity>
+
+
+            {/* VER EJERCICIOS (despliega el día) */}
+
+            <TouchableOpacity
+              style={styles.toggleButton}
+              onPress={() => toggleDay(day.id)}
+            >
+              <Text style={styles.toggleButtonText}>
+                {openDayIds.includes(day.id) ? 'Ocultar ejercicios ▴' : 'Ver ejercicios ▾'}
+              </Text>
+            </TouchableOpacity>
 
 
             {/* ==================================================
                 BLOQUES
             ================================================== */}
 
-            {day.blocks.map((block, blockIndex) => (
+            {openDayIds.includes(day.id) && day.blocks.map((block, blockIndex) => (
 
               <View key={block.id} style={styles.block}>
 
@@ -235,15 +279,21 @@ const styles = StyleSheet.create({
 
   /* DÍA */
 
+  // Cada día es una tarjeta; plegada ocupa poco para que entren varios
   dayContainer: {
-    marginBottom: 26,
+    backgroundColor: '#1D1D1D',
+    borderRadius: 16,
+    borderWidth: 1.5,
+    borderColor: '#FFE082',
+    padding: '4.5%',
+    marginBottom: 14,
   },
 
   dayHeader: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 12,
+    marginBottom: 4,
   },
 
   dayTitle: {
@@ -252,14 +302,38 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
 
-  dayButton: {
-    backgroundColor: '#3A2B0D',
-    borderRadius: 16,
-    paddingHorizontal: '5.5%',
-    paddingVertical: '3.5%',
+  daySummary: {
+    color: '#999999',
+    fontSize: 14,
+    marginBottom: 4,
   },
 
-  dayButtonText: {
+
+  startButton: {
+    backgroundColor: '#3A2B0D',
+    borderRadius: 16,
+    paddingVertical: '3.5%',
+    alignItems: 'center',
+    marginTop: 10,
+  },
+
+  toggleButton: {
+    alignItems: 'center',
+    paddingVertical: 10,
+    marginTop: 2,
+  },
+
+  toggleButtonText: {
+    color: '#FFC107',
+    fontSize: 14,
+    fontWeight: '600',
+  },
+
+  startButtonDisabled: {
+    opacity: 0.45,
+  },
+
+  startButtonText: {
     color: '#FFC107',
     fontSize: 15,
     fontWeight: '600',

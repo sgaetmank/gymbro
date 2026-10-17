@@ -109,7 +109,7 @@ si no                → mensaje + botón para pedir permiso
 3. Si algún ejercicio no se encuentra (`null`) → Alert y no se guarda.
 4. `.filter((exercise): exercise is WorkoutExercise => exercise !== null)` es un **type predicate**: le enseña a TypeScript que el array ya no tiene `null`. `.some(!exercise)` no alcanza para que TS lo infiera.
 5. **La fecha se arma a mano** con `getFullYear`, `getMonth() + 1` y `padStart(2, '0')`.
-6. `addWorkoutLog(...)` y `navigation.replace(...)` al día elegido (analizado en el bloque 4).
+6. `addWorkoutLog(...)` y `navigation.replace(...)`, que abre el entrenamiento guiado del día elegido (analizado en los bloques 4 y 7b).
 
 ## 9. Cosas a notar
 1. **Chequeo de presencia débil.** El QR es un texto fijo que cualquiera puede generar, y la ubicación se valida en el cliente (se puede falsear con apps de ubicación simulada). Sirve para un prototipo, no como control antifraude.
