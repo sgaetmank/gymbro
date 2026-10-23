@@ -17,6 +17,7 @@ import Animated, { useAnimatedRef } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Sortable from 'react-native-sortables';
 import DragHandle from '../components/DragHandle';
+import LoadingState from '../components/LoadingState';
 import { useExercises } from '../context/ExercisesContext';
 import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
 import type { TrainerStackParamList } from '../navigation/types';
@@ -60,7 +61,11 @@ export default function EditRoutineScreen({ navigation, route }: EditRoutineScre
           <Text style={styles.headerTitle}>Editar</Text>
         </View>
         <View style={styles.content}>
-          <Text style={styles.stateText}>{loadError || 'Cargando rutina…'}</Text>
+          {loadError === '' ? (
+            <LoadingState text="Cargando rutina…" />
+          ) : (
+            <Text style={styles.stateText}>{loadError}</Text>
+          )}
           {loadError !== '' && (
             <TouchableOpacity
               onPress={() => {
@@ -107,7 +112,7 @@ function EditRoutineForm({
   const isValidDecimal = (value: string) => /^\d+(\.\d+)?$/.test(value.trim());
 
   // ============================================================
-  // DATOS INICIALES DE EJEMPLO
+  // BORRADOR DE LA RUTINA (parte de los días que llegaron del servidor)
   // ============================================================
 
   const [days, setDays] = useState<RoutineDay[]>(initialDays);
@@ -125,6 +130,13 @@ function EditRoutineForm({
   
   // Cada nivel anidado es ~27px más angosto (borde + padding de la tarjeta)
   const cardWidth = (level: number) => contentWidth - level * 27;
+
+  // El editor está "listo" cuando ya se midió el ancho y Sortable terminó de medir las
+  // tarjetas (hasta entonces no las muestra). Antes de eso se ve "Cargando rutina…" en vez
+  // de una rutina vacía con el botón "Añadir Día". Una vez listo no vuelve a ocultarse.
+  // Sin días no hay tarjetas que medir: arranca como medida.
+  const [listMeasured, setListMeasured] = useState(initialDays.length === 0);
+  const routineReady = contentWidth > 0 && listMeasured;
 
   // Ref del scroll principal: permite el auto-scroll al arrastrar cerca del borde
   const scrollRef = useAnimatedRef<Animated.ScrollView>();
@@ -477,10 +489,10 @@ function EditRoutineForm({
   const persistRoutine = async (): Promise<boolean> => {
     setSaving(true);
     try {
-      const saved = await saveAlumnoRoutine(editedUser.id, days);
-      // El servidor genera ids nuevos: el borrador pasa a ser lo que él devolvió
-      setDays(saved.days);
-      setSavedSnapshot(JSON.stringify(saved.days)); // anota "esto es lo último guardado"
+      await saveAlumnoRoutine(editedUser.id, days);
+      // Se conserva el borrador: sus ids no viajan al servidor, y cambiarlos por los de la
+      // respuesta haría que todas las tarjetas se vuelvan a crear y a medir de cero.
+      setSavedSnapshot(JSON.stringify(days)); // anota "esto es lo último guardado" (lo que se envió)
       return true;
     } catch (e) {
       Alert.alert('No se pudo guardar', e instanceof ApiError ? e.message : 'Intentá nuevamente.');
@@ -634,7 +646,15 @@ function EditRoutineForm({
             DÍAS
         ==================================================== */}
 
+        {!routineReady && <LoadingState text="Cargando rutina…" />}
+
         {contentWidth > 0 && (
+        <View
+          onLayout={(e) => {
+            // Con la altura de la lista mayor al relleno, Sortable ya midió las tarjetas
+            if (e.nativeEvent.layout.height > 20) setListMeasured(true);
+          }}
+        >
         <Sortable.Flex
           customHandle
           flexDirection="column"
@@ -874,6 +894,7 @@ function EditRoutineForm({
 
         ))}
         </Sortable.Flex>
+        </View>
         )}
 
 
@@ -881,14 +902,16 @@ function EditRoutineForm({
             AGREGAR DÍA
         ====================================================== */}
 
-        <TouchableOpacity
-          style={styles.addDayButton}
-          onPress={addDay}
-        >
-          <Text style={styles.addDayText}>
-            ＋ Añadir Día
-          </Text>
-        </TouchableOpacity>
+        {routineReady && (
+          <TouchableOpacity
+            style={styles.addDayButton}
+            onPress={addDay}
+          >
+            <Text style={styles.addDayText}>
+              ＋ Añadir Día
+            </Text>
+          </TouchableOpacity>
+        )}
 
       </Animated.ScrollView>
 
@@ -966,9 +989,7 @@ function EditRoutineForm({
 
               {/* Estado de la carga desde la API */}
 
-              {loading && (
-                <Text style={styles.suggestionCategory}>Cargando ejercicios…</Text>
-              )}
+              {loading && <LoadingState compact text="Cargando ejercicios…" />}
 
               {error && (
                 <TouchableOpacity onPress={retry}>

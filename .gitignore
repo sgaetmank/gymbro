@@ -59,3 +59,7 @@ docs/superpowers/plans/2026-10-12-integracion-backend.md
 backend/.env
 backend/**/*.db
 backend/**/*.db-journal
+
+# Material de estudio (documentación teórica personal)
+docs/estudio/
+docs/estudio-backend/

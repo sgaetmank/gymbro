@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 
 import { SafeAreaView } from 'react-native-safe-area-context';
+import LoadingState from '../components/LoadingState';
 import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { TrainerStackParamList } from '../navigation/types';
@@ -112,10 +113,12 @@ export default function SearchUserScreen({
             </>
           )}
 
-          {alumnosError === '' && usuariosFiltrados.length === 0 && (
-            <Text style={styles.stateText}>
-              {loadingAlumnos ? 'Cargando usuarios…' : 'No se encontraron usuarios'}
-            </Text>
+          {alumnosError === '' && loadingAlumnos && usuariosFiltrados.length === 0 && (
+            <LoadingState text="Cargando usuarios…" />
+          )}
+
+          {alumnosError === '' && !loadingAlumnos && usuariosFiltrados.length === 0 && (
+            <Text style={styles.stateText}>No se encontraron usuarios</Text>
           )}
 
           {usuariosFiltrados.map((user) => {

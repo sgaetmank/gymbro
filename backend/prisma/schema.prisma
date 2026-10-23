@@ -1,11 +1,24 @@
+// Prisma: herramienta que te deja describir las tablas en un archivo (schema.prisma) y consultarlas desde TypeScript, sin escribir SQL a mano
+// traduce entre objetos del lenguaje y filas de tablas.
+
+// prisma generate	--> Lee schema.prisma y genera el cliente tipado (dentro de node_modules)
+// prisma db push -->	Compara el esquema con la base y la deja igual (crea o modifica tablas)
+
+
+// le dice a Prisma que genere el cliente de JavaScript/TypeScript (con tipos exactos para tus tablas).
+
 generator client {
   provider = "prisma-client-js"
 }
+
+// qué base se usa (sqlite) y dónde está env("DATABASE_URL")
 
 datasource db {
   provider = "sqlite"
   url      = env("DATABASE_URL")
 }
+
+// 2 roles posibles: Alumno/Entrenador
 
 enum Role {
   ALUMNO
@@ -29,7 +42,7 @@ model User {
   healthInsurance   String       @default("-")
   contraindications String       @default("Ninguna")
   goal              String
-  routineId         Int?
+  routineId         Int?         @unique
   routine           Routine?     @relation(fields: [routineId], references: [id], onDelete: SetNull)
   workoutLogs       WorkoutLog[]
   createdAt         DateTime     @default(now())
@@ -39,7 +52,7 @@ model Routine {
   id    Int    @id @default(autoincrement())
   name  String @default("Mi Rutina")
   days  Day[]
-  users User[]
+  user  User?
 }
 
 model Day {
@@ -50,7 +63,7 @@ model Day {
   routine   Routine @relation(fields: [routineId], references: [id], onDelete: Cascade)
   blocks    Block[]
 
-  @@index([routineId])
+  @@index([routineId]) // un índice que acelera "dame los días de esta rutina"
 }
 
 model Block {
@@ -60,7 +73,7 @@ model Block {
   day      Day    @relation(fields: [dayId], references: [id], onDelete: Cascade)
   items    Item[]
 
-  @@index([dayId])
+  @@index([dayId]) // un índice que acelera "dame los bloques de esta dia"
 }
 
 // Un ítem es un ejercicio o un descanso. type decide qué columnas se usan:
@@ -80,7 +93,7 @@ model Item {
   restUnit    String?
   block       Block   @relation(fields: [blockId], references: [id], onDelete: Cascade)
 
-  @@index([blockId])
+  @@index([blockId]) // un índice que acelera "dame los items de esta bloque"
 }
 
 model WorkoutLog {
@@ -88,10 +101,10 @@ model WorkoutLog {
   userId    Int
   date      String
   createdAt DateTime             @default(now())
-  user      User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User                 @relation(fields: [userId], references: [id], onDelete: Cascade) // al borrar un usuario se borran sus registros.
   exercises WorkoutLogExercise[]
 
-  @@index([userId, date])
+  @@index([userId, date]) //  índice compuesto para la consulta típica: "los registros de este usuario en este mes"
 }
 
 // Copia (snapshot) de cada ejercicio hecho ese día, con su grupo muscular.
@@ -100,7 +113,7 @@ model WorkoutLogExercise {
   logId       Int
   exerciseId  String
   muscleGroup String
-  log         WorkoutLog @relation(fields: [logId], references: [id], onDelete: Cascade)
+  log         WorkoutLog @relation(fields: [logId], references: [id], onDelete: Cascade) // al borrar un registro se borran los ejercicios del mismo
 
   @@index([logId])
 }

@@ -9,6 +9,7 @@ import {
 } from 'react-native';
 
 import { SafeAreaView } from 'react-native-safe-area-context';
+import LoadingState from '../components/LoadingState';
 import { useAuth } from '../context/AuthContext';
 import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
 import { ApiError, getMyLogs } from '../services/api';
@@ -222,10 +223,10 @@ export default function UserStatisticsScreen() {
               <TouchableOpacity onPress={() => { loadLogs(); }}>
                 <Text style={styles.emptyText}>{loadError} Tocá para reintentar.</Text>
               </TouchableOpacity>
+            ) : loadingLogs ? (
+              <LoadingState compact text="Cargando…" />
             ) : (
-              <Text style={styles.emptyText}>
-                {loadingLogs ? 'Cargando…' : 'No hay entrenamientos registrados en este mes.'}
-              </Text>
+              <Text style={styles.emptyText}>No hay entrenamientos registrados en este mes.</Text>
             )}
           </View>
 

@@ -11,19 +11,24 @@ import { checkinSchema, firstIssue } from '../validation';
 // Solo alumnos (ver app.ts).
 export const checkinsRouter = Router();
 
-// Registra un entrenamiento. El cliente manda solo QUÉ día hizo y DÓNDE está;
+// Registra un entrenamiento. El cliente manda solo QUÉ día hizo y DÓNDE está y el QR leido;
 // los ejercicios, los grupos musculares y la fecha los decide el servidor.
 checkinsRouter.post('/', async (req, res) => {
-  const parsed = checkinSchema.safeParse(req.body);
+
+  const parsed = checkinSchema.safeParse(req.body); // exige un dayId entero positivo, un qr de texto y coordenadas en rango
+  
   if (!parsed.success) {
     return res.status(400).json({ error: firstIssue(parsed.error) });
   }
+  
   const { dayId, qr, latitude, longitude } = parsed.data;
 
-  if (qr !== GYM.qr) {
+  if (qr !== GYM.qr) { // Compara con la constante de config.ts (GYMBRO_CHECKIN_V1)
     return res.status(400).json({ error: 'Este código no corresponde a Gymbro' });
   }
 
+  // calcula la distancia entre la ubicación del cliente y la del gimnasio; si está lejos, no deja registrar.
+  // geo.ts
   const distance = getDistanceInMeters({ latitude, longitude }, GYM);
   if (distance > GYM.radiusMeters) {
     return res.status(400).json({
@@ -35,7 +40,7 @@ checkinsRouter.post('/', async (req, res) => {
 
   // El día tiene que pertenecer a la rutina de ESTE alumno.
   const day = await prisma.day.findFirst({
-    where: { id: dayId, routine: { users: { some: { id: userId } } } },
+    where: { id: dayId, routine: { user: { id: userId } } },
     include: {
       blocks: {
         orderBy: { position: 'asc' },
@@ -48,10 +53,10 @@ checkinsRouter.post('/', async (req, res) => {
   }
 
   const exerciseIds = day.blocks
-    .flatMap((block) => block.items)
-    .filter((item) => item.type === 'exercise')
+    .flatMap((block) => block.items) // flatMap junta los ítems de todos los bloques en una sola lista
+    .filter((item) => item.type === 'exercise') // Se descartan los descansos
     .map((item) => item.exerciseId)
-    .filter((exerciseId): exerciseId is string => exerciseId !== null);
+    .filter((exerciseId): exerciseId is string => exerciseId !== null); // es una guarda de tipos: le dice a TypeScript que ya no quedan null
 
   if (exerciseIds.length === 0) {
     return res.status(400).json({ error: 'Ese día no tiene ejercicios para registrar' });

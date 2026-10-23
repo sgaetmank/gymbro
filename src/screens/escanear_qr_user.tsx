@@ -15,6 +15,7 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import LoadingState from '../components/LoadingState';
 import PrimaryButton from '../components/PrimaryButton';
 import { useExercises } from '../context/ExercisesContext';
 import type { AppStackParamList } from '../navigation/types';
@@ -255,7 +256,7 @@ export default function ScanQrUserScreen({
 
       {!permission ? (
         <View style={styles.permissionMessage}>
-          <Text style={styles.messageText}>Cargando...</Text>
+          <LoadingState text="Cargando..." />
         </View>
       ) : permission.granted ? (
         qrValid ? (
@@ -338,11 +339,11 @@ export default function ScanQrUserScreen({
                   </View>
                 </Modal>
               </>
+            ) : routineLoading ? (
+              <LoadingState text="Cargando tu rutina…" />
             ) : (
               <Text style={styles.messageText}>
-                {routineLoading
-                  ? 'Cargando tu rutina…'
-                  : routineError || 'No tenés una rutina asignada para elegir un día.'}
+                {routineError || 'No tenés una rutina asignada para elegir un día.'}
               </Text>
             )}
           </ScrollView>

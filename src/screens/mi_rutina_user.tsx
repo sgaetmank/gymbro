@@ -10,6 +10,7 @@ import {
 
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import LoadingState from '../components/LoadingState';
 import { useAuth } from '../context/AuthContext';
 import { useExercises } from '../context/ExercisesContext';
 import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
@@ -98,13 +99,13 @@ export default function UserRoutineScreen({
         showsVerticalScrollIndicator={false}
       >
 
-        <Text style={styles.screenTitle}>
-          {routine
-            ? routine.name
-            : loadingRoutine
-              ? 'Cargando tu rutina…'
-              : routineError || 'Todavía no tenés una rutina asignada'}
-        </Text>
+        {loadingRoutine && !routine ? (
+          <LoadingState text="Cargando tu rutina…" />
+        ) : (
+          <Text style={styles.screenTitle}>
+            {routine ? routine.name : routineError || 'Todavía no tenés una rutina asignada'}
+          </Text>
+        )}
 
         {routineError !== '' && (
           <TouchableOpacity onPress={loadRoutine}>

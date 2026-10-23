@@ -1,6 +1,25 @@
+/*
+
+Lo que devuelve Prisma es un reflejo de las tablas (con passwordHash, columnas opcionales, etc.). 
+Nunca se devuelve tal cual. 
+Estas funciones construyen explícitamente la respuesta pública. 
+
+Beneficios:
+
+- Seguridad: campos sensibles que no se nombran, no salen.
+- Estabilidad: si cambia una tabla, la API puede seguir igual.
+- Forma cómoda para la app: por ejemplo, un ítem de rutina con su forma de ejercicio o de descanso.
+
+*/
+
+
 import type { Prisma, User } from '@prisma/client';
 
-// Qué se carga al leer una rutina completa, ya ordenada por posición.
+/*
+Le dice a Prisma: "traeme la rutina con sus días, de cada día sus bloques, de cada bloque sus ítems, todo ordenado por position". 
+Se define una vez y se reutiliza en me.ts y alumnos.ts. 
+satisfies comprueba que sea válido sin perder el tipo exacto.
+*/
 export const ROUTINE_INCLUDE = {
   days: {
     orderBy: { position: 'asc' },
@@ -13,6 +32,7 @@ export const ROUTINE_INCLUDE = {
   },
 } satisfies Prisma.RoutineInclude;
 
+// Una rutina con días, bloques e ítems (según ROUTINE_INCLUDE)
 type RoutineWithTree = Prisma.RoutineGetPayload<{ include: typeof ROUTINE_INCLUDE }>;
 
 // Lista blanca: solo estos campos salen del servidor (nunca passwordHash).
@@ -37,6 +57,8 @@ export function toPublicUser(user: User) {
   };
 }
 
+
+// del árbol de tablas a la forma de la API
 export function toApiRoutine(routine: RoutineWithTree) {
   return {
     id: routine.id,
@@ -69,8 +91,14 @@ export function toApiRoutine(routine: RoutineWithTree) {
   };
 }
 
+
+// Un registro de entrenamiento con su lista exercises
 type LogWithExercises = Prisma.WorkoutLogGetPayload<{ include: { exercises: true } }>;
 
+/*
+Devuelve { id, userId, date, exercises: [{ exerciseId, muscleGroup }] },
+sin los ids internos de WorkoutLogExercise ni createdAt.
+*/
 export function toApiLog(log: LogWithExercises) {
   return {
     id: log.id,
