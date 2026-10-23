@@ -75,9 +75,9 @@ export default function UserProfileScreen() {
           rows={[
             { icon: '◉', label: 'DNI', value: user.dni },
             { icon: '♙', label: 'Género', value: user.gender },
-            { icon: '〽', label: 'Edad', value: user.age },
-            { icon: '〽', label: 'Peso', value: user.weight },
-            { icon: '〽', label: 'Altura', value: user.height },
+            { icon: '🎂', label: 'Edad', value: user.age },
+            { icon: '⚖️', label: 'Peso', value: user.weight },
+            { icon: '📏', label: 'Altura', value: user.height },
           ]}
         />
 

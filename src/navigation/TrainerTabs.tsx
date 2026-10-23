@@ -5,7 +5,7 @@ import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import type { TrainerStackParamList, TrainerTabParamList } from './types';
 
 import SearchUserScreen from '../screens/buscar_usuario_trainer';
-import EditRoutineScreen from '../screens/editar_rutina_trainer';
+import EditRoutineScreen, { guardUnsavedChanges } from '../screens/editar_rutina_trainer';
 import TrainerProfileScreen from '../screens/mi_cuenta_trainer';
 import UserDataScreen from '../screens/ver_datos_trainer';
 
@@ -80,7 +80,12 @@ export default function TrainerTabs() {
         listeners={({ navigation }) => ({
           tabPress: (e) => {
             e.preventDefault();
-            navigation.navigate('buscar_usuario_trainer', { screen: 'buscar_usuario_trainer_root' });
+            const goToRoot = () =>
+              navigation.navigate('buscar_usuario_trainer', { screen: 'buscar_usuario_trainer_root' });
+            // Si se está editando una rutina con cambios sin guardar, pide confirmación antes
+            if (!guardUnsavedChanges(goToRoot)) {
+              goToRoot();
+            }
           },
         })}
       />
@@ -88,6 +93,19 @@ export default function TrainerTabs() {
         name="mi_cuenta_trainer"
         component={TrainerProfileScreen}
         options={{ title: 'Mi Cuenta', tabBarIcon: makeTabIcon('account') }}
+        listeners={({ navigation }) => ({
+          tabPress: (e) => {
+            if (navigation.isFocused()) {
+              return;
+            }
+
+            // Si se está editando una rutina con cambios sin guardar, frena el
+            // cambio de pestaña hasta que el usuario confirme
+            if (guardUnsavedChanges(() => navigation.navigate('mi_cuenta_trainer'))) {
+              e.preventDefault();
+            }
+          },
+        })}
       />
     </Tab.Navigator>
   );

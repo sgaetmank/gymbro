@@ -1,6 +1,6 @@
 # Bloque 5: componentes y hooks compartidos
 
-Archivos: `src/components/PrimaryButton.tsx`, `CustomInput.tsx`, `ProfileDataCard.tsx`, `MoveArrows.tsx`, `ExerciseGif.tsx` y `src/hooks/useResponsiveLayout.ts`.
+Archivos: `src/components/PrimaryButton.tsx`, `CustomInput.tsx`, `ProfileDataCard.tsx`, `DragHandle.tsx`, `ExerciseGif.tsx` y `src/hooks/useResponsiveLayout.ts`.
 
 ## 0. Ideas base
 
@@ -46,19 +46,18 @@ Recibe un título y una lista de filas `{ icon, label, value }` y las dibuja tod
 - **Padding y márgenes en porcentaje** (`'5.5%'`): relativos al ancho del contenedor.
 - Se usa en `mi_cuenta_user` y `mi_cuenta_trainer`. Los valores son los strings del `User` tal cual (`"23 años"`, `"75.5 kg"`); si en la BD se guardan como números, el formateo pasará a hacerse en la pantalla.
 
-## 4. `MoveArrows`
+## 4. `DragHandle`
 
-Dos botones (subir/bajar) para reordenar días, bloques y ejercicios en `editar_rutina_trainer`.
-- **Props de comportamiento:** `canMoveUp`/`canMoveDown` (¿habilitado?) y `onMoveUp`/`onMoveDown`. El componente solo dibuja y avisa; la lógica de mover vive en la pantalla.
-- **`SIZES: Record<'day'|'block'|'item', {...}>`:** una pieza sirve para tres niveles de la jerarquía, cada uno más chico. `Record` obliga a definir todas las claves.
-- **`renderButton`:** función interna que evita repetir el JSX para arriba y abajo.
-- **Deshabilitado:** `disabled={!enabled}` bloquea el toque; color gris (`#444444`) y fondo distinto lo muestran.
-- **Relieve 3D:** cada borde con un color distinto y el inferior más grueso (3px).
+La barrita de arrastre (dos rayitas grises) que usa `editar_rutina_trainer` para reordenar días, bloques y ejercicios. El mecanismo completo está en el documento 16.
+- **Envuelve a `Sortable.Handle`** de `react-native-sortables`: ese componente engancha el gesto de arrastre del elemento. Todo lo que va adentro (acá un `Ionicons` `reorder-two`) pasa a ser la zona de agarre.
+- **No recibe props.** Sabe a qué elemento pertenece porque `Sortable.Handle` lee un contexto de React: el del `Sortable.Flex` más cercano que lo contiene. Por eso la misma pieza sirve en los tres niveles (día, bloque, ítem).
+- **Restricción:** solo funciona dentro de un `Sortable.Flex` con la prop `customHandle`; si no, la librería lanza un error.
+- **Estilo mínimo:** sin fondo ni borde, gris `#666666`. El contenedor mide 28 px de ancho para que la zona táctil sea cómoda.
 - Se usa 3 veces en el editor.
 
 ## 5. `ExerciseGif`
 
-Envuelve `expo-image`: `contentFit="contain"` (se ve entero), `transition={200}` (fundido), `aspectRatio: 1` (cuadrado), fondo blanco porque los GIFs de la API lo tienen. Lo usa `ver_dia_x_user`. `expo-image` reproduce GIFs animados en todas las plataformas y los cachea.
+Envuelve `expo-image`: `contentFit="contain"` (se ve entero), `transition={200}` (fundido), `aspectRatio: 1` (cuadrado), fondo blanco porque los GIFs de la API lo tienen. Lo usa `entrenar_dia_user` (en el modal del GIF). `expo-image` reproduce GIFs animados en todas las plataformas y los cachea.
 
 ## 6. `useResponsiveLayout`
 
@@ -89,7 +88,7 @@ El valor del campo vive en el **estado de la pantalla padre**, no en el input. E
 Importa porque el padre tiene **una única fuente de verdad**: puede validar, limpiar, rellenar, deshabilitar el botón según lo escrito o enviarlo al servidor sin tener que "preguntarle" al input. Si el input guardara su propio texto (no controlado), habría que leerlo a mano y los dos podrían desincronizarse.
 
 ### 2. ¿Por qué `PrimaryButton` recibe `onPress` en vez de decidir él qué hacer?
-Porque el botón es visual y sirve en lugares distintos: en `login` valida credenciales, en `signup` registra, en el QR confirma el día. Si decidiera él, tendría que conocer todos los casos. Al recibir la función por props, es **reutilizable y desacoplado**: la pantalla (que sabe el contexto) decide qué pasa, y el botón solo cumple el contrato "cuando me toquen, llamo a esta función". Es el mismo principio que `onChangeText` y `onMoveUp`.
+Porque el botón es visual y sirve en lugares distintos: en `login` valida credenciales, en `signup` registra, en el QR confirma el día. Si decidiera él, tendría que conocer todos los casos. Al recibir la función por props, es **reutilizable y desacoplado**: la pantalla (que sabe el contexto) decide qué pasa, y el botón solo cumple el contrato "cuando me toquen, llamo a esta función". Es el mismo principio que `onChangeText` y `onDragEnd`.
 
 ### 3. ¿Para qué sirve `key` en `rows.map(...)` y qué pasaría si faltara o se repitiera?
 React compara la lista anterior con la nueva y usa la `key` para identificar a cada elemento entre renders: saber cuál es el mismo, cuál es nuevo y cuál ya no está.
@@ -157,16 +156,16 @@ React compara por posición. En la posición 0 "antes había algo, ahora tambié
 
 | Archivo | Key | Evaluación |
 |---|---|---|
-| `buscar_usuario_trainer`, `editar_rutina_trainer` (días/bloques/ítems), `mi_rutina_user`, `ver_dia_x_user`, `escanear_qr_user` | `user.id`, `day.id`, `block.id`, `item.id` | Correcto: ids propios de los datos |
+| `buscar_usuario_trainer`, `editar_rutina_trainer` (días/bloques/ítems), `mi_rutina_user`, `entrenar_dia_user`, `escanear_qr_user` | `user.id`, `day.id`, `block.id`, `item.id` | Correcto: ids propios de los datos |
 | `ProfileDataCard` | `row.label` | Correcto mientras las etiquetas no se repitan dentro de una tarjeta |
 | `estadisticas_user` (semanas) | `week.from` | Correcto si cada semana tiene un inicio distinto |
 | `estadisticas_user` (grupos) | `group` | Correcto: un nombre por grupo muscular |
 | `signup` (opciones) | `option` | Correcto si las opciones no se repiten |
-| `ver_dia_x_user` (pasos de instrucciones) | `index` | Aceptable: lista estática, sin estado propio, nunca se reordena |
+| `entrenar_dia_user` (pasos de instrucciones) | `index` | Aceptable: lista estática, sin estado propio, nunca se reordena |
 
 El único uso de índice es el de las instrucciones, y es el caso donde sí es válido.
 
-**El caso crítico es `editar_rutina_trainer`.** Ahí el entrenador agrega, borra y **reordena** días, bloques y ejercicios (con `MoveArrows`), y cada ítem tiene estado propio (inputs de series, repeticiones, peso, comentarios). Es el escenario donde una key por índice rompería la pantalla; usar `item.id` lo evita. Al agregar un elemento nuevo hay que asignarle un id que no choque con los existentes (se analiza al estudiar ese archivo).
+**El caso crítico es `editar_rutina_trainer`.** Ahí el entrenador agrega, borra y **reordena** días, bloques y ejercicios (arrastrándolos con `DragHandle`), y cada ítem tiene estado propio (inputs de series, repeticiones, peso, comentarios). Es el escenario donde una key por índice rompería la pantalla; usar `item.id` lo evita. Al agregar un elemento nuevo hay que asignarle un id que no choque con los existentes (se analiza al estudiar ese archivo).
 
 ### En una línea
 La `key` es la identidad de cada elemento de la lista: React la usa para saber a quién pertenece cada estado cuando la lista cambia, por eso debe ser única, estable y, preferentemente, un id real de los datos.

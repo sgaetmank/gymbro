@@ -16,6 +16,7 @@ import ExerciseGif from '../components/ExerciseGif';
 import { useExercises } from '../context/ExercisesContext';
 import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
 import type { Exercise } from '../services/exercisesApi';
+import { buildSteps } from '../utils/buildSteps';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { UserRoutineStackParamList } from '../navigation/types';
 
@@ -30,6 +31,9 @@ export default function UserDayScreen({
   const { getExerciseById, loading, error, retry } = useExercises();
 
   const day = route.params.day;
+
+  // Un día sin ejercicios ni descansos no se puede recorrer paso a paso
+  const hasSteps = buildSteps(day).length > 0;
 
     const [modalVisible, setModalVisible] = useState(false);
     const [modalType, setModalType] = useState<'' | 'gif' | 'instructions'>('');
@@ -148,6 +152,17 @@ export default function UserDayScreen({
         <Text style={styles.subtitle}>
           {`${day.blocks.reduce((total, block) => total + block.items.filter((i) => i.type === 'exercise').length, 0)} ejercicios · ${day.blocks.length} bloques`}
         </Text>
+
+
+        {/* COMENZAR ENTRENAMIENTO (paso a paso) */}
+
+        <TouchableOpacity
+          style={[styles.startButton, !hasSteps && styles.startButtonDisabled]}
+          disabled={!hasSteps}
+          onPress={() => navigation.navigate('entrenar_dia_user', { day })}
+        >
+          <Text style={styles.startButtonText}>Comenzar entrenamiento</Text>
+        </TouchableOpacity>
 
 
         {/* ERROR AL CARGAR LOS EJERCICIOS */}
@@ -441,6 +456,27 @@ const styles = StyleSheet.create({
     color: '#999999',
     fontSize: 14,
     marginBottom: 13,
+  },
+
+
+  /* COMENZAR ENTRENAMIENTO */
+
+  startButton: {
+    backgroundColor: '#FFC107',
+    borderRadius: 13,
+    paddingVertical: 13,
+    alignItems: 'center',
+    marginBottom: 16,
+  },
+
+  startButtonDisabled: {
+    opacity: 0.45,
+  },
+
+  startButtonText: {
+    color: '#1A1300',
+    fontSize: 15,
+    fontWeight: '700',
   },
 
 

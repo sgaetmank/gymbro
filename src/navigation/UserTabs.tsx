@@ -7,6 +7,7 @@ import type { UserRoutineStackParamList, UserTabParamList } from './types';
 import UserHomeScreen from '../screens/home_user';
 import UserRoutineScreen from '../screens/mi_rutina_user';
 import UserDayScreen from '../screens/ver_dia_x_user';
+import GuidedDayScreen from '../screens/entrenar_dia_user';
 import StopwatchScreen from '../screens/reloj';
 import UserStatisticsScreen from '../screens/estadisticas_user';
 import UserProfileScreen from '../screens/mi_cuenta_user';
@@ -39,6 +40,7 @@ function RoutineTabStack() {
     <RoutineStack.Navigator screenOptions={{ headerShown: false }}>
       <RoutineStack.Screen name="mi_rutina_user_root" component={UserRoutineScreen} />
       <RoutineStack.Screen name="ver_dia_x_user" component={UserDayScreen} />
+      <RoutineStack.Screen name="entrenar_dia_user" component={GuidedDayScreen} />
     </RoutineStack.Navigator>
   );
 }

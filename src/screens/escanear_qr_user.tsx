@@ -233,8 +233,11 @@ export default function ScanQrUserScreen({
     navigation.replace('UserTabs', {
       screen: 'mi_rutina_user',
       params: {
-        screen: 'ver_dia_x_user',
+        screen: 'entrenar_dia_user',
         params: { day: selectedDay },
+        // Deja "mi_rutina_user_root" debajo en el stack: sin esto la pantalla
+        // quedaría sola y "Volver a mi rutina" / atrás no tendrían a dónde ir.
+        initial: false,
       },
     });
   };

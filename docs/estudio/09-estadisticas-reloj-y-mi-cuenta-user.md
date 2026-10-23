@@ -63,7 +63,7 @@ useEffect(() => {
   return () => clearInterval(interval);
 }, [isRunning]);
 ```
-- Cuenta **hacia arriba** (el descanso de `ver_dia_x_user` cuenta hacia abajo).
+- Cuenta **hacia arriba** (el descanso de `entrenar_dia_user` cuenta hacia abajo).
 - **El intervalo no necesita `useRef`** porque se crea y se limpia dentro del mismo effect (ver pregunta 4).
 - `return undefined` explícito: el effect devuelve algo en todos los caminos.
 - `setIsRunning((running) => !running)`: forma funcional para alternar Iniciar/Pausar.
@@ -124,16 +124,16 @@ Cuando arranca una semana nueva, `week = { ... }` asigna un objeto distinto a la
 
 Esto no contradice la regla de "no mutar el estado" de React: acá el objeto es una **variable local** que se construye dentro de una función y no pertenece al estado de ningún componente.
 
-### 4. ¿Por qué el cronómetro de `reloj` no necesita `useRef` y el descanso de `ver_dia_x_user` sí?
+### 4. ¿Por qué el cronómetro de `reloj` no necesita `useRef` y el descanso de `entrenar_dia_user` sí?
 Depende de **desde dónde se corta el intervalo**.
 - **`reloj`:** el intervalo se crea y se limpia dentro del mismo `useEffect`. La variable local `interval` y el cleanup (`return () => clearInterval(interval)`) están en el mismo ámbito (*closure*), así que no hace falta guardar nada entre renders.
-- **`ver_dia_x_user`:** el intervalo se corta también desde otras funciones fuera del effect (`startRest`, `pauseRest`, el cleanup de desmontaje). Esas funciones necesitan acceder al id, así que debe guardarse en algo que persista entre renders y sea accesible desde todas partes: un `useRef`.
+- **`entrenar_dia_user`:** el intervalo se corta también desde otras funciones fuera del effect (`startRest`, `pauseRest`, el cleanup de desmontaje). Esas funciones necesitan acceder al id, así que debe guardarse en algo que persista entre renders y sea accesible desde todas partes: un `useRef`.
 
 Regla: si todo el ciclo de vida ocurre dentro de un effect, una variable local alcanza; si otras funciones necesitan tocarlo, va en un ref.
 
 ### 5. ¿Por qué el cronómetro sigue corriendo al cambiar de pestaña, pero el temporizador de descanso se pierde al volver atrás?
 - **Cronómetro:** vive en una pantalla de un Tab.Navigator. Al cambiar de pestaña, la pantalla **no se desmonta**: solo pierde el foco, su estado y su `setInterval` siguen vivos. Se detiene recién cuando todo `UserTabs` se desmonta (al cerrar sesión).
-- **Descanso:** vive en `ver_dia_x_user`, una pantalla de un **stack**. Al hacer `goBack`, esa pantalla se **desmonta**, y su cleanup (`useEffect(() => clearRestInterval, [])`) corta el intervalo y todo su estado se pierde.
+- **Descanso:** vive en `entrenar_dia_user`, una pantalla de un **stack**. Al hacer `goBack`, esa pantalla se **desmonta**, y su cleanup (`useEffect(() => clearRestInterval, [])`) corta el intervalo y todo su estado se pierde.
 
 Es la diferencia entre Tabs y Stack del documento 03.
 

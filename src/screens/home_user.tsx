@@ -1,5 +1,5 @@
-import { useCallback, useState } from 'react';
 import { useFocusEffect } from '@react-navigation/native';
+import { useCallback, useState } from 'react';
 import {
   Alert,
   Linking,
@@ -10,13 +10,13 @@ import {
   View,
 } from 'react-native';
 
+import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
+import type { CompositeScreenProps } from '@react-navigation/native';
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '../context/AuthContext';
 import { getTrainedDays } from '../services/api';
 import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
-import type { CompositeScreenProps } from '@react-navigation/native';
-import type { BottomTabScreenProps } from '@react-navigation/bottom-tabs';
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { AppStackParamList, UserTabParamList } from '../navigation/types';
 
 type UserHomeScreenProps = CompositeScreenProps<
@@ -168,7 +168,7 @@ export default function UserHomeScreen({ navigation }: UserHomeScreenProps) {
 
               <Text style={styles.progressTitle}> ¿Ya entrenaste hoy? </Text>
 
-              <Text style={styles.progressSubtitle}> Escanea el QR para no perder la racha. </Text>
+              <Text style={styles.progressSubtitle}> Escanea el QR para registrar tu progreso. </Text>
 
             </View>
 
@@ -178,37 +178,6 @@ export default function UserHomeScreen({ navigation }: UserHomeScreenProps) {
             >
 
               <Text style={styles.smallButtonText}> Escanear </Text>
-
-            </TouchableOpacity>
-
-          </View>
-
-        </View>
-
-
-        {/* ====================================================
-            PRÓXIMO ENTRENAMIENTO
-        ==================================================== */}
-
-        <View style={styles.sectionBox}>
-
-
-          <View style={styles.workoutRow}>
-
-            <View style={styles.workoutInfo}>
-
-              <Text style={styles.workoutTitle}> Tu rutina </Text>
-
-              <Text style={styles.workoutSubtitle}> Clickea para ver los ejercicios. </Text>
-
-            </View>
-
-
-            {/* BOTÓN A ENTRENAR */}
-
-            <TouchableOpacity style={styles.trainButton} onPress={() => navigation.navigate('mi_rutina_user')} >
-
-              <Text style={styles.trainButtonText}> A entrenar </Text>
 
             </TouchableOpacity>
 
@@ -454,53 +423,6 @@ const styles = StyleSheet.create({
   },
 
   smallButtonText: {
-    color: '#111111',
-    fontSize: 14,
-    fontWeight: '700',
-  },
-
-
-  /* ==========================================================
-     PRÓXIMO ENTRENAMIENTO
-  ========================================================== */
-
-  workoutRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-
-  workoutInfo: {
-    flex: 1,
-  },
-
-  workoutTitle: {
-    color: '#FFFFFF',
-    fontSize: 15,
-    fontWeight: '700',
-    marginBottom: 4,
-  },
-
-  workoutSubtitle: {
-    color: '#777777',
-    fontSize: 13,
-  },
-
-  trainButton: {
-    backgroundColor: '#FFC107',
-    borderRadius: 18,
-    paddingHorizontal: '4.5%',
-    paddingVertical: '3%',
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-
-  trainIcon: {
-    color: '#111111',
-    fontSize: 13,
-    marginRight: 4,
-  },
-
-  trainButtonText: {
     color: '#111111',
     fontSize: 14,
     fontWeight: '700',

@@ -59,7 +59,7 @@ El valor por defecto (`user: null`, funciones vacías) solo se usa si un compone
 2. Se descargan ~1300 ejercicios en cada arranque, sin caché propio. `expo-image` cachea los GIFs, pero no este JSON.
 3. Consumidores:
    - `AuthContext`: login, signup, home, mi_rutina, estadísticas, escanear_qr, ambas cuentas.
-   - `ExercisesContext`: `editar_rutina_trainer`, `escanear_qr_user`, `mi_rutina_user`, `ver_dia_x_user`.
+   - `ExercisesContext`: `editar_rutina_trainer`, `escanear_qr_user`, `mi_rutina_user`, `entrenar_dia_user`.
 
 ## 5. Cómo funciona `attempt`
 

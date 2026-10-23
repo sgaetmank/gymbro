@@ -5,16 +5,15 @@ Archivos: `src/screens/home_user.tsx` y `src/screens/mi_rutina_user.tsx`. Las do
 ## 1. `home_user.tsx`
 
 ### Qué muestra
-Saludo con `user.firstName`, un contador de "días entrenados este año" y cuatro tarjetas de acción:
+Saludo con `user.firstName`, un contador de "días entrenados este año" y tres tarjetas de acción:
 
 | Tarjeta | Botón | Destino |
 |---|---|---|
 | Ver más estadísticas | Ver | `navigate('estadisticas_user')` (pestaña hermana) |
 | ¿Ya entrenaste hoy? | Escanear | `getParent()?.navigate('escanear_qr_user')` (stack raíz) |
-| Tu rutina | A entrenar | `navigate('mi_rutina_user')` (pestaña hermana) |
 | ¿Cómo llegar al gym? | Ver mapa | `handleOpenMap` (abre Google Maps) |
 
-Las tres primeras se analizaron en el documento 03 (navegación).
+Las dos primeras se analizaron en el documento 03 (navegación). El inicio ya no tiene un atajo a la rutina: se llega desde la pestaña "Rutinas" de la barra inferior, o desde el QR (documento 08).
 
 ### El contador y `useFocusEffect`
 ```tsx
@@ -48,17 +47,54 @@ await Linking.openURL(url);
 
 ### Cosas a notar
 1. **"Racha" no existe.** El comentario dice "días en racha" y el texto "para no perder la racha", pero lo que se calcula es la cantidad de días entrenados en el año, no días consecutivos.
-2. **`navigate('mi_rutina_user')` puede no llevar a la lista.** Las pestañas conservan su estado: si el usuario había entrado a un día de la rutina, "A entrenar" lo devuelve a ese día.
-3. **Espacios dentro de `<Text>`:** `<Text> Hola, {user.firstName}! </Text>` conserva los espacios del principio y del final porque están en la misma línea. Detalle de estilo.
+2. **Espacios dentro de `<Text>`:** `<Text> Hola, {user.firstName}! </Text>` conserva los espacios del principio y del final porque están en la misma línea. Detalle de estilo.
 
 ## 2. `mi_rutina_user.tsx`
 
-Lee la rutina asignada y la dibuja anidada: día → bloques → ítems (ejercicios y descansos). Cada día tiene un botón "Ver día" que navega al detalle.
+Lee la rutina asignada y dibuja cada día como una **tarjeta plegable**. Plegada, la tarjeta muestra el nombre del día, un resumen ("N ejercicios · M bloques"), el botón "Comenzar entrenamiento" y un enlace "Ver ejercicios ▾". Al desplegarla aparece el detalle anidado: bloques → ítems (ejercicios y descansos). La idea es que entren varios días en una sola pantalla.
 
 ```tsx
 const routine = getRoutineById(user.id_rutina);
 ```
 Lectura síncrona del modelo de datos (documento 01) en cada render.
+
+### Tarjetas plegables
+
+**Qué días están abiertos.**
+```tsx
+const [openDayIds, setOpenDayIds] = useState<number[]>([]);
+
+const toggleDay = (dayId: number) =>
+  setOpenDayIds((ids) =>
+    ids.includes(dayId) ? ids.filter((id) => id !== dayId) : [...ids, dayId]
+  );
+```
+- Es un **arreglo de ids**, no un solo número: así pueden estar abiertos varios días a la vez. Empieza vacío (todo plegado).
+- `toggleDay` usa la forma funcional `(ids) => ...` para partir del valor más reciente. Si el id ya está, lo saca con `filter` (que devuelve un arreglo **nuevo**); si no está, devuelve `[...ids, dayId]`, otro arreglo nuevo con el id agregado. Nunca se modifica el arreglo existente (`push`/`splice`), porque React solo detecta un cambio de estado si recibe una referencia distinta.
+- Se guardan **ids y no objetos día**, por el mismo criterio de "una sola fuente de verdad" del documento 06.
+- El estado vive en la pantalla: al cambiar de pestaña y volver se conserva (las pestañas no se desmontan), pero al cerrar la app todo vuelve a empezar plegado.
+
+**El resumen.**
+```tsx
+const countExercises = (day: RoutineDay) =>
+  day.blocks.reduce(
+    (total, block) => total + block.items.filter((i) => i.type === 'exercise').length,
+    0
+  );
+```
+`reduce` recorre el arreglo acumulando un valor (`total`, que arranca en 0). Acá suma la cantidad de ejercicios de cada bloque, sin contar los descansos. El texto es `${countExercises(day)} ejercicios · ${day.blocks.length} bloques` y no se pluraliza ("1 ejercicios", "1 bloques").
+
+**Desplegar el detalle.** La lista de bloques se dibuja con un renderizado condicional:
+```tsx
+{openDayIds.includes(day.id) && day.blocks.map((block, blockIndex) => ( ... ))}
+```
+Si el día no está abierto, la expresión vale `false` y React no dibuja nada. El texto del enlace cambia entre "Ver ejercicios ▾" y "Ocultar ejercicios ▴" con la misma condición.
+
+**Comenzar el entrenamiento.** El botón hace `navigation.navigate('entrenar_dia_user', { day })` (documento 08). Se **deshabilita** si el día no tiene nada para hacer:
+```tsx
+disabled={buildSteps(day).length === 0}
+```
+`buildSteps` es la función que aplana el día en pasos (documento 08); una lista vacía significa día sin ejercicios ni descansos.
 
 ### Las tres capas de `.map`
 ```
@@ -83,19 +119,19 @@ getExerciseById(item.exerciseId)?.name ?? (loading ? 'Cargando…' : 'Ejercicio 
 - `?.` (*optional chaining*): si el resultado es `undefined`, corta y da `undefined` en vez de romper.
 - `??` (*nullish coalescing*): usa el valor de la derecha solo si el de la izquierda es `null` o `undefined`.
 - Resultado: **nombre** si está en el catálogo, **"Cargando…"** si el catálogo está bajando, **"Ejercicio no disponible"** si ya terminó y no está.
-- Esta pantalla no distingue "error de red" ni ofrece reintentar (`ver_dia_x_user` sí).
+- Esta pantalla no distingue "error de red" ni ofrece reintentar (`entrenar_dia_user` sí).
 
 ### `formatRestUnit`
 ```tsx
 const formatRestUnit = (time, unit) => Number(time) === 1 ? unit.slice(0, -1) : unit;
 ```
-Singular/plural: `1 minuto`, `2 minutos`. `slice(0, -1)` quita la última letra. Funciona solo con `minutos` y `segundos`; es simple pero frágil.
+Singular/plural: `1 minuto`, `2 minutos`. `slice(0, -1)` quita la última letra. Funciona solo con `minutos` y `segundos`; es simple pero frágil. Está **escrita igual en `entrenar_dia_user`** (documento 08): código repetido que conviene mover a un archivo común (o eliminar si el descanso se guarda como segundos).
 
 ### Comentarios opcionales
 `{item.comments !== '' && (<Text>...)}`: la comparación explícita devuelve un booleano. Con `{item.comments && ...}`, un string vacío quedaría como valor "falso" que React intentaría dibujar, y en React Native un string suelto fuera de un `<Text>` es un problema.
 
 ### Navegación
-`navigation.navigate('ver_dia_x_user', { day })` pasa el **objeto día completo** (punto 3 de la sección 9 del documento 03).
+`navigation.navigate('entrenar_dia_user', { day })` pasa el **objeto día completo** (punto 3 de la sección 9 del documento 03).
 
 ## 3. Por qué hoy los cambios del trainer sí se ven (y con BD no)
 
@@ -134,10 +170,15 @@ Porque React solo vuelve a renderizar un componente cuando cambia su estado, sus
 
 `?.` evita el error cuando no hay ejercicio; `??` pasa a la alternativa solo cuando el resultado es `null` o `undefined`.
 
-### 5. ¿Qué pasa al tocar "A entrenar" si el usuario ya había entrado antes a un día de la rutina?
-`navigate('mi_rutina_user')` apunta a la **pestaña**, no a una pantalla del stack interno. Las pestañas conservan su estado interno al cambiar de foco. Si el stack de "Rutinas" quedó en `ver_dia_x_user`, el usuario vuelve a ese día y no a la lista de días. Para forzar la lista habría que navegar con `{ screen: 'mi_rutina_user_root' }`, como hace el listener del tab de "Buscar Usuario" en `TrainerTabs`.
+### 5. Si el usuario está en pleno entrenamiento, cambia de pestaña y vuelve a "Rutinas", ¿qué ve?
+Vuelve al **mismo paso** en que estaba. Las pestañas no se desmontan al cambiar de foco: solo pierden el foco y siguen vivas en segundo plano, y eso incluye el stack anidado de "Rutinas" con `entrenar_dia_user` adentro. Su estado (`stepIndex`, el modal, el temporizador) se conserva. En cambio, si sale con el botón atrás (`goBack`), la pantalla sí se desmonta y el progreso se pierde. Para volver a la lista de días desde otra pestaña habría que navegar con `{ screen: 'mi_rutina_user_root' }`, como hace el listener del tab de "Buscar Usuario" en `TrainerTabs`.
 
 ### 6. ¿Por qué hoy el alumno ve los cambios del trainer, y qué cambia con una BD real?
 **Hoy:** el trainer modifica el array en memoria y `getRoutineById` lo lee en cada render. Como hay una sola sesión a la vez, al cerrar sesión y entrar como alumno las pantallas se montan de cero y leen los datos ya actualizados. No hay concurrencia.
 
 **Con BD:** el alumno puede tener la app abierta con una versión vieja de la rutina mientras el trainer la edita desde otro dispositivo. La pantalla tiene que volver a pedir los datos (al ganar el foco, con pull-to-refresh o por notificación), y gestionar los estados de carga, error y "sin rutina". Lo que hoy es una lectura síncrona pasa a ser una consulta de red.
+
+### 7. ¿Por qué `openDayIds` es un `useState<number[]>` y `toggleDay` no usa `push` ni `splice`?
+**Por qué un arreglo:** hace falta saber *cuáles* días están abiertos, y se permite más de uno a la vez. Un solo número (`openDayId`) solo podría recordar un día, y obligaría a plegar el anterior al abrir otro.
+
+**Por qué no se muta:** React decide si volver a dibujar comparando la referencia del estado nuevo con la del anterior. `push` y `splice` modifican el **mismo** arreglo, así que la referencia no cambia y React puede no enterarse. `filter` y el spread (`[...ids, dayId]`) devuelven un arreglo **nuevo**, que sí se detecta como cambio. La forma funcional `setOpenDayIds((ids) => ...)` garantiza además partir del valor más reciente aunque se toquen dos tarjetas muy seguido.
