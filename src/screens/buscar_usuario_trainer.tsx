@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
+import { useCallback, useState } from 'react';
 import {
   ScrollView,
   StyleSheet,
@@ -9,10 +10,12 @@ import {
 } from 'react-native';
 
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { users } from '../data/users';
+import LoadingState from '../components/LoadingState';
 import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { TrainerStackParamList } from '../navigation/types';
+import { ApiError, getAlumnos } from '../services/api';
+import type { User } from '../types';
 
 export default function SearchUserScreen({
   navigation,
@@ -32,15 +35,36 @@ export default function SearchUserScreen({
   // Texto escrito en el buscador
   const [filtro, setFiltro] = useState('');
 
-  // Usuarios que coinciden con lo escrito (nombre, apellido o email), sin importar tildes.
-  // Se excluyen los entrenadores: esta pantalla es solo para buscar usuarios.
-  const usuariosFiltrados = users
-    .filter((user) => !user.isTrainer)
-    .filter((user) =>
-      normalizar(`${user.firstName} ${user.lastName} ${user.email}`).includes(
-        normalizar(filtro)
-      )
-    );
+  // Alumnos pedidos al servidor (el servidor ya no devuelve entrenadores)
+  const [alumnos, setAlumnos] = useState<User[]>([]);
+  const [loadingAlumnos, setLoadingAlumnos] = useState(true);
+  const [alumnosError, setAlumnosError] = useState('');
+
+  const loadAlumnos = useCallback(async () => {
+    setAlumnosError('');
+    try {
+      setAlumnos(await getAlumnos());
+    } catch (e) {
+      setAlumnos([]); // no se muestran datos que no se pudieron confirmar
+      setAlumnosError(e instanceof ApiError ? e.message : 'No se pudo cargar la lista de usuarios.');
+    } finally {
+      setLoadingAlumnos(false);
+    }
+  }, []);
+
+  // Se vuelve a pedir cada vez que la pantalla recupera el foco (pudo registrarse un alumno nuevo)
+  useFocusEffect(
+    useCallback(() => {
+      loadAlumnos();
+    }, [loadAlumnos])
+  );
+
+  // Alumnos que coinciden con lo escrito (nombre, apellido o email), sin importar tildes.
+  const usuariosFiltrados = alumnos.filter((user) =>
+    normalizar(`${user.firstName} ${user.lastName} ${user.email}`).includes(
+      normalizar(filtro)
+    )
+  );
 
   return (
     <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
@@ -49,7 +73,7 @@ export default function SearchUserScreen({
       <View style={[styles.header,isLandscape && styles.headerLandscape,]} >
 
         <Text style={styles.headerTitle}>
-          Buscar Usuario
+          Alumnos
         </Text>
 
       </View>
@@ -79,6 +103,23 @@ export default function SearchUserScreen({
           showsVerticalScrollIndicator={false}
           contentContainerStyle={styles.list}
         >
+
+          {alumnosError !== '' && (
+            <>
+              <Text style={styles.stateText}>{alumnosError}</Text>
+              <TouchableOpacity onPress={loadAlumnos}>
+                <Text style={styles.retryText}>Tocá para reintentar</Text>
+              </TouchableOpacity>
+            </>
+          )}
+
+          {alumnosError === '' && loadingAlumnos && usuariosFiltrados.length === 0 && (
+            <LoadingState text="Cargando usuarios…" />
+          )}
+
+          {alumnosError === '' && !loadingAlumnos && usuariosFiltrados.length === 0 && (
+            <Text style={styles.stateText}>No se encontraron usuarios</Text>
+          )}
 
           {usuariosFiltrados.map((user) => {
 
@@ -249,6 +290,19 @@ const styles = StyleSheet.create({
 
   list: {
     paddingBottom: 20,
+  },
+
+  stateText: {
+    color: '#858585',
+    fontSize: 15,
+    marginBottom: 12,
+  },
+
+  retryText: {
+    color: '#FFC107',
+    fontSize: 15,
+    fontWeight: '600',
+    marginBottom: 12,
   },
 
   /* TARJETA */

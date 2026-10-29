@@ -15,7 +15,7 @@ import type { CompositeScreenProps } from '@react-navigation/native';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useAuth } from '../context/AuthContext';
-import { getWorkoutDaysThisYear } from '../data/workoutLogs';
+import { getTrainedDays } from '../services/api';
 import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
 import type { AppStackParamList, UserTabParamList } from '../navigation/types';
 
@@ -43,11 +43,23 @@ export default function UserHomeScreen({ navigation }: UserHomeScreenProps) {
     }
   };
 
+  // Cada vez que la pantalla recupera el foco se vuelve a pedir el contador al servidor
   useFocusEffect(
     useCallback(() => {
-      setWorkoutDaysThisYear(
-        userId != null ? getWorkoutDaysThisYear(userId) : 0
-      );
+      if (userId == null) return undefined;
+
+      let cancelled = false; // evita actualizar el estado si ya se salió de la pantalla
+      getTrainedDays(new Date().getFullYear())
+        .then((days) => {
+          if (!cancelled) setWorkoutDaysThisYear(days);
+        })
+        .catch(() => {
+          // Si falla la red se deja el último valor mostrado.
+        });
+
+      return () => {
+        cancelled = true;
+      };
     }, [userId])
   );
 
@@ -154,9 +166,11 @@ export default function UserHomeScreen({ navigation }: UserHomeScreenProps) {
 
             <View style={styles.progressInfo}>
 
-              <Text style={styles.progressTitle}> ¿Ya entrenaste hoy? </Text>
+              <Text style={styles.progressTitle}> ¿Entrás o salís del gimnasio? </Text>
 
-              <Text style={styles.progressSubtitle}> Escanea el QR para registrar tu progreso. </Text>
+              <Text style={styles.progressSubtitle}>
+                Escaneá el QR de entrada o salida. Al entrar también podés registrar tu entrenamiento.
+              </Text>
 
             </View>
 
@@ -165,7 +179,7 @@ export default function UserHomeScreen({ navigation }: UserHomeScreenProps) {
               onPress={() => navigation.getParent()?.navigate('escanear_qr_user')}
             >
 
-              <Text style={styles.smallButtonText}> Escanear </Text>
+              <Text style={styles.smallButtonText}> Escanear QR </Text>
 
             </TouchableOpacity>
 

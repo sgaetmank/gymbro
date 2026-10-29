@@ -17,36 +17,86 @@ import Animated, { useAnimatedRef } from 'react-native-reanimated';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Sortable from 'react-native-sortables';
 import DragHandle from '../components/DragHandle';
+import LoadingState from '../components/LoadingState';
 import { useExercises } from '../context/ExercisesContext';
-import {
-  createRoutine,
-  getRoutineById,
-  updateRoutineDays,
-  type ExerciseRoutineItem,
-  type RestRoutineItem,
-  type RoutineDay,
-} from '../data/routines';
-import { setUserRoutine } from '../data/users';
 import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
 import type { TrainerStackParamList } from '../navigation/types';
+import { ApiError, getAlumnoRoutine, saveAlumnoRoutine } from '../services/api';
+import type { ExerciseRoutineItem, RestRoutineItem, RoutineDay, User } from '../types';
 
-export default function EditRoutineScreen({
+type EditRoutineScreenProps = NativeStackScreenProps<TrainerStackParamList, 'editar_rutina_trainer'>;
+
+// Pide la rutina actual del alumno al servidor y recién entonces dibuja el editor
+export default function EditRoutineScreen({ navigation, route }: EditRoutineScreenProps) {
+  const editedUser = route.params.user;
+  // null = todavía no llegó. Un alumno sin rutina carga una lista vacía (se crea al guardar)
+  const [initialDays, setInitialDays] = useState<RoutineDay[] | null>(null);
+  const [loadError, setLoadError] = useState('');
+  // Subir este número vuelve a pedir la rutina ("Tocá para reintentar")
+  const [attempt, setAttempt] = useState(0);
+
+  useEffect(() => {
+    let cancelled = false;
+    getAlumnoRoutine(editedUser.id)
+      .then((routine) => {
+        if (!cancelled) setInitialDays(routine?.days ?? []);
+      })
+      .catch((e) => {
+        if (!cancelled) {
+          setLoadError(e instanceof ApiError ? e.message : 'No se pudo cargar la rutina.');
+        }
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, [editedUser.id, attempt]);
+
+  if (initialDays === null) {
+    return (
+      <SafeAreaView style={styles.container} edges={['top', 'left', 'right']}>
+        <View style={styles.header}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <Text style={styles.backIcon}>‹</Text>
+          </TouchableOpacity>
+          <Text style={styles.headerTitle}>Editar</Text>
+        </View>
+        <View style={styles.content}>
+          {loadError === '' ? (
+            <LoadingState text="Cargando rutina…" />
+          ) : (
+            <Text style={styles.stateText}>{loadError}</Text>
+          )}
+          {loadError !== '' && (
+            <TouchableOpacity
+              onPress={() => {
+                setLoadError('');
+                setAttempt((n) => n + 1);
+              }}
+            >
+              <Text style={styles.retryText}>Tocá para reintentar</Text>
+            </TouchableOpacity>
+          )}
+        </View>
+      </SafeAreaView>
+    );
+  }
+
+  return <EditRoutineForm navigation={navigation} user={editedUser} initialDays={initialDays} />;
+}
+
+function EditRoutineForm({
   navigation,
-  route,
-}: NativeStackScreenProps<TrainerStackParamList, 'editar_rutina_trainer'>) {
+  user: editedUser,
+  initialDays,
+}: {
+  navigation: EditRoutineScreenProps['navigation'];
+  user: User;
+  initialDays: RoutineDay[];
+}) {
   const { isLandscape } = useResponsiveLayout();
   
   // Ejercicios traídos de la API (ver ExercisesContext)
   const { exercises, getExerciseById, loading, error, retry } = useExercises();
-  
-  // Usuario al que se le está editando la rutina (viene de la pantalla de búsqueda)
-  const editedUser = route?.params?.user;
-  
-  // Un alumno recién registrado todavía no tiene rutina: se crea al guardar por primera vez
-  const routine = getRoutineById(editedUser?.id_rutina);
-  
-  // Id de la rutina del alumno (null hasta que se cree), para no crearla dos veces
-  const routineId = useRef(routine?.id ?? null);
 
   // Saca tildes/acentos para que la búsqueda no dependa de escribirlos bien
   const normalizar = (texto: string) =>
@@ -62,15 +112,13 @@ export default function EditRoutineScreen({
   const isValidDecimal = (value: string) => /^\d+(\.\d+)?$/.test(value.trim());
 
   // ============================================================
-  // DATOS INICIALES DE EJEMPLO
+  // BORRADOR DE LA RUTINA (parte de los días que llegaron del servidor)
   // ============================================================
 
-  const [days, setDays] = useState<RoutineDay[]>(routine?.days ?? []);
+  const [days, setDays] = useState<RoutineDay[]>(initialDays);
 
   // Foto de lo último guardado, para detectar cambios pendientes
-  const [savedSnapshot, setSavedSnapshot] = useState(() =>
-    JSON.stringify(routine?.days ?? [])
-  );
+  const [savedSnapshot, setSavedSnapshot] = useState(() => JSON.stringify(initialDays));
   const hasUnsavedChanges = JSON.stringify(days) !== savedSnapshot;
 
   // Se activa justo antes de salir para que el aviso no se repita
@@ -82,6 +130,13 @@ export default function EditRoutineScreen({
   
   // Cada nivel anidado es ~27px más angosto (borde + padding de la tarjeta)
   const cardWidth = (level: number) => contentWidth - level * 27;
+
+  // El editor está "listo" cuando ya se midió el ancho y Sortable terminó de medir las
+  // tarjetas (hasta entonces no las muestra). Antes de eso se ve "Cargando rutina…" en vez
+  // de una rutina vacía con el botón "Añadir Día". Una vez listo no vuelve a ocultarse.
+  // Sin días no hay tarjetas que medir: arranca como medida.
+  const [listMeasured, setListMeasured] = useState(initialDays.length === 0);
+  const routineReady = contentWidth > 0 && listMeasured;
 
   // Ref del scroll principal: permite el auto-scroll al arrastrar cerca del borde
   const scrollRef = useAnimatedRef<Animated.ScrollView>();
@@ -428,20 +483,27 @@ export default function EditRoutineScreen({
   // GUARDAR Y AVISO AL SALIR
   // ============================================================
 
-  // Pasa el borrador a datos guardados. Si el alumno no tenía rutina, la crea y se la asigna.
-  const persistRoutine = () => {
-    if (routineId.current === null) {
-      const created = createRoutine(days);
-      setUserRoutine(editedUser.id, created.id);
-      routineId.current = created.id;
-    } else {
-      updateRoutineDays(routineId.current, days);
+  const [saving, setSaving] = useState(false);
+
+  // Manda el borrador al servidor (crea la rutina si el alumno no tenía). Devuelve si se guardó.
+  const persistRoutine = async (): Promise<boolean> => {
+    setSaving(true);
+    try {
+      await saveAlumnoRoutine(editedUser.id, days);
+      // Se conserva el borrador: sus ids no viajan al servidor, y cambiarlos por los de la
+      // respuesta haría que todas las tarjetas se vuelvan a crear y a medir de cero.
+      setSavedSnapshot(JSON.stringify(days)); // anota "esto es lo último guardado" (lo que se envió)
+      return true;
+    } catch (e) {
+      Alert.alert('No se pudo guardar', e instanceof ApiError ? e.message : 'Intentá nuevamente.');
+      return false;
+    } finally {
+      setSaving(false);
     }
   };
 
   const saveChanges = () => {
     persistRoutine();
-    setSavedSnapshot(JSON.stringify(days)); // anota "esto es lo último guardado"
   };
 
   // Pregunta qué hacer con los cambios sin guardar antes de confirmar la salida.
@@ -458,9 +520,9 @@ export default function EditRoutineScreen({
         },
         {
           text: 'Guardar y salir',
-          onPress: () => {
-            persistRoutine();
-            leave();
+          onPress: async () => {
+            // Solo sale si el servidor confirmó el guardado
+            if (await persistRoutine()) leave();
           },
         },
       ],
@@ -543,11 +605,11 @@ export default function EditRoutineScreen({
             styles.saveButton,
             !hasUnsavedChanges && styles.saveButtonDisabled,
           ]}
-          disabled={!hasUnsavedChanges}
+          disabled={!hasUnsavedChanges || saving}
           onPress={saveChanges}
         >
           <Text style={styles.saveText}>
-            {hasUnsavedChanges ? 'Guardar' : 'Guardado ✓'}
+            {saving ? 'Guardando…' : hasUnsavedChanges ? 'Guardar' : 'Guardado ✓'}
           </Text>
         </TouchableOpacity>
 
@@ -584,7 +646,15 @@ export default function EditRoutineScreen({
             DÍAS
         ==================================================== */}
 
+        {!routineReady && <LoadingState text="Cargando rutina…" />}
+
         {contentWidth > 0 && (
+        <View
+          onLayout={(e) => {
+            // Con la altura de la lista mayor al relleno, Sortable ya midió las tarjetas
+            if (e.nativeEvent.layout.height > 20) setListMeasured(true);
+          }}
+        >
         <Sortable.Flex
           customHandle
           flexDirection="column"
@@ -824,6 +894,7 @@ export default function EditRoutineScreen({
 
         ))}
         </Sortable.Flex>
+        </View>
         )}
 
 
@@ -831,14 +902,16 @@ export default function EditRoutineScreen({
             AGREGAR DÍA
         ====================================================== */}
 
-        <TouchableOpacity
-          style={styles.addDayButton}
-          onPress={addDay}
-        >
-          <Text style={styles.addDayText}>
-            ＋ Añadir Día
-          </Text>
-        </TouchableOpacity>
+        {routineReady && (
+          <TouchableOpacity
+            style={styles.addDayButton}
+            onPress={addDay}
+          >
+            <Text style={styles.addDayText}>
+              ＋ Añadir Día
+            </Text>
+          </TouchableOpacity>
+        )}
 
       </Animated.ScrollView>
 
@@ -916,9 +989,7 @@ export default function EditRoutineScreen({
 
               {/* Estado de la carga desde la API */}
 
-              {loading && (
-                <Text style={styles.suggestionCategory}>Cargando ejercicios…</Text>
-              )}
+              {loading && <LoadingState compact text="Cargando ejercicios…" />}
 
               {error && (
                 <TouchableOpacity onPress={retry}>
@@ -1194,6 +1265,19 @@ const styles = StyleSheet.create({
     paddingHorizontal: '2.5%',
     paddingTop: '2.5%',
     paddingBottom: '6%',
+  },
+
+  stateText: {
+    color: '#858585',
+    fontSize: 15,
+    marginBottom: 12,
+  },
+
+  retryText: {
+    color: '#FFC107',
+    fontSize: 15,
+    fontWeight: '600',
+    marginBottom: 12,
   },
 
   contentLandscape: {

@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useFocusEffect } from '@react-navigation/native';
+import { useCallback, useState } from 'react';
 import {
   ScrollView,
   StyleSheet,
@@ -8,9 +9,11 @@ import {
 } from 'react-native';
 
 import { SafeAreaView } from 'react-native-safe-area-context';
+import LoadingState from '../components/LoadingState';
 import { useAuth } from '../context/AuthContext';
-import { getWorkoutLogsByUser, type WorkoutLog } from '../data/workoutLogs';
 import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
+import { ApiError, getMyLogs } from '../services/api';
+import type { WorkoutLog } from '../types';
 
 const MONTH_NAMES = [
   'Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
@@ -82,13 +85,41 @@ export default function UserStatisticsScreen() {
     month: today.getMonth(),
   });
 
+  // Registros del mes elegido, pedidos al servidor
+  const [monthLogs, setMonthLogs] = useState<WorkoutLog[]>([]);
+  const [loadingLogs, setLoadingLogs] = useState(true);
+  const [loadError, setLoadError] = useState('');
+
+  // Devuelve la función que cancela el pedido (useFocusEffect la usa al salir de la pantalla).
+  const loadLogs = useCallback(() => {
+    let cancelled = false;
+    setLoadingLogs(true);
+    setLoadError('');
+    setMonthLogs([]);
+
+    getMyLogs(selected.year, selected.month + 1) // la API usa meses de 1 a 12
+      .then((logs) => {
+        if (!cancelled) setMonthLogs(logs);
+      })
+      .catch((e) => {
+        if (!cancelled) {
+          setLoadError(e instanceof ApiError ? e.message : 'No se pudieron cargar los registros.');
+        }
+      })
+      .finally(() => {
+        if (!cancelled) setLoadingLogs(false);
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [selected.year, selected.month]);
+
+  // Se vuelve a pedir al cambiar de mes y cada vez que la pestaña recupera el foco
+  useFocusEffect(loadLogs);
+
   // Sin sesión (ej: mientras se anima el cierre de sesión) no se dibuja nada
   if (!user) return null;
-
-  const monthPrefix = toDateKey(selected.year, selected.month, 1).slice(0, 7); // 'YYYY-MM'
-
-  const userLogs = getWorkoutLogsByUser(user.id);
-  const monthLogs = userLogs.filter((log) => log.date.startsWith(monthPrefix));
 
   function changeMonth(delta: number) {
     const date = new Date(selected.year, selected.month + delta, 1);
@@ -186,11 +217,17 @@ export default function UserStatisticsScreen() {
 
         {monthLogs.length === 0 ? (
 
-          // Mes sin registros: en vez de gráficos vacíos, un mensaje
+          // Mes sin registros (o todavía cargando): en vez de gráficos vacíos, un mensaje
           <View style={styles.sectionBox}>
-            <Text style={styles.emptyText}>
-              No hay entrenamientos registrados en este mes.
-            </Text>
+            {loadError !== '' ? (
+              <TouchableOpacity onPress={() => { loadLogs(); }}>
+                <Text style={styles.emptyText}>{loadError} Tocá para reintentar.</Text>
+              </TouchableOpacity>
+            ) : loadingLogs ? (
+              <LoadingState compact text="Cargando…" />
+            ) : (
+              <Text style={styles.emptyText}>No hay entrenamientos registrados en este mes.</Text>
+            )}
           </View>
 
         ) : (

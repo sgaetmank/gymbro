@@ -1,4 +1,4 @@
-import type { RoutineDay, RoutineItem } from '../data/routines';
+import type { RoutineDay, RoutineItem } from '../types';
 
 // Un paso del entrenamiento guiado: un ejercicio o un descanso, más el bloque
 // al que pertenece (el nombre "Bloque N" no se guarda: se calcula por posición).

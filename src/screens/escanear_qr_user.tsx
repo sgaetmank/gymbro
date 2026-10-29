@@ -1,6 +1,6 @@
 import { CameraView, useCameraPermissions } from 'expo-camera';
 import * as Location from 'expo-location';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   Alert,
   Linking,
@@ -15,15 +15,22 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
+import LoadingState from '../components/LoadingState';
 import PrimaryButton from '../components/PrimaryButton';
-import { useAuth } from '../context/AuthContext';
 import { useExercises } from '../context/ExercisesContext';
-import { getRoutineById, type RoutineDay } from '../data/routines';
-import { addWorkoutLog, type WorkoutExercise } from '../data/workoutLogs';
 import type { AppStackParamList } from '../navigation/types';
+import {
+  ApiError,
+  createCheckin,
+  getMyRoutine,
+  registerGymEntry,
+  registerGymExit,
+} from '../services/api';
 import type { Exercise } from '../services/exercisesApi';
+import type { Routine, RoutineDay } from '../types';
 
-const QR_GYMBRO = 'GYMBRO_CHECKIN_V1';
+const QR_GYMBRO_ENTRADA = 'GYMBRO_CHECKIN_V1';
+const QR_GYMBRO_SALIDA = 'GYMBRO_CHECKOUT_V1';
 const GYM_LOCATION = {
   latitude: -34.6127955,
   longitude: -58.3661936,
@@ -84,10 +91,34 @@ export default function ScanQrUserScreen({
   const [dayPickerVisible, setDayPickerVisible] = useState(false);
   const [selectedDayId, setSelectedDayId] = useState<number | null>(null);
   const scanProcessed = useRef(false);
-  const { user } = useAuth();
   const { getExerciseById, loading, error } = useExercises();
-  const routine = user ? getRoutineById(user.id_rutina) : null;
+  // Posición validada al escanear: se manda al servidor, que la vuelve a validar.
+  const [coords, setCoords] = useState<Coordinates | null>(null);
+  const [submitting, setSubmitting] = useState(false);
+  // Rutina del alumno, pedida al servidor al abrir la pantalla
+  const [routine, setRoutine] = useState<Routine | null>(null);
+  const [routineLoading, setRoutineLoading] = useState(true);
+  const [routineError, setRoutineError] = useState('');
   const selectedDay = routine?.days.find((day) => day.id === selectedDayId);
+
+  useEffect(() => {
+    let cancelled = false;
+    getMyRoutine()
+      .then((result) => {
+        if (!cancelled) setRoutine(result);
+      })
+      .catch((e) => {
+        if (!cancelled) {
+          setRoutineError(e instanceof ApiError ? e.message : 'No se pudo cargar tu rutina.');
+        }
+      })
+      .finally(() => {
+        if (!cancelled) setRoutineLoading(false);
+      });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   const pedirPermiso = () => {
     if (!permission) return;
@@ -111,7 +142,7 @@ export default function ScanQrUserScreen({
     scanProcessed.current = true;
     setScanned(true);
 
-    if (data === QR_GYMBRO) {
+    if (data === QR_GYMBRO_ENTRADA || data === QR_GYMBRO_SALIDA) {
       try {
         let locationPermission = await Location.getForegroundPermissionsAsync();
         if (!locationPermission.granted) {
@@ -158,7 +189,46 @@ export default function ScanQrUserScreen({
           return;
         }
 
-        setQrValid(true);
+        const attendanceInput = {
+          qr: data,
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+        };
+
+        if (data === QR_GYMBRO_ENTRADA) {
+          try {
+            await registerGymEntry(attendanceInput);
+          } catch (e) {
+            Alert.alert(
+              'No se pudo registrar la entrada',
+              e instanceof ApiError ? e.message : 'Intentá nuevamente.',
+              [{ text: 'Intentar de nuevo', onPress: resetScan }]
+            );
+            return;
+          }
+
+          setCoords({ latitude: position.coords.latitude, longitude: position.coords.longitude });
+          setQrValid(true);
+          return;
+        }
+
+        try {
+          await registerGymExit(attendanceInput);
+        } catch (e) {
+          Alert.alert(
+            'No se pudo registrar la salida',
+            e instanceof ApiError ? e.message : 'Intentá nuevamente.',
+            [{ text: 'Intentar de nuevo', onPress: resetScan }]
+          );
+          return;
+        }
+
+        Alert.alert('Salida registrada', 'Tu salida del gimnasio quedó registrada.', [
+          {
+            text: 'Aceptar',
+            onPress: () => navigation.replace('UserTabs', { screen: 'home_user' }),
+          },
+        ]);
       } catch {
         Alert.alert(
           'No se pudo validar la ubicación',
@@ -181,52 +251,30 @@ export default function ScanQrUserScreen({
     );
   };
 
-  const handleSubmit = () => {
-    if (!user || !selectedDay) {
+  // Registra el entrenamiento en el servidor. Se manda solo QUÉ día se hizo y DÓNDE está el alumno:
+  // el servidor valida el QR y la distancia, y decide los ejercicios, los grupos musculares y la fecha.
+  const handleSubmit = async () => {
+    if (!selectedDay || !coords) {
       Alert.alert('Elegí un día', 'Seleccioná el día de la rutina que realizaste.');
       return;
     }
 
-    if (loading || error) {
-      Alert.alert(
-        'Ejercicios no disponibles',
-        'No se pudieron cargar los ejercicios para guardar el entrenamiento.'
-      );
-      return;
-    }
-
-    const exercises = selectedDay.blocks
-      .flatMap((block) => block.items)
-      .filter((item) => item.type === 'exercise')
-      .map((item) => {
-        const exercise = getExerciseById(item.exerciseId);
-        return exercise
-          ? { exerciseId: item.exerciseId, muscleGroup: exercise.muscleGroup }
-          : null;
+    setSubmitting(true);
+    try {
+      await createCheckin({
+        dayId: selectedDay.id,
+        qr: QR_GYMBRO_ENTRADA,
+        latitude: coords.latitude,
+        longitude: coords.longitude,
       });
-
-    if (exercises.some((exercise) => !exercise)) {
+    } catch (e) {
+      setSubmitting(false);
       Alert.alert(
-        'Ejercicios no disponibles',
-        'No se pudieron encontrar todos los ejercicios de este día.'
+        'No se pudo registrar',
+        e instanceof ApiError ? e.message : 'Intentá nuevamente.'
       );
       return;
     }
-
-    const today = new Date();
-    const date = [
-      today.getFullYear(),
-      String(today.getMonth() + 1).padStart(2, '0'),
-      String(today.getDate()).padStart(2, '0'),
-    ].join('-');
-
-    addWorkoutLog({
-      userId: user.id,
-      date,
-      exercises: exercises.filter(
-        (exercise): exercise is WorkoutExercise => exercise !== null
-      ),
-    });
 
     navigation.replace('UserTabs', {
       screen: 'mi_rutina_user',
@@ -247,13 +295,13 @@ export default function ScanQrUserScreen({
           <Text style={styles.backButtonText}>Volver</Text>
         </TouchableOpacity>
         <Text style={styles.headerTitle}>
-          {qrValid ? 'Registrar entrenamiento' : 'Escanear QR'}
+          {qrValid ? 'Registrar entrenamiento' : 'Escanear entrada o salida'}
         </Text>
       </View>
 
       {!permission ? (
         <View style={styles.permissionMessage}>
-          <Text style={styles.messageText}>Cargando...</Text>
+          <LoadingState text="Cargando..." />
         </View>
       ) : permission.granted ? (
         qrValid ? (
@@ -263,7 +311,7 @@ export default function ScanQrUserScreen({
           >
             <Text style={styles.formTitle}>¿Qué día entrenaste?</Text>
             <Text style={styles.formSubtitle}>
-              QR de Gymbro validado. Elegí el día de tu rutina.
+              Entrada registrada. Si entrenaste, elegí el día de tu rutina.
             </Text>
 
             {routine?.days.length ? (
@@ -290,7 +338,11 @@ export default function ScanQrUserScreen({
                   </Text>
                 )}
 
-                <PrimaryButton title="Confirmar día" onPress={handleSubmit} />
+                <PrimaryButton
+                  title={submitting ? 'Registrando…' : 'Confirmar día'}
+                  onPress={handleSubmit}
+                  disabled={submitting}
+                />
 
                 <Modal
                   visible={dayPickerVisible}
@@ -332,9 +384,11 @@ export default function ScanQrUserScreen({
                   </View>
                 </Modal>
               </>
+            ) : routineLoading ? (
+              <LoadingState text="Cargando tu rutina…" />
             ) : (
               <Text style={styles.messageText}>
-                No tenés una rutina asignada para elegir un día.
+                {routineError || 'No tenés una rutina asignada para elegir un día.'}
               </Text>
             )}
           </ScrollView>
@@ -348,9 +402,7 @@ export default function ScanQrUserScreen({
         )
       ) : (
         <View style={styles.permissionMessage}>
-          <Text style={styles.messageText}>
-            Necesitamos permiso para usar la cámara.
-          </Text>
+          <Text style={styles.messageText}>Necesitamos permiso para usar la cámara.</Text>
           <PrimaryButton
             title={permission.canAskAgain ? 'Dar permiso' : 'Abrir configuración'}
             onPress={pedirPermiso}

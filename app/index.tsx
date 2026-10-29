@@ -1,5 +1,6 @@
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { ActivityIndicator, View } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 
@@ -18,7 +19,23 @@ const Stack = createNativeStackNavigator<AppStackParamList>();
 function AppNavigator() {
   // useAuth() lee el AuthContext. Cuando login()/logout() cambian "user" con
   // setUser, este componente se re-renderiza solo, sin llamarlo manualmente.
-  const { user } = useAuth(); // guarda quien esta logueado
+  const { user, loading } = useAuth(); // guarda quien esta logueado
+
+  // Mientras se recupera la sesión guardada no se sabe si mostrar login o tabs.
+  if (loading) {
+    return (
+      <View
+        style={{
+          flex: 1,
+          alignItems: 'center',
+          justifyContent: 'center',
+          backgroundColor: '#101010',
+        }}
+      >
+        <ActivityIndicator size="large" color="#FFC107" />
+      </View>
+    );
+  }
 
   return (
     <Stack.Navigator screenOptions={{ headerShown: false }}>

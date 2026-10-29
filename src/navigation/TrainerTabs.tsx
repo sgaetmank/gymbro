@@ -4,6 +4,7 @@ import { Text } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import type { TrainerStackParamList, TrainerTabParamList } from './types';
 
+import TrainerHomeScreen from '../screens/inicio_trainer';
 import SearchUserScreen from '../screens/buscar_usuario_trainer';
 import EditRoutineScreen, { guardUnsavedChanges } from '../screens/editar_rutina_trainer';
 import TrainerProfileScreen from '../screens/mi_cuenta_trainer';
@@ -14,6 +15,7 @@ const SearchStack = createNativeStackNavigator<TrainerStackParamList>();
 
 // Mismos glifos que usaba TrainerBottomNav, para no cambiar el look del nav.
 const TAB_ICONS = {
+  home: '⌂',
   search: '⌕',
   account: '♙',
 };
@@ -74,9 +76,22 @@ export default function TrainerTabs() {
       }}
     >
       <Tab.Screen
+        name="inicio_trainer"
+        component={TrainerHomeScreen}
+        options={{ title: 'Inicio', tabBarIcon: makeTabIcon('home') }}
+        listeners={({ navigation }) => ({
+          tabPress: (e) => {
+            if (navigation.isFocused()) return;
+            if (guardUnsavedChanges(() => navigation.navigate('inicio_trainer'))) {
+              e.preventDefault();
+            }
+          },
+        })}
+      />
+      <Tab.Screen
         name="buscar_usuario_trainer"
         component={SearchTabStack}
-        options={{ title: 'Buscar Usuario', tabBarIcon: makeTabIcon('search') }}
+        options={{ title: 'Alumnos', tabBarIcon: makeTabIcon('search') }}
         listeners={({ navigation }) => ({
           tabPress: (e) => {
             e.preventDefault();

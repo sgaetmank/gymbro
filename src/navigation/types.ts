@@ -1,7 +1,6 @@
 import type { NavigatorScreenParams } from '@react-navigation/native';
 
-import type { RoutineDay } from '../data/routines';
-import type { User } from '../data/users';
+import type { RoutineDay, User } from '../types';
 
 // Cada navigator tiene un tipo ParamList: un diccionario nombreDePantalla → parámetros que recibe.
 
@@ -20,6 +19,7 @@ export type TrainerStackParamList = {
 };
 
 export type TrainerTabParamList = {
+  inicio_trainer: undefined;
   buscar_usuario_trainer: NavigatorScreenParams<TrainerStackParamList>;
   mi_cuenta_trainer: undefined;
 };
