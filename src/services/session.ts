@@ -1,6 +1,5 @@
 // Guarda el token de la sesión en el almacenamiento seguro del teléfono
-// (Keychain en iOS, Keystore en Android). En la versión web no está disponible:
-// ahí la sesión simplemente no se recuerda al cerrar la pestaña.
+
 import * as SecureStore from 'expo-secure-store';
 
 const TOKEN_KEY = 'gymbro_token';

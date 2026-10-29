@@ -1,4 +1,4 @@
-// Prisma: herramienta que te deja describir las tablas en un archivo (schema.prisma) y consultarlas desde TypeScript, sin escribir SQL a mano
+// Prisma: herramienta que te deja describir las tablas y consultarlas desde TypeScript, sin escribir SQL a mano
 // traduce entre objetos del lenguaje y filas de tablas.
 
 // prisma generate	--> Lee schema.prisma y genera el cliente tipado (dentro de node_modules)

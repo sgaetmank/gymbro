@@ -9,9 +9,9 @@ import {
 
 import {
   ApiError,
-  getMe,
   login as apiLogin,
   register as apiRegister,
+  getMe,
   setAuthToken,
   setUnauthorizedHandler,
 } from '../services/api';
@@ -68,14 +68,21 @@ export function AuthProvider({ children }: PropsWithChildren) {
     async function restoreSession() {
       try {
         const token = await loadToken();
-        if (!token) return;
-        setAuthToken(token);
-        const me = await getMe();
+
+        if (!token) return; // si no hay token cargado muestra el login
+
+        setAuthToken(token); // si hay token, carga el user
+
+        const me = await getMe(); // traigo los datos de ese usuario para poder mostrarlos en la app
+
         if (!cancelled) setUser(me);
+
       } catch (error) {
         setAuthToken(null);
-        // Token vencido o inválido: se descarta. Si solo falló la red, se conserva para el próximo intento.
+        
+        // Token vencido o inválido: se descarta. Si solo falló la red, se conserva para el próximo intento. 
         if (error instanceof ApiError && error.status === 401) await clearToken();
+     
       } finally {
         if (!cancelled) setLoading(false);
       }

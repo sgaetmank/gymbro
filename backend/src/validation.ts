@@ -62,6 +62,7 @@ export const registerSchema = z.object({
   goal: z.enum(GOALS, { error: REQUIRED }),
 });
 
+// Solo comprueba que haya algo. La validación real es la comparación con la bas
 export const loginSchema = z.object({
   email: z.string().trim().toLowerCase().min(1),
   password: z.string().min(1),

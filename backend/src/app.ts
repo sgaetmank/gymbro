@@ -23,21 +23,21 @@ Se ejecutan en el orden en que se registran.
 // Agrega cabeceras que permiten que una página web de otro origen llame a la API
 app.use(cors()); // 
 
-// Lee el cuerpo del pedido, lo interpreta como JSON y lo deja en req.body
+//  convierte el body JSON en un objeto en req.body. Sin esto, req.body llega vacío.
 // Va antes de las rutas porque las rutas leen req.body, que solo existe después de que ese middleware interpretó el JSON.
 app.use(express.json());
 
-/*
-Un "¿estás vivo?". No pide token. 
-Es lo primero que se prueba cuando algo falla: si http://IP:3000/api/health responde, el problema no está en Express (está en la red, el firewall o la app).
-*/
+
+// prueba mínima del servidor. Si responde,Express está vivo aunque la base falle.
 app.get('/api/health', (_req, res) => {
   res.json({ ok: true });
 });
 
 
 /*
-app.use(prefijo, middleware1, middleware2, router) significa: "para todo pedido cuya ruta empiece con el prefijo, ejecutá estos en orden".
+app.use(prefijo, middleware1, middleware2, router) 
+
+significa: "para todo pedido cuya ruta empiece con el prefijo, ejecutá estos en orden".
 */
 app.use('/api/auth', authRouter); // entra cualquiera: es donde se obtiene el token
 app.use('/api/me', requireAuth, meRouter); // entra cualquier usuario con sesión

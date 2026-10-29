@@ -6,8 +6,7 @@ const API_PORT = 3000;
 //    por ejemplo "192.168.0.117:8081") es la del servidor, solo cambia el puerto.
 //    Así no hay que tocar nada cuando la PC cambia de red y de IP.
 // 3) Sin ninguna de las dos (versión web, simulador de iOS): localhost.
-// Ojo: en modo túnel de Expo el hostUri es un dominio de Expo, no la PC; ahí hay que
-// definir EXPO_PUBLIC_API_URL a mano.
+
 export function buildApiUrl(explicit: string | undefined, hostUri: string | undefined): string {
   if (explicit) return explicit.replace(/\/$/, '');
 
