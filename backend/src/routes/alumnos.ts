@@ -17,6 +17,18 @@ alumnosRouter.get('/', async (_req, res) => {
   res.json({ users: alumnos.map(toPublicUser) });
 });
 
+// Lista solo a los alumnos con una entrada todavía abierta.
+alumnosRouter.get('/activos', async (_req, res) => {
+  const alumnos = await prisma.user.findMany({
+    where: {
+      role: 'ALUMNO',
+      gymVisits: { some: { exitedAt: null } },
+    },
+    orderBy: { id: 'asc' },
+  });
+  res.json({ users: alumnos.map(toPublicUser) });
+});
+
 // Rutina de un alumno (null si todavía no tiene).
 alumnosRouter.get('/:id/rutina', async (req, res) => {
   const id = parseId(req.params.id); // req.params.id es el texto de la URL; parseId lo convierte en número válido o null

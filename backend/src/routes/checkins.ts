@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Router, type Response } from 'express';
 
 import { getAuth } from '../auth';
 import { getCatalog } from '../catalog';
@@ -6,10 +6,78 @@ import { GYM } from '../config';
 import { prisma } from '../db';
 import { getDistanceInMeters, todayInTimeZone } from '../geo';
 import { toApiLog } from '../serializers';
-import { checkinSchema, firstIssue } from '../validation';
+import { attendanceSchema, checkinSchema, firstIssue } from '../validation';
 
 // Solo alumnos (ver app.ts).
 export const checkinsRouter = Router();
+
+function validateAttendance(body: unknown, res: Response, expectedQr: string) {
+  const parsed = attendanceSchema.safeParse(body);
+  if (!parsed.success) {
+    res.status(400).json({ error: firstIssue(parsed.error) });
+    return null;
+  }
+
+  if (parsed.data.qr !== expectedQr) {
+    res.status(400).json({ error: 'Este código no corresponde a Gymbro' });
+    return null;
+  }
+
+  const distance = getDistanceInMeters(
+    { latitude: parsed.data.latitude, longitude: parsed.data.longitude },
+    GYM
+  );
+  if (distance > GYM.radiusMeters) {
+    res.status(400).json({
+      error: `Estás lejos del gimnasio (a ${Math.round(distance)} m). Acercate para registrar.`,
+    });
+    return null;
+  }
+
+  return parsed.data;
+}
+
+checkinsRouter.post('/entrada', async (req, res) => {
+  const input = validateAttendance(req.body, res, GYM.qr);
+  if (!input) return;
+
+  const { userId } = getAuth(res);
+  const openVisit = await prisma.gymVisit.findFirst({
+    where: { userId, exitedAt: null },
+    select: { id: true },
+  });
+  if (openVisit) {
+    return res.status(409).json({ error: 'Ya tenés una entrada abierta y figurás dentro del gimnasio.' });
+  }
+
+  const visit = await prisma.gymVisit.create({ data: { userId } });
+  res.status(201).json({ visit: { enteredAt: visit.enteredAt } });
+});
+
+checkinsRouter.post('/salida', async (req, res) => {
+  const input = validateAttendance(req.body, res, GYM.exitQr);
+  if (!input) return;
+
+  const { userId } = getAuth(res);
+  const openVisit = await prisma.gymVisit.findFirst({
+    where: { userId, exitedAt: null },
+    orderBy: { enteredAt: 'desc' },
+    select: { id: true },
+  });
+  if (!openVisit) {
+    return res.status(409).json({ error: 'No tenés una entrada abierta para registrar la salida.' });
+  }
+
+  const result = await prisma.gymVisit.updateMany({
+    where: { id: openVisit.id, exitedAt: null },
+    data: { exitedAt: new Date() },
+  });
+  if (result.count === 0) {
+    return res.status(409).json({ error: 'Esta entrada ya fue cerrada. Volvé a intentarlo.' });
+  }
+
+  res.json({ ok: true });
+});
 
 // Registra un entrenamiento. El cliente manda solo QUÉ día hizo y DÓNDE está y el QR leido;
 // los ejercicios, los grupos musculares y la fecha los decide el servidor.

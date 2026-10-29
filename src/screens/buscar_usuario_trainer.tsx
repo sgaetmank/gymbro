@@ -73,7 +73,7 @@ export default function SearchUserScreen({
       <View style={[styles.header,isLandscape && styles.headerLandscape,]} >
 
         <Text style={styles.headerTitle}>
-          Buscar Usuario
+          Alumnos
         </Text>
 
       </View>

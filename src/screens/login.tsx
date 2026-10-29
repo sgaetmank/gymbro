@@ -96,15 +96,6 @@ export default function LoginScreen({
           }}
         />
 
-        {/* Recordarme */}
-        <View style={styles.rememberContainer}>
-          <View style={styles.checkbox} />
-
-          <Text style={styles.rememberText}>
-            Mantener sesión abierta
-          </Text>
-        </View>
-
         {/*Renderizado condicional (si hay errores): Mensaje de error (campos vacíos o credenciales incorrectas) */}
         {error !== '' && <Text style={styles.error}>{error}</Text>}
 
@@ -195,27 +186,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginTop: 4,
     marginBottom: 26,
-  },
-
-  rememberContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    marginTop: -3,
-    marginBottom: 5,
-  },
-
-  checkbox: {
-    width: 16,
-    height: 16,
-    borderWidth: 1,
-    borderColor: '#777777',
-    borderRadius: 2,
-    marginRight: 8,
-  },
-
-  rememberText: {
-    color: '#999999',
-    fontSize: 15,
   },
 
   error: {

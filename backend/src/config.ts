@@ -16,6 +16,7 @@ if (!config.jwtSecret) {
 // Los datos del gimnasio que valida el check-in: texto del QR, coordenadas, radio de 150 m y zona horaria.
 export const GYM = {
   qr: 'GYMBRO_CHECKIN_V1',
+  exitQr: 'GYMBRO_CHECKOUT_V1',
   latitude: -34.6127955,
   longitude: -58.3661936,
   radiusMeters: 150,

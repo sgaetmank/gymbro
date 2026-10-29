@@ -19,11 +19,18 @@ import LoadingState from '../components/LoadingState';
 import PrimaryButton from '../components/PrimaryButton';
 import { useExercises } from '../context/ExercisesContext';
 import type { AppStackParamList } from '../navigation/types';
-import { ApiError, createCheckin, getMyRoutine } from '../services/api';
+import {
+  ApiError,
+  createCheckin,
+  getMyRoutine,
+  registerGymEntry,
+  registerGymExit,
+} from '../services/api';
 import type { Exercise } from '../services/exercisesApi';
 import type { Routine, RoutineDay } from '../types';
 
-const QR_GYMBRO = 'GYMBRO_CHECKIN_V1';
+const QR_GYMBRO_ENTRADA = 'GYMBRO_CHECKIN_V1';
+const QR_GYMBRO_SALIDA = 'GYMBRO_CHECKOUT_V1';
 const GYM_LOCATION = {
   latitude: -34.6127955,
   longitude: -58.3661936,
@@ -135,7 +142,7 @@ export default function ScanQrUserScreen({
     scanProcessed.current = true;
     setScanned(true);
 
-    if (data === QR_GYMBRO) {
+    if (data === QR_GYMBRO_ENTRADA || data === QR_GYMBRO_SALIDA) {
       try {
         let locationPermission = await Location.getForegroundPermissionsAsync();
         if (!locationPermission.granted) {
@@ -182,8 +189,46 @@ export default function ScanQrUserScreen({
           return;
         }
 
-        setCoords({ latitude: position.coords.latitude, longitude: position.coords.longitude });
-        setQrValid(true);
+        const attendanceInput = {
+          qr: data,
+          latitude: position.coords.latitude,
+          longitude: position.coords.longitude,
+        };
+
+        if (data === QR_GYMBRO_ENTRADA) {
+          try {
+            await registerGymEntry(attendanceInput);
+          } catch (e) {
+            Alert.alert(
+              'No se pudo registrar la entrada',
+              e instanceof ApiError ? e.message : 'Intentá nuevamente.',
+              [{ text: 'Intentar de nuevo', onPress: resetScan }]
+            );
+            return;
+          }
+
+          setCoords({ latitude: position.coords.latitude, longitude: position.coords.longitude });
+          setQrValid(true);
+          return;
+        }
+
+        try {
+          await registerGymExit(attendanceInput);
+        } catch (e) {
+          Alert.alert(
+            'No se pudo registrar la salida',
+            e instanceof ApiError ? e.message : 'Intentá nuevamente.',
+            [{ text: 'Intentar de nuevo', onPress: resetScan }]
+          );
+          return;
+        }
+
+        Alert.alert('Salida registrada', 'Tu salida del gimnasio quedó registrada.', [
+          {
+            text: 'Aceptar',
+            onPress: () => navigation.replace('UserTabs', { screen: 'home_user' }),
+          },
+        ]);
       } catch {
         Alert.alert(
           'No se pudo validar la ubicación',
@@ -218,7 +263,7 @@ export default function ScanQrUserScreen({
     try {
       await createCheckin({
         dayId: selectedDay.id,
-        qr: QR_GYMBRO,
+        qr: QR_GYMBRO_ENTRADA,
         latitude: coords.latitude,
         longitude: coords.longitude,
       });
@@ -250,7 +295,7 @@ export default function ScanQrUserScreen({
           <Text style={styles.backButtonText}>Volver</Text>
         </TouchableOpacity>
         <Text style={styles.headerTitle}>
-          {qrValid ? 'Registrar entrenamiento' : 'Escanear QR'}
+          {qrValid ? 'Registrar entrenamiento' : 'Escanear entrada o salida'}
         </Text>
       </View>
 
@@ -266,7 +311,7 @@ export default function ScanQrUserScreen({
           >
             <Text style={styles.formTitle}>¿Qué día entrenaste?</Text>
             <Text style={styles.formSubtitle}>
-              QR de Gymbro validado. Elegí el día de tu rutina.
+              Entrada registrada. Si entrenaste, elegí el día de tu rutina.
             </Text>
 
             {routine?.days.length ? (
@@ -357,9 +402,7 @@ export default function ScanQrUserScreen({
         )
       ) : (
         <View style={styles.permissionMessage}>
-          <Text style={styles.messageText}>
-            Necesitamos permiso para usar la cámara.
-          </Text>
+          <Text style={styles.messageText}>Necesitamos permiso para usar la cámara.</Text>
           <PrimaryButton
             title={permission.canAskAgain ? 'Dar permiso' : 'Abrir configuración'}
             onPress={pedirPermiso}
