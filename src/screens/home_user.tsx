@@ -166,9 +166,11 @@ export default function UserHomeScreen({ navigation }: UserHomeScreenProps) {
 
             <View style={styles.progressInfo}>
 
-              <Text style={styles.progressTitle}> ¿Ya entrenaste hoy? </Text>
+              <Text style={styles.progressTitle}> ¿Entrás o salís del gimnasio? </Text>
 
-              <Text style={styles.progressSubtitle}> Escanea el QR para registrar tu progreso. </Text>
+              <Text style={styles.progressSubtitle}>
+                Escaneá el QR de entrada o salida. Al entrar también podés registrar tu entrenamiento.
+              </Text>
 
             </View>
 
@@ -177,7 +179,7 @@ export default function UserHomeScreen({ navigation }: UserHomeScreenProps) {
               onPress={() => navigation.getParent()?.navigate('escanear_qr_user')}
             >
 
-              <Text style={styles.smallButtonText}> Escanear </Text>
+              <Text style={styles.smallButtonText}> Escanear QR </Text>
 
             </TouchableOpacity>
 

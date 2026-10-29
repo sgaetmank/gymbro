@@ -19,6 +19,7 @@ export type TrainerStackParamList = {
 };
 
 export type TrainerTabParamList = {
+  inicio_trainer: undefined;
   buscar_usuario_trainer: NavigatorScreenParams<TrainerStackParamList>;
   mi_cuenta_trainer: undefined;
 };

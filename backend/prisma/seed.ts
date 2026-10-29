@@ -10,6 +10,7 @@ import { workoutLogs } from './seed-data/workoutLogs';
 
 async function main() {
   // Se vacía de los hijos hacia los padres.
+  await prisma.gymVisit.deleteMany();
   await prisma.workoutLogExercise.deleteMany();
   await prisma.workoutLog.deleteMany();
   await prisma.user.deleteMany();

@@ -183,6 +183,70 @@ describe('API de Gymbro', () => {
     });
   });
 
+  describe('asistencia al gimnasio', () => {
+    it('rechaza la salida si el alumno no tiene una entrada abierta', async () => {
+      const res = await api('/api/checkins/salida', {
+        method: 'POST',
+        token: studentToken,
+        body: { qr: 'GYMBRO_CHECKOUT_V1', ...GYM },
+      });
+      assert.equal(res.status, 409);
+    });
+
+    it('registra la entrada, evita duplicados y permite registrar la salida', async () => {
+      const entry = await api('/api/checkins/entrada', {
+        method: 'POST',
+        token: studentToken,
+        body: { qr: 'GYMBRO_CHECKIN_V1', ...GYM },
+      });
+      assert.equal(entry.status, 201);
+
+      const duplicateEntry = await api('/api/checkins/entrada', {
+        method: 'POST',
+        token: studentToken,
+        body: { qr: 'GYMBRO_CHECKIN_V1', ...GYM },
+      });
+      assert.equal(duplicateEntry.status, 409);
+
+      const active = await api('/api/alumnos/activos', { token: trainerToken });
+      assert.equal(active.status, 200);
+      assert.ok(active.body.users.some((user: any) => user.id === studentId));
+
+      const exit = await api('/api/checkins/salida', {
+        method: 'POST',
+        token: studentToken,
+        body: { qr: 'GYMBRO_CHECKOUT_V1', ...GYM },
+      });
+      assert.equal(exit.status, 200);
+
+      const noLongerActive = await api('/api/alumnos/activos', { token: trainerToken });
+      assert.ok(!noLongerActive.body.users.some((user: any) => user.id === studentId));
+
+      const duplicateExit = await api('/api/checkins/salida', {
+        method: 'POST',
+        token: studentToken,
+        body: { qr: 'GYMBRO_CHECKOUT_V1', ...GYM },
+      });
+      assert.equal(duplicateExit.status, 409);
+    });
+
+    it('valida el QR y la ubicación para la entrada y la salida', async () => {
+      const invalidQr = await api('/api/checkins/entrada', {
+        method: 'POST',
+        token: studentToken,
+        body: { qr: 'QR_INCORRECTO', ...GYM },
+      });
+      assert.equal(invalidQr.status, 400);
+
+      const farAway = await api('/api/checkins/salida', {
+        method: 'POST',
+        token: studentToken,
+        body: { qr: 'GYMBRO_CHECKOUT_V1', latitude: -34.7, longitude: -58.5 },
+      });
+      assert.equal(farAway.status, 400);
+    });
+  });
+
   describe('rutinas', () => {
     it('el alumno nuevo todavía no tiene rutina', async () => {
       const res = await api('/api/me/rutina', { token: studentToken });

@@ -4,7 +4,6 @@
 // prisma generate	--> Lee schema.prisma y genera el cliente tipado (dentro de node_modules)
 // prisma db push -->	Compara el esquema con la base y la deja igual (crea o modifica tablas)
 
-
 // le dice a Prisma que genere el cliente de JavaScript/TypeScript (con tipos exactos para tus tablas).
 
 generator client {
@@ -45,14 +44,15 @@ model User {
   routineId         Int?         @unique
   routine           Routine?     @relation(fields: [routineId], references: [id], onDelete: SetNull)
   workoutLogs       WorkoutLog[]
+  gymVisits         GymVisit[]
   createdAt         DateTime     @default(now())
 }
 
 model Routine {
-  id    Int    @id @default(autoincrement())
-  name  String @default("Mi Rutina")
-  days  Day[]
-  user  User?
+  id   Int    @id @default(autoincrement())
+  name String @default("Mi Rutina")
+  days Day[]
+  user User?
 }
 
 model Day {
@@ -108,6 +108,17 @@ model WorkoutLog {
 }
 
 // Copia (snapshot) de cada ejercicio hecho ese día, con su grupo muscular.
+model GymVisit {
+  id        Int       @id @default(autoincrement())
+  userId    Int
+  enteredAt DateTime  @default(now())
+  exitedAt  DateTime?
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, exitedAt])
+  @@index([enteredAt])
+}
+
 model WorkoutLogExercise {
   id          Int        @id @default(autoincrement())
   logId       Int

@@ -265,10 +265,37 @@ export async function createCheckin(input: {
   return data.log;
 }
 
+export async function registerGymEntry(input: {
+  qr: string;
+  latitude: number;
+  longitude: number;
+}): Promise<void> {
+  await request<{ visit: { enteredAt: string } }>('/api/checkins/entrada', {
+    method: 'POST',
+    body: input,
+  });
+}
+
+export async function registerGymExit(input: {
+  qr: string;
+  latitude: number;
+  longitude: number;
+}): Promise<void> {
+  await request<{ ok: boolean }>('/api/checkins/salida', {
+    method: 'POST',
+    body: input,
+  });
+}
+
 // ---------- Entrenador ----------
 
 export async function getAlumnos(): Promise<User[]> {
   const data = await request<{ users: ApiUser[] }>('/api/alumnos');
+  return data.users.map(adaptUser);
+}
+
+export async function getAlumnosActivos(): Promise<User[]> {
+  const data = await request<{ users: ApiUser[] }>('/api/alumnos/activos');
   return data.users.map(adaptUser);
 }
 

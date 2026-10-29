@@ -117,6 +117,12 @@ export const checkinSchema = z.object({
   longitude: z.number().min(-180).max(180),
 });
 
+export const attendanceSchema = z.object({
+  qr: z.string(),
+  latitude: z.number().min(-90).max(90),
+  longitude: z.number().min(-180).max(180),
+});
+
 
 // ---------- Consultas ----------
 
