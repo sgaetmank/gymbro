@@ -4,7 +4,6 @@ import { Text } from 'react-native';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import type { TrainerStackParamList, TrainerTabParamList } from './types';
 
-import TrainerHomeScreen from '../screens/inicio_trainer';
 import SearchUserScreen from '../screens/buscar_usuario_trainer';
 import EditRoutineScreen, { guardUnsavedChanges } from '../screens/editar_rutina_trainer';
 import TrainerProfileScreen from '../screens/mi_cuenta_trainer';
@@ -15,7 +14,6 @@ const SearchStack = createNativeStackNavigator<TrainerStackParamList>();
 
 // Mismos glifos que usaba TrainerBottomNav, para no cambiar el look del nav.
 const TAB_ICONS = {
-  home: '⌂',
   search: '⌕',
   account: '♙',
 };
@@ -36,18 +34,6 @@ function SearchTabStack() {
   return (
     <SearchStack.Navigator screenOptions={{ headerShown: false }}>
       <SearchStack.Screen name="buscar_usuario_trainer_root" component={SearchUserScreen} />
-      <SearchStack.Screen name="ver_datos_trainer" component={UserDataScreen} />
-      <SearchStack.Screen name="editar_rutina_trainer" component={EditRoutineScreen} />
-    </SearchStack.Navigator>
-  );
-}
-
-// El tab "Inicio" también necesita drill-down (ver datos / editar rutina de un alumno activo),
-// así que tiene su propio stack con las mismas pantallas que el de búsqueda.
-function HomeTabStack() {
-  return (
-    <SearchStack.Navigator screenOptions={{ headerShown: false }}>
-      <SearchStack.Screen name="inicio_trainer_root" component={TrainerHomeScreen} />
       <SearchStack.Screen name="ver_datos_trainer" component={UserDataScreen} />
       <SearchStack.Screen name="editar_rutina_trainer" component={EditRoutineScreen} />
     </SearchStack.Navigator>
@@ -87,21 +73,6 @@ export default function TrainerTabs() {
         },
       }}
     >
-      <Tab.Screen
-        name="inicio_trainer"
-        component={HomeTabStack}
-        options={{ title: 'Inicio', tabBarIcon: makeTabIcon('home') }}
-        listeners={({ navigation }) => ({
-          tabPress: (e) => {
-            e.preventDefault();
-            const goToRoot = () =>
-              navigation.navigate('inicio_trainer', { screen: 'inicio_trainer_root' });
-            if (!guardUnsavedChanges(goToRoot)) {
-              goToRoot();
-            }
-          },
-        })}
-      />
       <Tab.Screen
         name="buscar_usuario_trainer"
         component={SearchTabStack}

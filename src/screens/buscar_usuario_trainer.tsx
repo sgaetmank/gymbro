@@ -39,6 +39,9 @@ export default function SearchUserScreen({
   const [alumnos, setAlumnos] = useState<User[]>([]);
   // IDs de los alumnos que están entrenando ahora (para mostrar el punto verde)
   const [activosIds, setActivosIds] = useState<Set<number>>(new Set());
+
+  // Filtro "Activos": muestra solo a los alumnos que están en el gimnasio ahora
+  const [soloActivos, setSoloActivos] = useState(false);
   const [loadingAlumnos, setLoadingAlumnos] = useState(true);
   const [alumnosError, setAlumnosError] = useState('');
 
@@ -61,18 +64,30 @@ export default function SearchUserScreen({
     }
   }, []);
 
+  // Refresca solo los puntos verdes (la lista completa no cambia tan seguido)
+  const loadActivos = useCallback(async () => {
+    try {
+      setActivosIds(new Set((await getAlumnosActivos()).map((u) => u.id)));
+    } catch {
+      // un fallo pasajero conserva los puntos anteriores
+    }
+  }, []);
+
   // Se vuelve a pedir cada vez que la pantalla recupera el foco (pudo registrarse un alumno nuevo)
+  // y, mientras tenga el foco, los activos se refrescan cada 30 s
   useFocusEffect(
     useCallback(() => {
       loadAlumnos();
-    }, [loadAlumnos])
+      const interval = setInterval(loadActivos, 30_000);
+      return () => clearInterval(interval);
+    }, [loadAlumnos, loadActivos])
   );
 
   // Alumnos que coinciden con lo escrito (nombre, apellido o email), sin importar tildes.
-  const usuariosFiltrados = alumnos.filter((user) =>
-    normalizar(`${user.firstName} ${user.lastName} ${user.email}`).includes(
-      normalizar(filtro)
-    )
+  const usuariosFiltrados = alumnos.filter(
+    (user) =>
+      (!soloActivos || activosIds.has(user.id)) &&
+      normalizar(`${user.firstName} ${user.lastName} ${user.email}`).includes(normalizar(filtro))
   );
 
   return (
@@ -107,6 +122,18 @@ export default function SearchUserScreen({
 
         </View>
 
+        {/* FILTRO DE ACTIVOS */}
+        <TouchableOpacity
+          style={[styles.filterChip, soloActivos && styles.filterChipActive]}
+          onPress={() => setSoloActivos((v) => !v)}
+          activeOpacity={0.8}
+        >
+          <View style={styles.chipIndicator} />
+          <Text style={[styles.filterChipText, soloActivos && styles.filterChipTextActive]}>
+            Activos ({activosIds.size})
+          </Text>
+        </TouchableOpacity>
+
         {/* LISTA DE USUARIOS */}
         <ScrollView
           showsVerticalScrollIndicator={false}
@@ -127,7 +154,11 @@ export default function SearchUserScreen({
           )}
 
           {alumnosError === '' && !loadingAlumnos && usuariosFiltrados.length === 0 && (
-            <Text style={styles.stateText}>No se encontraron usuarios</Text>
+            <Text style={styles.stateText}>
+              {soloActivos && filtro === ''
+                ? 'No hay alumnos entrenando en este momento.'
+                : 'No se encontraron usuarios'}
+            </Text>
           )}
 
           {usuariosFiltrados.map((user) => {
@@ -295,6 +326,43 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 16,
     paddingVertical: 0,
+  },
+
+  /* FILTRO DE ACTIVOS */
+
+  filterChip: {
+    alignSelf: 'flex-start',
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: 7,
+    paddingHorizontal: 12,
+    marginBottom: '2.5%',
+    backgroundColor: '#1D1D1D',
+    borderRadius: 999,
+    borderWidth: 1,
+    borderColor: '#292929',
+  },
+
+  filterChipActive: {
+    borderColor: '#FFC107',
+  },
+
+  chipIndicator: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: '#4CAF50',
+    marginRight: 6,
+  },
+
+  filterChipText: {
+    color: '#BBBBBB',
+    fontSize: 14,
+    fontWeight: '600',
+  },
+
+  filterChipTextActive: {
+    color: '#FFC107',
   },
 
   /* LISTA */

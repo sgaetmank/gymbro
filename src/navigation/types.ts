@@ -13,14 +13,12 @@ export type AppStackParamList = {
 };
 
 export type TrainerStackParamList = {
-  inicio_trainer_root: undefined;
   buscar_usuario_trainer_root: undefined;
   ver_datos_trainer: { user: User };
   editar_rutina_trainer: { user: User };
 };
 
 export type TrainerTabParamList = {
-  inicio_trainer: NavigatorScreenParams<TrainerStackParamList>;
   buscar_usuario_trainer: NavigatorScreenParams<TrainerStackParamList>;
   mi_cuenta_trainer: undefined;
 };
