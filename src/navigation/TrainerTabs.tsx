@@ -42,6 +42,18 @@ function SearchTabStack() {
   );
 }
 
+// El tab "Inicio" también necesita drill-down (ver datos / editar rutina de un alumno activo),
+// así que tiene su propio stack con las mismas pantallas que el de búsqueda.
+function HomeTabStack() {
+  return (
+    <SearchStack.Navigator screenOptions={{ headerShown: false }}>
+      <SearchStack.Screen name="inicio_trainer_root" component={TrainerHomeScreen} />
+      <SearchStack.Screen name="ver_datos_trainer" component={UserDataScreen} />
+      <SearchStack.Screen name="editar_rutina_trainer" component={EditRoutineScreen} />
+    </SearchStack.Navigator>
+  );
+}
+
 export default function TrainerTabs() {
   const insets = useSafeAreaInsets();
 
@@ -77,13 +89,15 @@ export default function TrainerTabs() {
     >
       <Tab.Screen
         name="inicio_trainer"
-        component={TrainerHomeScreen}
+        component={HomeTabStack}
         options={{ title: 'Inicio', tabBarIcon: makeTabIcon('home') }}
         listeners={({ navigation }) => ({
           tabPress: (e) => {
-            if (navigation.isFocused()) return;
-            if (guardUnsavedChanges(() => navigation.navigate('inicio_trainer'))) {
-              e.preventDefault();
+            e.preventDefault();
+            const goToRoot = () =>
+              navigation.navigate('inicio_trainer', { screen: 'inicio_trainer_root' });
+            if (!guardUnsavedChanges(goToRoot)) {
+              goToRoot();
             }
           },
         })}

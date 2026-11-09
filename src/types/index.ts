@@ -1,5 +1,4 @@
-// Tipos que comparten las pantallas. Reflejan lo que devuelve el servidor
-// una vez pasado por los adaptadores de src/services/api.ts.
+// Tipos que comparten las pantallas. Reflejan lo que devuelve el servidor una vez pasado por los adaptadores de src/services/api.ts.
 
 export type User = {
   id: number;

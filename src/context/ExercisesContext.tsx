@@ -41,6 +41,8 @@ export function ExercisesProvider({ children }: PropsWithChildren) {
         if (!cancelled) setLoading(false);
       });
 
+    // clean-up: se ejecuta cuando el componente se desmonta.
+    // o cuando el efecto se va a volver a ejecutar, porque cambió attempt.
     return () => {
       cancelled = true;
     };

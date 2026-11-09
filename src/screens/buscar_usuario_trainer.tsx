@@ -14,7 +14,7 @@ import LoadingState from '../components/LoadingState';
 import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
 import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { TrainerStackParamList } from '../navigation/types';
-import { ApiError, getAlumnos } from '../services/api';
+import { ApiError, getAlumnos, getAlumnosActivos } from '../services/api';
 import type { User } from '../types';
 
 export default function SearchUserScreen({
@@ -37,15 +37,24 @@ export default function SearchUserScreen({
 
   // Alumnos pedidos al servidor (el servidor ya no devuelve entrenadores)
   const [alumnos, setAlumnos] = useState<User[]>([]);
+  // IDs de los alumnos que están entrenando ahora (para mostrar el punto verde)
+  const [activosIds, setActivosIds] = useState<Set<number>>(new Set());
   const [loadingAlumnos, setLoadingAlumnos] = useState(true);
   const [alumnosError, setAlumnosError] = useState('');
 
   const loadAlumnos = useCallback(async () => {
     setAlumnosError('');
     try {
-      setAlumnos(await getAlumnos());
+      const [todos, activos] = await Promise.all([
+        getAlumnos(),
+        // Si falla la lista de activos no se pierde la lista completa: solo no se marca a nadie
+        getAlumnosActivos().catch(() => [] as User[]),
+      ]);
+      setAlumnos(todos);
+      setActivosIds(new Set(activos.map((u) => u.id)));
     } catch (e) {
       setAlumnos([]); // no se muestran datos que no se pudieron confirmar
+      setActivosIds(new Set());
       setAlumnosError(e instanceof ApiError ? e.message : 'No se pudo cargar la lista de usuarios.');
     } finally {
       setLoadingAlumnos(false);
@@ -156,6 +165,8 @@ export default function SearchUserScreen({
                   </Text>
 
                 </View>
+
+                {activosIds.has(user.id) && <View style={styles.activeIndicator} />}
 
                 {/* BOTONES DEL USUARIO SELECCIONADO */}
                 {isSelected && (
@@ -364,6 +375,14 @@ const styles = StyleSheet.create({
     color: '#858585',
     fontSize: 14,
     marginTop: 3,
+  },
+
+  activeIndicator: {
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    backgroundColor: '#4CAF50',
+    marginLeft: 12,
   },
 
   /* BOTONES */

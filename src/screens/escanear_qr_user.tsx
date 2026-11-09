@@ -35,7 +35,7 @@ const GYM_LOCATION = {
   latitude: -34.6127955,
   longitude: -58.3661936,
 };
-const GYM_RADIUS_METERS = 150;
+const GYM_RADIUS_METERS = 5000; // TEMPORAL: solo para probar el escaneo. Volver a 150.
 
 type Coordinates = Pick<Location.LocationObjectCoords, 'latitude' | 'longitude'>;
 
@@ -57,6 +57,8 @@ function getDistanceInMeters(first: Coordinates, second: Coordinates): number {
     Math.atan2(Math.sqrt(distance), Math.sqrt(1 - distance))
   );
 }
+
+// obtiene una breve descripción de los grupos musculares trabajados en un día de rutina
 
 function getDayDescription(
   day: RoutineDay,
@@ -294,9 +296,7 @@ export default function ScanQrUserScreen({
         <TouchableOpacity style={styles.backButton} onPress={() => navigation.goBack()}>
           <Text style={styles.backButtonText}>Volver</Text>
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>
-          {qrValid ? 'Registrar entrenamiento' : 'Escanear entrada o salida'}
-        </Text>
+
       </View>
 
       {!permission ? (

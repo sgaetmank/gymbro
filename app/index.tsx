@@ -6,12 +6,12 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 import { AuthProvider, useAuth } from '../src/context/AuthContext';
 import { ExercisesProvider } from '../src/context/ExercisesContext';
+import TrainerTabs from '../src/navigation/TrainerTabs';
 import type { AppStackParamList } from '../src/navigation/types';
+import UserTabs from '../src/navigation/UserTabs';
+import ScanQrUserScreen from '../src/screens/escanear_qr_user';
 import LooginScreen from '../src/screens/login';
 import SignUpScreen from '../src/screens/signup';
-import ScanQrUserScreen from '../src/screens/escanear_qr_user';
-import TrainerTabs from '../src/navigation/TrainerTabs';
-import UserTabs from '../src/navigation/UserTabs';
 
 const Stack = createNativeStackNavigator<AppStackParamList>();
 

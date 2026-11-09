@@ -13,20 +13,20 @@ export type AppStackParamList = {
 };
 
 export type TrainerStackParamList = {
+  inicio_trainer_root: undefined;
   buscar_usuario_trainer_root: undefined;
   ver_datos_trainer: { user: User };
   editar_rutina_trainer: { user: User };
 };
 
 export type TrainerTabParamList = {
-  inicio_trainer: undefined;
+  inicio_trainer: NavigatorScreenParams<TrainerStackParamList>;
   buscar_usuario_trainer: NavigatorScreenParams<TrainerStackParamList>;
   mi_cuenta_trainer: undefined;
 };
 
 export type UserRoutineStackParamList = {
   mi_rutina_user_root: undefined;
-  ver_dia_x_user: { day: RoutineDay };
   entrenar_dia_user: { day: RoutineDay };
 };
 

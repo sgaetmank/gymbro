@@ -49,7 +49,7 @@ export default function EditRoutineScreen({ navigation, route }: EditRoutineScre
     return () => {
       cancelled = true;
     };
-  }, [editedUser.id, attempt]);
+  }, [editedUser.id, attempt]); // el attempt se modifica cuando tocamos "Tocá para reintentar" (vuelve a pedir la rutina del alumno)
 
   if (initialDays === null) {
     return (
