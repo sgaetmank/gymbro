@@ -35,11 +35,15 @@ function toDateKey(year: number, month: number, day: number) {
   return `${year}-${mm}-${dd}`;
 }
 
-// Divide el mes en semanas (de lunes a domingo) y cuenta cuántas veces
-// entrenó en cada una.
+// Divide el mes en semanas (de lunes a domingo) y cuenta cuántos
+// entrenamientos hizo en cada una.
 function getWeeksOfMonth(year: number, month: number, monthLogs: WorkoutLog[]) {
   const daysInMonth = new Date(year, month + 1, 0).getDate();
-  const trainedDates = new Set(monthLogs.map((log) => log.date));
+  // Cuántos registros hay por fecha (puede haber más de uno el mismo día)
+  const logsPerDate = new Map<string, number>();
+  monthLogs.forEach((log) =>
+    logsPerDate.set(log.date, (logsPerDate.get(log.date) ?? 0) + 1)
+  );
 
   const weeks: { from: number; to: number; trained: number }[] = [];
   let week: { from: number; to: number; trained: number } | null = null;
@@ -51,16 +55,14 @@ function getWeeksOfMonth(year: number, month: number, monthLogs: WorkoutLog[]) {
       weeks.push(week);
     }
     week.to = day;
-    if (trainedDates.has(toDateKey(year, month, day))) week.trained++;
+    week.trained += logsPerDate.get(toDateKey(year, month, day)) ?? 0;
   }
 
   return weeks;
 }
 
 // Cuenta cuántos ejercicios de cada grupo muscular hizo, de mayor a menor
-function countByMuscleGroup(
-  monthLogs: WorkoutLog[]
-): { group: string; count: number }[] {
+function countByMuscleGroup(monthLogs: WorkoutLog[]) : { group: string; count: number }[] {
   const counts: Record<string, number> = {};
   monthLogs.forEach((log) => {
     log.exercises.forEach((exercise) => {
@@ -68,9 +70,12 @@ function countByMuscleGroup(
     });
   });
 
+  // Convertir el diccionario en lista y ordenar de mayor a menor
   return Object.entries(counts)
     .map(([group, count]) => ({ group, count }))
     .sort((a, b) => b.count - a.count);
+  // [{group:"Pecho", count:12}, {group:"Piernas", count:8}, ...]
+
 }
 
 
@@ -236,7 +241,7 @@ export default function UserStatisticsScreen() {
 
             {/* ==================================================
                 ENTRENAMIENTOS POR SEMANA
-                Una barra por semana: cuántos días entrenó.
+                Una barra por semana: cuántos entrenamientos hizo.
             ================================================== */}
 
             <View style={styles.sectionBox}>
@@ -261,7 +266,7 @@ export default function UserStatisticsScreen() {
 
                     </View>
 
-                    {/* VALOR (cantidad de días entrenados) */}
+                    {/* VALOR (cantidad de entrenamientos de la semana) */}
                     <Text style={styles.weekValue}>{week.trained}</Text>
 
                   </View>

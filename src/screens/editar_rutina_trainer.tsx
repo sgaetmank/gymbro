@@ -633,6 +633,7 @@ function EditRoutineForm({
         <View
           style={styles.titleRow}
           onLayout={(e) => setContentWidth(e.nativeEvent.layout.width)}
+          // onLayout se vuelve a ejecutar si el ancho cambia 
         >
 
           <Text style={styles.routineTitle}>
@@ -656,12 +657,12 @@ function EditRoutineForm({
           }}
         >
         <Sortable.Flex
-          customHandle
+          customHandle // Le dice al contenedor que el arrastre lo inicia un Sortable.Handle y no todo el elemento.
           flexDirection="column"
           flexWrap="nowrap"
-          width={cardWidth(0)}
-          gap={12}
-          paddingBottom={12}
+          width={cardWidth(0)} //  la librería posiciona con valores absolutos
+          gap={12} //  separación entre elementos: como la librería posiciona por medidas, no conviene que los hijos tengan margen propio.
+          paddingBottom={12} // deja aire debajo del último elemento
           scrollableRef={scrollRef}
           onDragEnd={({ order }) => reorderDays(order)}
         >

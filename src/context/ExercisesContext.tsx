@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useMemo, useState, type PropsWithChildren } from 'react';
+import { createContext, useCallback, useContext, useEffect, useMemo, useState, type PropsWithChildren } from 'react';
 
 import { fetchExercises, type Exercise } from '../services/exercisesApi';
 
@@ -54,17 +54,28 @@ export function ExercisesProvider({ children }: PropsWithChildren) {
     [exercises]
   );
 
-  const getExerciseById = (exerciseId: string) => exercisesById.get(exerciseId);
+  const getExerciseById = useCallback(
+    (exerciseId: string) => exercisesById.get(exerciseId),
+    [exercisesById]
+  );
 
   // Vuelve a mostrar "cargando" y dispara otra vez el useEffect de arriba
-  const retry = () => {
+  const retry = useCallback(() => {
     setLoading(true);
     setError(null);
     setAttempt((n) => n + 1);
-  };
+  }, []);
+
+  // Memoizado: el objeto solo se vuelve a crear cuando cambia algo de verdad.
+  // Sin esto, cada render del Provider crearía un objeto nuevo y todos los
+  // consumidores se re-renderizarían aunque sus datos no hayan cambiado.
+  const value = useMemo(
+    () => ({ exercises, loading, error, getExerciseById, retry }),
+    [exercises, loading, error, getExerciseById, retry]
+  );
 
   return (
-    <ExercisesContext.Provider value={{ exercises, loading, error, getExerciseById, retry }}>
+    <ExercisesContext.Provider value={value}>
       {children}
     </ExercisesContext.Provider>
   );

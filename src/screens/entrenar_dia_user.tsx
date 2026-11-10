@@ -161,17 +161,18 @@ export default function GuidedDayScreen({
 
   // Deslizar el dedo cambia de paso: a la izquierda avanza, a la derecha vuelve.
   const swipe = Gesture.Pan()
-    .runOnJS(true)
+    .runOnJS(true) // hace que todos los callbacks de ese gesto corran directamente en el hilo de JavaScript, sin worklets.
     .enabled(!isFinished) // lo apaga en la pantalla final
-    .activeOffsetX([-30, 30]) // activeOffsetX: solo se activa con un movimiento claramente horizontal de mas de 60 px;
-    .failOffsetY([-20, 20]) // failOffsetY: si el dedo sube o baja primero, es scroll y el gesto se descarta.
+    .activeOffsetX([-30, 30]) // solo se activa con un movimiento claramente horizontal de mas de 30 px;
+    .failOffsetY([-20, 20]) //  si el dedo sube o baja primero, es scroll y el gesto se descarta.
 
     // goNext/goPrevious tocan la ref del timer, pero solo al soltar el dedo
     // (nunca durante el render): el aviso de react-hooks/refs es un falso positivo.
     // eslint-disable-next-line react-hooks/refs
     .onEnd((e) => {
-      if (e.translationX <= -SWIPE_DISTANCE) goNext();
-      else if (e.translationX >= SWIPE_DISTANCE) goPrevious();
+       // Al soltar el dedo, mira translationX y decide
+      if (e.translationX <= -SWIPE_DISTANCE) goNext();  // Se deslizó al menos 60 px hacia la izquierda: avanza
+      else if (e.translationX >= SWIPE_DISTANCE) goPrevious(); // Se deslizó al menos 60 px hacia la derecha: retrocede
     });
 
   // Salta a cualquier paso desde el modal de la rutina

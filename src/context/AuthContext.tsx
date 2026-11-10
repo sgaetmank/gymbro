@@ -3,6 +3,7 @@ import {
   useCallback,
   useContext,
   useEffect,
+  useMemo,
   useState,
   type PropsWithChildren,
 } from 'react';
@@ -95,7 +96,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
   }, []);
 
   // Pide al servidor validar email + contraseña. Guarda el token y deja la sesión abierta.
-  const login = async (email: string, password: string): Promise<AuthResult> => {
+  const login = useCallback(async (email: string, password: string): Promise<AuthResult> => {
     try {
       const result = await apiLogin(email.trim(), password);
       setAuthToken(result.token);
@@ -105,10 +106,10 @@ export function AuthProvider({ children }: PropsWithChildren) {
     } catch (error) {
       return { ok: false, error: errorMessage(error, 'No se pudo iniciar sesión') };
     }
-  };
+  }, []);
 
   // Crea un alumno nuevo en el servidor (que valida email y DNI repetidos) y lo deja logueado.
-  const register = async (data: RegistrationData): Promise<AuthResult> => {
+  const register = useCallback(async (data: RegistrationData): Promise<AuthResult> => {
     try {
       const result = await apiRegister(data);
       setAuthToken(result.token);
@@ -118,10 +119,18 @@ export function AuthProvider({ children }: PropsWithChildren) {
     } catch (error) {
       return { ok: false, error: errorMessage(error, 'No se pudo crear la cuenta') };
     }
-  };
+  }, []);
+
+  // Memoizado: el objeto solo se vuelve a crear cuando cambia algo de verdad.
+  // Sin esto, cada render del Provider crearía un objeto nuevo y todos los
+  // consumidores se re-renderizarían aunque sus datos no hayan cambiado.
+  const value = useMemo(
+    () => ({ user, loading, login, register, logout }),
+    [user, loading, login, register, logout]
+  );
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, logout }}>
+    <AuthContext.Provider value={value}>
       {children}
     </AuthContext.Provider>
   );

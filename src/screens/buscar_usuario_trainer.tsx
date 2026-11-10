@@ -9,10 +9,10 @@ import {
   View,
 } from 'react-native';
 
+import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import LoadingState from '../components/LoadingState';
 import { useResponsiveLayout } from '../hooks/useResponsiveLayout';
-import type { NativeStackScreenProps } from '@react-navigation/native-stack';
 import type { TrainerStackParamList } from '../navigation/types';
 import { ApiError, getAlumnos, getAlumnosActivos } from '../services/api';
 import type { User } from '../types';
@@ -86,6 +86,7 @@ export default function SearchUserScreen({
   // Alumnos que coinciden con lo escrito (nombre, apellido o email), sin importar tildes.
   const usuariosFiltrados = alumnos.filter(
     (user) =>
+      // si el filtro "activos" está apagado, o este alumno es activo
       (!soloActivos || activosIds.has(user.id)) &&
       normalizar(`${user.firstName} ${user.lastName} ${user.email}`).includes(normalizar(filtro))
   );
